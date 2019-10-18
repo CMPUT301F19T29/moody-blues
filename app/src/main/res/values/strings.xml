@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">moody-blues</string>
+    <string name="title_activity_login">Login</string>
+</resources>
