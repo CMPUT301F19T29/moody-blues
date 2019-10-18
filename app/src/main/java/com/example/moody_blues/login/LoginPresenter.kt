@@ -1,8 +1,8 @@
-package com.example.kotlintest
+package com.example.moody_blues.login
 
-import com.example.moody_blues.history.HistoryContract
+import com.example.moody_blues.models.User
 
-class LoginPresenter(val historyView: HistoryContract.View) : HistoryContract.Presenter {
+class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -10,7 +10,8 @@ class LoginPresenter(val historyView: HistoryContract.View) : HistoryContract.Pr
     // Can use val/vars from [primary
     init {
         // Links the presenter to the view
-        historyView.presenter = this
+        loginView.presenter = this
+        val user:User;
     }
 
     override fun start() {

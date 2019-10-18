@@ -2,7 +2,7 @@ package com.example.moody_blues.mood
 
 import com.example.moody_blues.map.MapContract
 
-class MoodPresenter(val moodView: MapContract.View) : MapContract.Presenter {
+class MoodPresenter(val moodView: MoodContract.View) : MoodContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor

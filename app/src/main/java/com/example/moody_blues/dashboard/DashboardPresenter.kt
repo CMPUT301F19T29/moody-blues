@@ -1,8 +1,7 @@
 package com.example.moody_blues.dashboard
 
-import com.example.moody_blues.map.MapContract
 
-class DashboardPresenter(val dashboardView: MapContract.View) : MapContract.Presenter {
+class DashboardPresenter(val dashboardView: DashboardContract.View) : DashboardContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor

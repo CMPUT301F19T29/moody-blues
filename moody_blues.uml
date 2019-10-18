@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.example.moody_blues</OriginalElement>
+  <nodes>
+    <node x="543.7268339768339" y="310.0">com.example.moody_blues.dashboard.DashboardContract.View</node>
+    <node x="2393.133687258687" y="310.0">com.example.moody_blues.login.LoginContract.View</node>
+    <node x="219.0" y="386.0">com.example.moody_blues.requests.RequestPresenter</node>
+    <node x="1963.7268339768339" y="310.0">com.example.moody_blues.map.MapContract.View</node>
+    <node x="1061.7268339768339" y="310.0">com.example.moody_blues.feed.FeedContract.Presenter</node>
+    <node x="1916.7268339768339" y="386.0">com.example.moody_blues.map.MapView</node>
+    <node x="1318.8518339768339" y="12.0">com.example.moody_blues.feed.FeedContract</node>
+    <node x="114.72683397683386" y="12.0">com.example.moody_blues.dashboard.DashboardContract</node>
+    <node x="1730.7268339768339" y="386.0">com.example.moody_blues.login.LoginPresenter</node>
+    <node x="0.0" y="386.0">com.example.moody_blues.dashboard.DashboardPresenter</node>
+    <node x="496.72683397683386" y="386.0">com.example.moody_blues.dashboard.DashboardView</node>
+    <node x="855.7268339768339" y="386.0">com.example.moody_blues.requests.RequestView</node>
+    <node x="668.7268339768339" y="386.0">com.example.moody_blues.mood.MoodPresenter</node>
+    <node x="1380.7268339768339" y="386.0">com.example.moody_blues.map.MapPresenter</node>
+    <node x="1413.2268339768339" y="310.0">com.example.moody_blues.map.MapContract.Presenter</node>
+    <node x="766.0" y="581.5">com.example.moody_blues.models.Mood</node>
+    <node x="328.72683397683386" y="12.0">com.example.moody_blues.requests.RequestContract</node>
+    <node x="1926.9768339768339" y="12.0">com.example.moody_blues.map.MapContract</node>
+    <node x="2565.133687258687" y="310.0">com.example.moody_blues.history.HistoryContract.View</node>
+    <node x="700.4768339768339" y="12.0">com.example.moody_blues.mood.MoodContract</node>
+    <node x="1767.2268339768339" y="310.0">com.example.moody_blues.login.LoginContract.Presenter</node>
+    <node x="1558.7268339768339" y="386.0">com.example.moody_blues.feed.FeedView</node>
+    <node x="2284.476833976834" y="12.0">com.example.moody_blues.login.LoginContract</node>
+    <node x="2518.133687258687" y="386.0">com.example.moody_blues.history.HistoryView</node>
+    <node x="1605.7268339768339" y="310.0">com.example.moody_blues.feed.FeedContract.View</node>
+    <node x="2088.726833976834" y="386.0">com.example.moody_blues.history.HistoryPresenter</node>
+    <node x="1255.7268339768339" y="310.0">com.example.moody_blues.mood.MoodContract.View</node>
+    <node x="705.7268339768339" y="310.0">com.example.moody_blues.mood.MoodContract.Presenter</node>
+    <node x="1208.7268339768339" y="386.0">com.example.moody_blues.mood.MoodView</node>
+    <node x="263.5" y="310.0">com.example.moody_blues.requests.RequestContract.Presenter</node>
+    <node x="902.7268339768339" y="310.0">com.example.moody_blues.requests.RequestContract.View</node>
+    <node x="1633.7268339768339" y="0.0">com.example.moody_blues.BaseView</node>
+    <node x="1027.7268339768339" y="386.0">com.example.moody_blues.feed.FeedPresenter</node>
+    <node x="2130.226833976834" y="310.0">com.example.moody_blues.history.HistoryContract.Presenter</node>
+    <node x="2445.976833976834" y="12.0">com.example.moody_blues.history.HistoryContract</node>
+    <node x="993.2268339768339" y="0.0">com.example.moody_blues.BasePresenter</node>
+    <node x="2346.133687258687" y="386.0">com.example.moody_blues.login.LoginView</node>
+    <node x="53.0" y="310.0">com.example.moody_blues.dashboard.DashboardContract.Presenter</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.example.moody_blues.dashboard.DashboardContract.Presenter" target="com.example.moody_blues.BasePresenter">
+      <point x="23.25" y="-13.0" />
+      <point x="122.75" y="200.0" />
+      <point x="1001.869691119691" y="200.0" />
+      <point x="-51.85714285714289" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.requests.RequestView" target="com.example.moody_blues.requests.RequestContract.View">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.login.LoginContract.View" target="com.example.moody_blues.BaseView">
+      <point x="-14.5" y="-13.0" />
+      <point x="2407.633687258687" y="100.0" />
+      <point x="1713.0839768339767" y="100.0" />
+      <point x="28.85714285714289" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.feed.FeedPresenter" target="com.example.moody_blues.feed.FeedContract.Presenter">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.history.HistoryContract.View" target="com.example.moody_blues.BaseView">
+      <point x="-14.5" y="-13.0" />
+      <point x="2579.633687258687" y="80.0" />
+      <point x="1727.512548262548" y="80.0" />
+      <point x="43.28571428571422" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.login.LoginContract.View" target="com.example.moody_blues.login.LoginContract">
+      <point x="14.5" y="-13.0" />
+      <point x="2436.633687258687" y="90.0" />
+      <point x="2375.226833976834" y="90.0" />
+      <point x="30.25" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.map.MapView" target="com.example.moody_blues.map.MapContract.View">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.login.LoginContract.Presenter" target="com.example.moody_blues.BasePresenter">
+      <point x="-23.25" y="-13.0" />
+      <point x="1790.4768339768339" y="130.0" />
+      <point x="1088.2982625482625" y="130.0" />
+      <point x="34.57142857142867" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.mood.MoodView" target="com.example.moody_blues.mood.MoodContract.View">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.dashboard.DashboardPresenter" target="com.example.moody_blues.dashboard.DashboardContract.Presenter">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.map.MapContract.Presenter" target="com.example.moody_blues.map.MapContract">
+      <point x="23.25" y="-13.0" />
+      <point x="1482.9768339768339" y="270.0" />
+      <point x="1953.7268339768339" y="270.0" />
+      <point x="-26.75" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.map.MapPresenter" target="com.example.moody_blues.map.MapContract.Presenter">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.requests.RequestContract.Presenter" target="com.example.moody_blues.requests.RequestContract">
+      <point x="-23.25" y="-13.0" />
+      <point x="286.75" y="190.0" />
+      <point x="362.47683397683386" y="190.0" />
+      <point x="-33.75" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.requests.RequestContract.View" target="com.example.moody_blues.BaseView">
+      <point x="14.5" y="-13.0" />
+      <point x="946.2268339768339" y="240.0" />
+      <point x="1655.369691119691" y="240.0" />
+      <point x="-28.85714285714289" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.login.LoginContract.Presenter" target="com.example.moody_blues.login.LoginContract">
+      <point x="23.25" y="-13.0" />
+      <point x="1836.9768339768339" y="280.0" />
+      <point x="2314.726833976834" y="280.0" />
+      <point x="-30.25" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.history.HistoryPresenter" target="com.example.moody_blues.history.HistoryContract.Presenter">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.map.MapContract.View" target="com.example.moody_blues.map.MapContract">
+      <point x="14.5" y="-13.0" />
+      <point x="26.75" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.history.HistoryView" target="com.example.moody_blues.history.HistoryContract.View">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.mood.MoodContract.View" target="com.example.moody_blues.BaseView">
+      <point x="14.5" y="-13.0" />
+      <point x="1299.2268339768339" y="250.0" />
+      <point x="1669.7982625482625" y="250.0" />
+      <point x="-14.428571428571331" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.feed.FeedContract.View" target="com.example.moody_blues.BaseView">
+      <point x="14.5" y="-13.0" />
+      <point x="1649.2268339768339" y="260.0" />
+      <point x="1684.2268339768339" y="260.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.mood.MoodPresenter" target="com.example.moody_blues.mood.MoodContract.Presenter">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.dashboard.DashboardContract.View" target="com.example.moody_blues.BaseView">
+      <point x="14.5" y="-13.0" />
+      <point x="587.2268339768339" y="230.0" />
+      <point x="1640.9411196911196" y="230.0" />
+      <point x="-43.28571428571422" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.requests.RequestPresenter" target="com.example.moody_blues.requests.RequestContract.Presenter">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.dashboard.DashboardContract.View" target="com.example.moody_blues.dashboard.DashboardContract">
+      <point x="-14.5" y="-13.0" />
+      <point x="558.2268339768339" y="180.0" />
+      <point x="226.47683397683386" y="180.0" />
+      <point x="37.25" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.dashboard.DashboardContract.Presenter" target="com.example.moody_blues.dashboard.DashboardContract">
+      <point x="-23.25" y="-13.0" />
+      <point x="76.25" y="190.0" />
+      <point x="151.97683397683386" y="190.0" />
+      <point x="-37.25" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.feed.FeedView" target="com.example.moody_blues.feed.FeedContract.View">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.requests.RequestContract.View" target="com.example.moody_blues.requests.RequestContract">
+      <point x="-14.5" y="-13.0" />
+      <point x="917.2268339768339" y="170.0" />
+      <point x="429.97683397683386" y="170.0" />
+      <point x="33.75" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.mood.MoodContract.Presenter" target="com.example.moody_blues.BasePresenter">
+      <point x="23.25" y="-13.0" />
+      <point x="775.4768339768339" y="220.0" />
+      <point x="1036.4411196911196" y="220.0" />
+      <point x="-17.28571428571422" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.dashboard.DashboardView" target="com.example.moody_blues.dashboard.DashboardContract.View">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.history.HistoryContract.Presenter" target="com.example.moody_blues.BasePresenter">
+      <point x="-23.25" y="-13.0" />
+      <point x="2153.476833976834" y="110.0" />
+      <point x="1105.5839768339767" y="110.0" />
+      <point x="51.85714285714289" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.map.MapContract.View" target="com.example.moody_blues.BaseView">
+      <point x="-14.5" y="-13.0" />
+      <point x="1978.2268339768339" y="120.0" />
+      <point x="1698.6554054054052" y="120.0" />
+      <point x="14.428571428571331" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.requests.RequestContract.Presenter" target="com.example.moody_blues.BasePresenter">
+      <point x="23.25" y="-13.0" />
+      <point x="333.25" y="210.0" />
+      <point x="1019.1554054054052" y="210.0" />
+      <point x="-34.57142857142867" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.map.MapContract.Presenter" target="com.example.moody_blues.BasePresenter">
+      <point x="-23.25" y="-13.0" />
+      <point x="1436.4768339768339" y="150.0" />
+      <point x="1071.012548262548" y="150.0" />
+      <point x="17.28571428571422" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.feed.FeedContract.Presenter" target="com.example.moody_blues.feed.FeedContract">
+      <point x="23.25" y="-13.0" />
+      <point x="1131.4768339768339" y="220.0" />
+      <point x="1347.3518339768339" y="220.0" />
+      <point x="-28.5" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.mood.MoodContract.Presenter" target="com.example.moody_blues.mood.MoodContract">
+      <point x="-23.25" y="-13.0" />
+      <point x="-28.5" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.login.LoginPresenter" target="com.example.moody_blues.login.LoginContract.Presenter">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.feed.FeedContract.Presenter" target="com.example.moody_blues.BasePresenter">
+      <point x="-23.25" y="-13.0" />
+      <point x="1084.9768339768339" y="220.0" />
+      <point x="1053.7268339768339" y="220.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="com.example.moody_blues.mood.MoodContract.View" target="com.example.moody_blues.mood.MoodContract">
+      <point x="-14.5" y="-13.0" />
+      <point x="1270.2268339768339" y="160.0" />
+      <point x="785.9768339768339" y="160.0" />
+      <point x="28.5" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.feed.FeedContract.View" target="com.example.moody_blues.feed.FeedContract">
+      <point x="-14.5" y="-13.0" />
+      <point x="1620.2268339768339" y="140.0" />
+      <point x="1404.3518339768339" y="140.0" />
+      <point x="28.5" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.history.HistoryContract.Presenter" target="com.example.moody_blues.history.HistoryContract">
+      <point x="23.25" y="-13.0" />
+      <point x="2199.976833976834" y="290.0" />
+      <point x="2479.726833976834" y="290.0" />
+      <point x="-33.75" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.login.LoginView" target="com.example.moody_blues.login.LoginContract.View">
+      <point x="0.0" y="-48.0" />
+      <point x="0.0" y="13.0" />
+    </edge>
+    <edge source="com.example.moody_blues.history.HistoryContract.View" target="com.example.moody_blues.history.HistoryContract">
+      <point x="14.5" y="-13.0" />
+      <point x="2608.633687258687" y="70.0" />
+      <point x="2547.226833976834" y="70.0" />
+      <point x="33.75" y="13.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5119004027828633" x="1345.5000000000002" y="582.4703147353363" />
+  <SelectedNodes>
+    <node>com.example.moody_blues.models.Mood</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>Project Files</SCOPE>
+  <VISIBILITY>public</VISIBILITY>
+</Diagram>
+

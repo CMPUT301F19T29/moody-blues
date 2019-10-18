@@ -1,8 +1,6 @@
 package com.example.moody_blues.feed
 
-import com.example.moody_blues.map.MapContract
-
-class FeedPresenter(val feedView: MapContract.View) : MapContract.Presenter {
+class FeedPresenter(val feedView: FeedContract.View) : FeedContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor

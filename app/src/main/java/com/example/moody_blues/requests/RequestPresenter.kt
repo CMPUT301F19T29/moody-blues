@@ -1,8 +1,6 @@
 package com.example.moody_blues.requests
 
-import com.example.moody_blues.map.MapContract
-
-class RequestPresenter(val requestView: MapContract.View) : MapContract.Presenter {
+class RequestPresenter(val requestView: RequestContract.View) : RequestContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
