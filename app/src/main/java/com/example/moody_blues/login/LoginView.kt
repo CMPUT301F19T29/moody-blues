@@ -1,6 +1,7 @@
 package com.example.moody_blues.login
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -17,18 +18,18 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         presenter = LoginPresenter(this)
 
         // Do stuff with the presenter
-        presenter.start()
-
         val button1:Button = findViewById(R.id.button1)
         val field1:EditText = findViewById(R.id.field1)
         val field2:EditText = findViewById(R.id.field2)
 
         button1.setOnClickListener {
-            presenter!!.login(field1.text.toString(), field2.text.toString())
+            presenter.login(field1.text.toString(), field2.text.toString())
         }
-
     }
 
+    override fun gotoMain() {
+        // TODO: set up intents, etc. and redirect to Main View
+    }
 
 }
 
