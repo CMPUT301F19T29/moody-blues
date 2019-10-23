@@ -16,4 +16,10 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
 
     override fun start() {
     }
+
+    fun login(user:String, pass:String) {
+        // validate with firestore
+
+
+    }
 }
