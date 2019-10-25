@@ -10,7 +10,7 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
     init {
         // Links the presenter to the view
         loginView.presenter = this
-        val user:User
+        val user: User
 9
         this.start()
     }
@@ -18,8 +18,8 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
     override fun start() {
     }
 
-    override fun login(user:String, pass:String) {
+    override fun login(user: String, pass: String) {
         // validate with firestore, then:
-        loginView.gotoMain()
+        loginView.gotoDashboard()
     }
 }

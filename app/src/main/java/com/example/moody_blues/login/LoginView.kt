@@ -1,11 +1,13 @@
 package com.example.moody_blues.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
+import com.example.moody_blues.dashboard.DashboardView
 
 class LoginView : AppCompatActivity(), LoginContract.View {
     override lateinit var presenter: LoginContract.Presenter
@@ -18,17 +20,19 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         presenter = LoginPresenter(this)
 
         // Do stuff with the presenter
-        val button1:Button = findViewById(R.id.button1)
-        val field1:EditText = findViewById(R.id.field1)
-        val field2:EditText = findViewById(R.id.field2)
+        val submit: Button = findViewById(R.id.login_submit_button)
+        val user: EditText = findViewById(R.id.login_user_field)
+        val pass: EditText = findViewById(R.id.login_pass_field)
 
-        button1.setOnClickListener {
-            presenter.login(field1.text.toString(), field2.text.toString())
+        submit.setOnClickListener {
+            presenter.login(user.text.toString(), pass.text.toString())
         }
     }
 
-    override fun gotoMain() {
-        // TODO: set up intents, etc. and redirect to Main View
+    override fun gotoDashboard() {
+        val intent = Intent(this, DashboardView::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // clear activity stack
+        startActivity(intent)
     }
 
 }

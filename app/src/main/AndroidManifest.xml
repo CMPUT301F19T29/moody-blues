@@ -12,13 +12,18 @@
         <activity
             android:name=".login.LoginView"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".dashboard.DashboardView">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".dashboard.DashboardView"></activity>
+        <activity android:name=".feed.FeedView"></activity>
+        <activity android:name=".history.HistoryView"></activity>
+        <activity android:name=".map.MapView"></activity>
+        <activity android:name=".mood.MoodView"></activity>
+        <activity android:name=".requests.RequestView"></activity>
     </application>
 
 </manifest>
