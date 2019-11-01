@@ -3,7 +3,11 @@ import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
 
 interface DashboardContract {
-    interface View : BaseView<Presenter> {}
+    interface View : BaseView<Presenter> {
+        fun gotoHistory()
+    }
 
-    interface Presenter : BasePresenter {}
+    interface Presenter : BasePresenter {
+        fun gotoHistory()
+    }
 }
