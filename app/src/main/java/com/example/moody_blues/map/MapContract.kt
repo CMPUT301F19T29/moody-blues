@@ -3,7 +3,11 @@ import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
 
 interface MapContract {
-    interface View : BaseView<Presenter> {}
+    interface View : BaseView<Presenter> {
+        fun gotoMood()
+    }
 
-    interface Presenter : BasePresenter {}
+    interface Presenter : BasePresenter {
+        fun selectLocation()
+    }
 }
