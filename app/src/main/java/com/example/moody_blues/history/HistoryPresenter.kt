@@ -1,5 +1,7 @@
 package com.example.moody_blues.history
 
+import android.location.Location
+import android.util.Log
 import com.example.moody_blues.models.Mood
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -18,8 +20,8 @@ class HistoryPresenter(val historyView: HistoryContract.View) : HistoryContract.
     override fun start() {
     }
 
-    override fun createNewMood() {
-        val mood = Mood("", "", "", null, "", "")
+    override fun createNewMood(location: Location?) {
+        val mood = Mood(location.toString())
         historyView.gotoMood(mood)
     }
 }

@@ -1,4 +1,5 @@
 package com.example.moody_blues.history
+import android.location.Location
 import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
 import com.example.moody_blues.models.Mood
@@ -9,6 +10,6 @@ interface HistoryContract {
     }
 
     interface Presenter : BasePresenter {
-        fun createNewMood()
+        fun createNewMood(location: Location?)
     }
 }

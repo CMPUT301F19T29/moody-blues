@@ -1,37 +1,19 @@
 package com.example.moody_blues.models
 
+import android.location.Location
 import android.media.Image
 import java.io.Serializable
+import java.util.*
 
-class Mood (
-    date: String,
-    time: String,
-    reason_text: String,
-    reason_image: Image? = null,
-    social: String,
-    emotion: String) : Serializable {
+class Mood(
+    var date: Date? = Calendar.getInstance().time,
+    var reason_text: String? = null,
+    var reason_image: Image? = null,
+    var social: String? = null,
+    var emotion: String? = null,
+    var location: String? = null // todo: revert back to Location
+) : Serializable {
 
-    var date: String = date
-        get() = field
-        set(value) { field = value}
+    constructor(_location: String?) : this(location = _location)
 
-    var time: String = time
-        get() = field
-        set(value) { field = value}
-
-    var reason_text: String = reason_text
-        get() = field
-        set(value) { field = value}
-
-    var reason_image: Image? = reason_image
-        get() = field
-        set(value) { field = value}
-
-    var social: String = social
-        get() = field
-        set(value) { field = value}
-
-    var emotion: String = emotion
-        get() = field
-        set(value) { field = value}
 }
