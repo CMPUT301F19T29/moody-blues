@@ -17,8 +17,8 @@ class MoodPresenter(val moodView: MoodContract.View) : MoodContract.Presenter {
     override fun start() {
     }
 
-    override fun confirmMood() {
-        moodView.backtoHistory()
+    override fun confirmMood(mood: Mood) {
+        moodView.backtoHistory(mood)
     }
 
 }

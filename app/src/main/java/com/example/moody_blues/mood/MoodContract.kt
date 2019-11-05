@@ -5,11 +5,11 @@ import com.example.moody_blues.models.Mood
 
 interface MoodContract {
     interface View : BaseView<Presenter> {
-        fun backtoHistory()
+        fun backtoHistory(mood: Mood)
 //        fun gotoMap()
     }
 
     interface Presenter : BasePresenter {
-        fun confirmMood()
+        fun confirmMood(mood: Mood)
     }
 }
