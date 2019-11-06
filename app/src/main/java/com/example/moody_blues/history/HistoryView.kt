@@ -1,16 +1,9 @@
 package com.example.moody_blues.history
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Adapter
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ListAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.mood.MoodAdapter
@@ -39,37 +32,36 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
             presenter.createNewMood()
         }
 
-//        val list: RecyclerView = findViewById(R.id.history_list_mood)
+//        // testing by initialising with fake moods
+//        val fakeMood: Mood = Mood("2019-11-05", "1:22", "to test", null, "social", "confused")
+//        moods.add(fakeMood)
+
         history_list_mood.adapter = MoodAdapter(moods)
         history_list_mood.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        println("\n\n\n\nonActivityResult reached \n\n\n\n")
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+        if (requestCode == GET_MOOD_CODE && resultCode == RESULT_OK) {
             val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
-            println(moods)
-//            addMood(mood)
-//            println(moods)
+            addMood(mood)
         }
     }
 
-//    fun addMood(mood: Mood) {
-//        moods.add(mood)
-//        history_list_mood.adapter!!.notifyDataSetChanged()
-//    }
+    fun addMood(mood: Mood) {
+        moods.add(mood)
+        history_list_mood.adapter!!.notifyDataSetChanged()
+    }
 
     override fun gotoMood(mood: Mood) {
-        moods.add(mood)
         val intent = Intent(this, MoodView::class.java)
         intent.putExtra(INTENT_MOOD, mood)
-        startActivity(intent)
-        history_list_mood.adapter!!.notifyDataSetChanged()
+        startActivityForResult(intent, GET_MOOD_CODE)
     }
 
     companion object {
         const val INTENT_MOOD = "mood"
+        const val GET_MOOD_CODE = 1
     }
 }
 

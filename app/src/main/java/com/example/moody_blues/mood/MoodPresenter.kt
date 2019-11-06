@@ -1,8 +1,5 @@
 package com.example.moody_blues.mood
 
-import com.example.moody_blues.map.MapContract
-import com.example.moody_blues.models.Mood
-
 class MoodPresenter(val moodView: MoodContract.View) : MoodContract.Presenter {
 
     // Constructor cannot contain any code
@@ -17,8 +14,8 @@ class MoodPresenter(val moodView: MoodContract.View) : MoodContract.Presenter {
     override fun start() {
     }
 
-    override fun confirmMood(mood: Mood) {
-        moodView.backtoHistory(mood)
+    override fun confirmMood() {
+        moodView.backtoHistory()
     }
 
 }

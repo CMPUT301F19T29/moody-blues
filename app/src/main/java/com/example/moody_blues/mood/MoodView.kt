@@ -42,14 +42,15 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             mood.reason_text = reasonField.text.toString()
 //            mood.location = locationField.text.toString()
 
-            presenter.confirmMood(mood)
+            val intent = Intent()
+            intent.putExtra(INTENT_MOOD_RESULT, mood)
+            setResult(RESULT_OK, intent)
+
+            presenter.confirmMood()
         }
     }
 
-    override fun backtoHistory(mood: Mood) {
-        val intent = Intent()
-        intent.putExtra(INTENT_MOOD_RESULT, mood)
-        setResult(RESULT_OK, intent)
+    override fun backtoHistory() {
         finish()
     }
 
