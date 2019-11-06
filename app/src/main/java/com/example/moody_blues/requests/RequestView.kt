@@ -15,6 +15,11 @@ class RequestView : AppCompatActivity(), RequestContract.View {
         presenter = RequestPresenter(this)
 
         // Do stuff with the presenter
+
+    }
+
+    override fun gotoFollowUser() {
+        // opens a popup to enter a user to follow
     }
 }
 

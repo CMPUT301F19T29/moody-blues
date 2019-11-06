@@ -13,4 +13,8 @@ class MapPresenter(val mapView: MapContract.View) : MapContract.Presenter {
 
     override fun start() {
     }
+
+    override fun selectLocation() {
+        TODO("clicking on map should select that location to be used in the mood")
+    }
 }
