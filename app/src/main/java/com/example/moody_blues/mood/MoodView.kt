@@ -10,13 +10,16 @@ import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_MOOD
 import com.example.moody_blues.map.MapView
 import com.example.moody_blues.models.Mood
+import org.w3c.dom.Text
 
 class MoodView : AppCompatActivity(), MoodContract.View {
     override lateinit var presenter: MoodContract.Presenter
+    private lateinit var mood: Mood
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mood_view)
+        mood = this.intent.extras?.getSerializable(HistoryView.INTENT_MOOD) as Mood
         title = "New Mood"
 
         // Pass the view to the presenter
@@ -25,22 +28,27 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         val mood = intent.getSerializableExtra(INTENT_MOOD) as Mood
         // make buttons for mood
         val confirmButton: Button = findViewById(R.id.mood_save_button)
+
         // value fields
         val dateField: TextView = findViewById(R.id.mood_date_field)
-        val timeField: TextView = findViewById(R.id.mood_time_field)
         val emotionField: TextView = findViewById(R.id.mood_emotion_field)
         val socialField: TextView = findViewById(R.id.mood_social_field)
         val reasonField: TextView = findViewById(R.id.mood_reason_field)
-//        val locationField: TextView = findViewById(R.id.mood_location_field)
+        val locationField: TextView = findViewById(R.id.mood_location_field)
+
+        dateField.text = mood.getDate()
+        emotionField.text = mood.getEmotion()
+        socialField.text = mood.getSocial()
+        reasonField.text = mood.getReasonText()
+        //locationField.text = mood.getLocation()
 
         // confirm button
         confirmButton.setOnClickListener {
-            mood.date = dateField.text.toString()
-            mood.time = timeField.text.toString()
-            mood.emotion = emotionField.text.toString()
-            mood.social = socialField.text.toString()
-            mood.reason_text = reasonField.text.toString()
-//            mood.location = locationField.text.toString()
+            mood.setDate(dateField.text.toString())
+            mood.setEmotion(emotionField.text.toString())
+            mood.setSocial(socialField.text.toString())
+            mood.setReasonText(reasonField.text.toString())
+            mood.setLocation(locationField.text.toString())
 
             val intent = Intent()
             intent.putExtra(INTENT_MOOD_RESULT, mood)
