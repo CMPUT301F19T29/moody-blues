@@ -26,6 +26,7 @@
         <activity android:name=".map.MapView"></activity>
         <activity android:name=".mood.MoodView"></activity>
         <activity android:name=".requests.RequestView"></activity>
+        <activity android:name=".signup.SignupView"></activity>
     </application>
 
 </manifest>
