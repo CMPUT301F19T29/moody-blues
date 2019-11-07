@@ -9,15 +9,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74ca780c-c87d-4d95-97aa-7935edaa25e4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/moody_blues/models/Mood.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/moody_blues/models/Mood.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/moody_blues/mood/MoodAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/moody_blues/mood/MoodAdapter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/moody_blues/mood/MoodView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/moody_blues/mood/MoodView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/mood_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/mood_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/row_mood.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/row_mood.xml" afterDir="false" />
-    </list>
+    <list default="true" id="74ca780c-c87d-4d95-97aa-7935edaa25e4" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +19,7 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="ZY326M9WJC" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$/..">
       <ProjectState />
@@ -93,8 +86,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/moody_blues/mood/MoodAdapter.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="29" column="70" selection-start-line="29" selection-start-column="70" selection-end-line="29" selection-end-column="70" />
+            <state relative-caret-position="151">
+              <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
             </state>
           </provider>
         </entry>
@@ -151,10 +144,10 @@
         <option value="$PROJECT_DIR$/src/main/res/layout/dashboard_view.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/moody_blues/history/HistoryView.kt" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/moody_blues/models/Mood.kt" />
-        <option value="$PROJECT_DIR$/src/main/res/layout/row_mood.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/moody_blues/mood/MoodView.kt" />
         <option value="$PROJECT_DIR$/src/main/res/layout/mood_view.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/moody_blues/mood/MoodAdapter.kt" />
+        <option value="$PROJECT_DIR$/src/main/res/layout/row_mood.xml" />
       </list>
     </option>
   </component>
@@ -427,7 +420,7 @@
       <window_info anchor="bottom" id="Build" order="4" sideWeight="0.5147651" visible="true" weight="0.18838526" />
       <window_info anchor="bottom" id="Run" order="5" sideWeight="0.5067114" weight="0.1529745" />
       <window_info anchor="bottom" id="Logcat" order="6" sideWeight="0.4986577" weight="0.3286119" />
-      <window_info anchor="bottom" id="Android Profiler" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Android Profiler" order="7" />
       <window_info anchor="bottom" id="Debug" order="8" />
       <window_info anchor="bottom" id="Find" order="9" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
@@ -680,22 +673,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/login_view.xml">
-      <provider selected="true" editor-type-id="android-designer2" />
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="5" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/row_mood.xml">
-      <provider selected="true" editor-type-id="android-designer2" />
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/moody_blues/mood/MoodView.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="792">
@@ -713,6 +690,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/login_view.xml">
+      <provider selected="true" editor-type-id="android-designer2" />
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" column="5" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/moody_blues/history/HistoryView.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1075">
@@ -727,10 +712,18 @@
       <provider selected="true" editor-type-id="android-designer2" />
       <provider editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/row_mood.xml">
+      <provider selected="true" editor-type-id="android-designer2" />
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/moody_blues/mood/MoodAdapter.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="29" column="70" selection-start-line="29" selection-start-column="70" selection-end-line="29" selection-end-column="70" />
+        <state relative-caret-position="151">
+          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
         </state>
       </provider>
     </entry>
