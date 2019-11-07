@@ -4,13 +4,10 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.mood.MoodAdapter
@@ -25,7 +22,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     override lateinit var presenter: HistoryContract.Presenter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private val moods: ArrayList<Mood> = ArrayList()
+    private lateinit var moods: ArrayList<Mood>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,42 +50,38 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
 //        val fakeMood: Mood = Mood("2019-11-05", "1:22", "to test", null, "social", "confused")
 //        moods.add(fakeMood)
 
+        moods = presenter.fetchMoods()
         history_list_mood.adapter = MoodAdapter(moods)
         history_list_mood.layoutManager = LinearLayoutManager(this)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == GET_MOOD_CODE && resultCode == RESULT_OK) {
-            val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
-            addMood(mood)
-        }
-    }
-
-    private fun addMood(mood: Mood) {
-        moods.add(mood)
-        history_list_mood.adapter!!.notifyDataSetChanged()
-    }
-
-    override fun gotoMood(mood: Mood) {
-        val intent = Intent(this, MoodView::class.java)
-        intent.putExtra(INTENT_MOOD, mood)
-        startActivityForResult(intent, GET_MOOD_CODE)
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         if (requestCode == 0)
             getLocationResult()
     }
 
     private fun getLocationResult() {
         fusedLocationClient
-            .lastLocation
-            .addOnSuccessListener { location : Location? ->
-                presenter.createNewMood(location)
-            }
+                .lastLocation
+                .addOnSuccessListener { location : Location? ->
+                    presenter.createMood(location)
+                }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GET_MOOD_CODE && resultCode == RESULT_OK) {
+            val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
+            presenter.addMood(mood)
+            history_list_mood.adapter!!.notifyDataSetChanged()
+        }
+    }
+
+    override fun gotoMood(mood: Mood) {
+        val intent = Intent(this, MoodView::class.java)
+        intent.putExtra(INTENT_MOOD, mood)
+        startActivityForResult(intent, GET_MOOD_CODE)
     }
 
     companion object {
