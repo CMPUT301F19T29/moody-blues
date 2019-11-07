@@ -18,7 +18,6 @@ class MoodAdapter(val moods: ArrayList<Mood>) : RecyclerView.Adapter<MoodAdapter
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.date.text = moods[position].getDate()
-        holder.time.text = moods[position].getTime()
         holder.emotion.text = moods[position].getEmotion()
         holder.social.text = moods[position].getSocial()
         holder.reason.text = moods[position].getReasonText()
@@ -29,7 +28,6 @@ class MoodAdapter(val moods: ArrayList<Mood>) : RecyclerView.Adapter<MoodAdapter
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val date: TextView = itemView.findViewById(R.id.row_mood_date)
-        val time: TextView = itemView.findViewById(R.id.row_mood_time)
         val emotion: TextView = itemView.findViewById(R.id.row_mood_emotion)
         val social: TextView = itemView.findViewById(R.id.row_mood_social)
         val reason: TextView = itemView.findViewById(R.id.row_mood_reason_text)

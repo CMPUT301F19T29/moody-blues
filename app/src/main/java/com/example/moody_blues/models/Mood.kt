@@ -9,7 +9,6 @@ import java.util.*
 
 class Mood(
     private var date: String? = null,
-    private var time: String? = null,
     private var reason_text: String? = null,
     private var reason_image: Image? = null,
     private var social: String? = null,
@@ -19,19 +18,13 @@ class Mood(
 
     constructor(_location: String?) : this() {
         val calendar = Calendar.getInstance().time
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CANADA)
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.CANADA)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CANADA)
         this.date = dateFormat.format(calendar)
-        this.time = timeFormat.format(calendar)
         this.location = _location
     }
 
     fun getDate(): String? {
         return this.date
-    }
-
-    fun getTime(): String? {
-        return this.time
     }
 
     fun getReasonText(): String? {
@@ -56,10 +49,6 @@ class Mood(
 
     fun setDate(date: String?) {
         this.date = date
-    }
-
-    fun setTime(time: String?) {
-        this.time = time
     }
 
     fun setReasonText(reason_text: String?) {

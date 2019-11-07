@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="10dp"
             android:text="$EMOTION"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -81,9 +81,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
                 android:text="$DATE"
                 app:layout_constraintBaseline_toBaselineOf="@+id/row_mood_username"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/row_mood_at_label" />
 
             <TextView
@@ -96,19 +97,6 @@
                 android:textSize="10sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/row_mood_username"
                 app:layout_constraintStart_toEndOf="@+id/row_mood_username" />
-
-            <TextView
-                android:id="@+id/row_mood_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:text="$TIME"
-                app:layout_constraintBaseline_toBaselineOf="@+id/row_mood_username"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/row_mood_date" />
 
             <TextView
                 android:id="@+id/row_mood_from_label"
@@ -137,7 +125,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
-            android:id="@+id/divider"
+            android:id="@+id/row_mood_bottom_div"
             android:layout_width="409dp"
             android:layout_height="1dp"
             android:layout_marginStart="1dp"
@@ -148,7 +136,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <View
-            android:id="@+id/divider2"
+            android:id="@+id/row_mood_left_div"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginStart="1dp"
@@ -159,7 +147,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <View
-            android:id="@+id/divider3"
+            android:id="@+id/row_mood_right_div"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider"
