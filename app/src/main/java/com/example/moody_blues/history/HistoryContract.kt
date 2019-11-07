@@ -10,6 +10,8 @@ interface HistoryContract {
     }
 
     interface Presenter : BasePresenter {
-        fun createNewMood(location: Location?)
+        fun fetchMoods(): ArrayList<Mood>
+        fun createMood(location: Location?)
+        fun addMood(mood: Mood)
     }
 }

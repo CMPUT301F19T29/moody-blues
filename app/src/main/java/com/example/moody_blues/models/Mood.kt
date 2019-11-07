@@ -4,7 +4,6 @@ import android.location.Location
 import android.media.Image
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class Mood(

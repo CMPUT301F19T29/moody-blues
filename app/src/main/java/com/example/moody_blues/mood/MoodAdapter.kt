@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
 
-class MoodAdapter(val moods: ArrayList<Mood>) : RecyclerView.Adapter<MoodAdapter.ViewHolder>() {
+class MoodAdapter(private val moods: ArrayList<Mood>) : RecyclerView.Adapter<MoodAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_mood, parent, false)
