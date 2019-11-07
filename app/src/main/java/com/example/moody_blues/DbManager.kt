@@ -29,8 +29,8 @@ class DbManager() {
 
     }
 
-    suspend fun signOut(){
-
+    fun signOut(){
+        auth.getInstance.signOut()
     }
 
     suspend fun getSignedInUsername(){
