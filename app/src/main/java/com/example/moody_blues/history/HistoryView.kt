@@ -1,7 +1,6 @@
 package com.example.moody_blues.history
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -23,6 +22,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.history_view.*
+import kotlinx.coroutines.GlobalScope
 
 class HistoryView : AppCompatActivity(), HistoryContract.View {
     override lateinit var presenter: HistoryContract.Presenter
@@ -71,7 +71,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         }
 
         history_list_mood.adapter = MoodAdapter(presenter.fetchMoods(),
-            { item: Mood, pos: Int -> presenter.editMood(pos) },
+            { item: Mood, pos: Int -> presenter.editMood(item) },
             { item: Mood, pos: Int -> presenter.deleteMood(item)
                 history_list_mood.adapter!!.notifyDataSetChanged()
                 true })
@@ -108,7 +108,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         if (requestCode == GET_EDITED_MOOD_CODE && resultCode == RESULT_OK) {
             val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
             val pos: Int = data.getIntExtra(INTENT_POS_RESULT, -1)
-            presenter.updateMood(mood, pos)
+            presenter.updateMood(mood)
             history_list_mood.adapter!!.notifyDataSetChanged()
         }
     }
@@ -125,19 +125,19 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         moodAdapter.refresh(moods)
     }
 
-    override fun gotoEditMood(pos: Int) {
-        val mood: Mood = AppManager.getMood(pos)
-        val intent = Intent(this, MoodView::class.java)
-        intent.putExtra(FLAG, "edit")
-        intent.putExtra(INTENT_MOOD, mood)
-        intent.putExtra(INTENT_EDIT_POS, pos)
-        startActivityForResult(intent, GET_EDITED_MOOD_CODE)
+    override fun gotoEditMood(id: String) {
+            val mood: Mood? = AppManager.getMood(id)
+            val intent = Intent(this, MoodView::class.java)
+            intent.putExtra(FLAG, "edit")
+            intent.putExtra(INTENT_MOOD, mood)
+            intent.putExtra(INTENT_EDIT_ID, id)
+            startActivityForResult(intent, GET_EDITED_MOOD_CODE)
     }
 
     companion object {
         const val FLAG = "flag"
         const val INTENT_MOOD = "mood"
-        const val INTENT_EDIT_POS = "editPos"
+        const val INTENT_EDIT_ID = "editId"
         const val GET_MOOD_CODE = 1
         const val GET_EDITED_MOOD_CODE = 2
     }

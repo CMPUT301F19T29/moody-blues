@@ -20,8 +20,8 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.date.text = moods[position].getDateString()
-        holder.emotion.text = moods[position].getEmotion()
-        holder.social.text = moods[position].getSocial()
+        holder.emotion.text = moods[position].getEmotionString()
+        holder.social.text = moods[position].getSocialString()
         holder.reason.text = moods[position].getReasonText()
         holder.username.text = AppManager.getUsername()
         holder.image.setImageResource(R.drawable.moody_blues_icon_background)

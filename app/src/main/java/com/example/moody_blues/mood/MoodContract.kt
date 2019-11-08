@@ -1,6 +1,7 @@
 package com.example.moody_blues.mood
 import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
+import com.example.moody_blues.models.Mood
 
 interface MoodContract {
     interface View : BaseView<Presenter> {
@@ -9,6 +10,6 @@ interface MoodContract {
     }
 
     interface Presenter : BasePresenter {
-        fun confirmMood()
+        fun confirmMood(mood: Mood)
     }
 }
