@@ -47,8 +47,11 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         // Emotional state spinner stuff
 
         val emotionalStates = arrayOf("\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
-        val colors = arrayOf(Color.GREEN, Color.BLUE, Color.YELLOW, Color.RED, Color.LTGRAY, Color.MAGENTA)
-        val color : Int
+
+        // TODO: For some reason some colors crash the app lol maybe find out why later (currently none of these do though)
+        val colors = arrayOf(Color.GREEN, Color.parseColor("#33FFF4"), Color.YELLOW, Color.parseColor("#FF6D66"), Color.LTGRAY, Color.parseColor("#FE9DFF"))
+        val emotionField = findViewById<Spinner>(R.id.mood_emotion_field)
+      
         if (emotionField != null) {
             val arrayAdapter =
                 ArrayAdapter(this, android.R.layout.simple_spinner_item, emotionalStates)
@@ -63,8 +66,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
                     id: Long
                 ) {
                     emotionalStates[position]
-//                    color = position
-//                    parent.getChildAt(position).setBackgroundColor(colors[position])
+                    val color = colors[position]
+                    findViewById<View>(android.R.id.content).setBackgroundColor(color)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
