@@ -7,6 +7,7 @@ import com.example.moody_blues.models.Mood
 interface HistoryContract {
     interface View : BaseView<Presenter> {
         fun gotoMood(mood: Mood)
+        fun refreshMoods(moods: ArrayList<Mood>)
     }
 
     interface Presenter : BasePresenter {

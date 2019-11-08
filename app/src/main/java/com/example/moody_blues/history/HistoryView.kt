@@ -22,8 +22,6 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     override lateinit var presenter: HistoryContract.Presenter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var moods: ArrayList<Mood>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.history_view)
@@ -50,8 +48,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
 //        val fakeMood: Mood = Mood("2019-11-05", "1:22", "to test", null, "social", "confused")
 //        moods.add(fakeMood)
 
-        moods = presenter.fetchMoods()
-        history_list_mood.adapter = MoodAdapter(moods)
+        history_list_mood.adapter = MoodAdapter(presenter.fetchMoods())
         history_list_mood.layoutManager = LinearLayoutManager(this)
     }
 
@@ -74,7 +71,6 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         if (requestCode == GET_MOOD_CODE && resultCode == RESULT_OK) {
             val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
             presenter.addMood(mood)
-            history_list_mood.adapter!!.notifyDataSetChanged()
         }
     }
 
@@ -82,6 +78,11 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         val intent = Intent(this, MoodView::class.java)
         intent.putExtra(INTENT_MOOD, mood)
         startActivityForResult(intent, GET_MOOD_CODE)
+    }
+
+    override fun refreshMoods(moods: ArrayList<Mood>) {
+        val moodAdapter = history_list_mood.adapter as MoodAdapter
+        moodAdapter.refresh(moods)
     }
 
     companion object {
