@@ -7,7 +7,7 @@ import com.example.moody_blues.models.Mood
 interface HistoryContract {
     interface View : BaseView<Presenter> {
         fun gotoMood(mood: Mood)
-        suspend fun gotoEditMood(id: String)
+        fun gotoEditMood(id: String)
         fun refreshMoods(moods: ArrayList<Mood>)
     }
 

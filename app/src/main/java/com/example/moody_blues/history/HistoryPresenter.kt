@@ -53,14 +53,14 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     }
 
     override fun editMood(mood: Mood) {
-        MainScope().launch {
-            historyView.gotoEditMood(mood.id)
-        }
+        historyView.gotoEditMood(mood.id)
     }
 
     override fun updateMood(mood: Mood) {
         MainScope().launch{
             AppManager.updateMood(mood.id, mood)
+            var moods = ArrayList<Mood>(AppManager.getMoods().values)
+            historyView.refreshMoods(moods)
         }
     }
 

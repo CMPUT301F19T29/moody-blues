@@ -73,16 +73,21 @@ open class DbManager {
                 .get().await()
         var moodMap = HashMap<String, Mood>()
         for (doc in moods){
-            moodMap[doc.id] = doc.toObject(Mood::class.java)
+            var mood = doc.toObject(Mood::class.java)
+            mood.id = doc.id
+            moodMap[doc.id] = mood
         }
         return moodMap
     }
 
     suspend fun getMood(id: String, email: String): Mood? {
         val db = FirebaseFirestore.getInstance()
-        return db.collection("users").document(email)
+        var snapshot = db.collection("users").document(email)
                 .collection("moods").document(id)
-                .get().await().toObject(Mood::class.java)
+                .get().await()
+        var mood = snapshot.toObject(Mood::class.java)!!
+        mood.id = snapshot.id
+        return mood
     }
 
     suspend fun getMoods(email: String): HashMap<String, Mood> {
@@ -94,7 +99,9 @@ open class DbManager {
                 .await()
         var moodMap = HashMap<String, Mood>()
         for (doc in moodSnapshot){
-            moodMap[doc.id] = doc.toObject(Mood::class.java)
+            var mood = doc.toObject(Mood::class.java)
+            mood.id = doc.id
+            moodMap[doc.id] = mood
         }
         return moodMap
     }

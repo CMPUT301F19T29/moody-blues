@@ -84,6 +84,7 @@ object AppManager : DbManager(){ // todo: inherit from DbManager
         }
         else{
             var id = addMood(mood, this.user!!.id)
+            mood.id = id
             this.userMoods[id] = mood
             id
         }

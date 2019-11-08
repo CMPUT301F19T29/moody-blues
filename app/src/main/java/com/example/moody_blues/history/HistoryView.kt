@@ -125,7 +125,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         moodAdapter.refresh(moods)
     }
 
-    override suspend fun gotoEditMood(id: String) {
+    override fun gotoEditMood(id: String) {
             val mood: Mood? = AppManager.getMood(id)
             val intent = Intent(this, MoodView::class.java)
             intent.putExtra(FLAG, "edit")
