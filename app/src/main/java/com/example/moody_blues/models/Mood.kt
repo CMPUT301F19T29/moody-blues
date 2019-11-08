@@ -1,5 +1,6 @@
 package com.example.moody_blues.models
 
+import android.graphics.Color
 import android.location.Location
 import android.media.Image
 import java.io.Serializable
@@ -9,13 +10,14 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Mood(
     private var date: LocalDateTime? = null,
     private var reason_text: String? = null,
     private var reason_image: Image? = null,
-    private var social: String? = null,
-    private var emotion: String? = null,
+    private var social: Int? = null,
+    private var emotion: Int? = null,
     private var location: String? = null // todo: revert back to Location
 ) : Serializable {
 
@@ -42,11 +44,23 @@ class Mood(
     }
 
     fun getSocial(): String? {
-        return this.social
+        return SOCIAL_REASONS[this.getSocialID()]
+    }
+
+    fun getSocialID(): Int {
+        return this.social?: 0
     }
 
     fun getEmotion(): String? {
-        return this.emotion
+        return EMOTION_STATES[this.getEmotionID()]
+    }
+
+    fun getColor(): Int? {
+        return EMOTION_COLORS[this.getEmotionID()]
+    }
+
+    fun getEmotionID(): Int {
+        return this.emotion?: 0
     }
 
     fun getLocation(): String? {
@@ -65,16 +79,37 @@ class Mood(
         this.reason_image = reason_image
     }
 
-    fun setSocial(social: String?) {
+    fun setSocial(social: Int?) {
         this.social = social
     }
 
-    fun setEmotion(emotion: String?) {
+    fun setEmotion(emotion: Int?) {
         this.emotion = emotion
     }
 
     fun setLocation(location: String?) {
         this.location = location
+    }
+
+    private class Emotion(
+            var text: String,
+            var color: Int
+    )
+
+    companion object {
+//        private val emotions: ArrayList<Emotion> = ArrayList()
+        val EMOTION_STATES: Array<String> = arrayOf("\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
+        val EMOTION_COLORS: Array<Int> = arrayOf(Color.GREEN, Color.parseColor("#33FFF4"), Color.YELLOW, Color.parseColor("#FF6D66"), Color.LTGRAY, Color.parseColor("#FE9DFF"))
+        val SOCIAL_REASONS: Array<String> = arrayOf("None", "Alone", "With one other person", "With two to several people", "With a group")
+
+        init {
+//            emotions.add(Emotion("\uD83D\uDE0E Happy", Color.GREEN))
+//            emotions.add(Emotion("\uD83D\uDE20 Upset", Color.parseColor("#33FFF4")))
+//            emotions.add(Emotion("\uD83D\uDE06 Excited", Color.YELLOW))
+//            emotions.add(Emotion("\uD83D\uDE24 Agitated", Color.parseColor("#FF6D66")))
+//            emotions.add(Emotion("\uD83D\uDE10 Bored", Color.LTGRAY))
+//            emotions.add(Emotion("\uD83E\uDD14 Uncertain", Color.parseColor("#FE9DFF")))
+        }
     }
 
 }
