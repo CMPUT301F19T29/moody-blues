@@ -81,11 +81,4 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
         }
     }
 
-    override fun refreshMoods(emotion: String) {
-        historyView.refreshMoods(AppManager.getFilteredUserMoods(emotion))
-    }
-
-    override fun refreshMoods() {
-        historyView.refreshMoods(AppManager.getUserMoods())
-    }
 }
