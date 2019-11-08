@@ -5,9 +5,13 @@ import com.example.moody_blues.BaseView
 interface DashboardContract {
     interface View : BaseView<Presenter> {
         fun gotoHistory()
+        fun gotoFeed()
+        fun gotoRequests()
     }
 
     interface Presenter : BasePresenter {
         fun gotoHistory()
+        fun gotoFeed()
+        fun gotoRequests()
     }
 }

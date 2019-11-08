@@ -22,4 +22,8 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
         // validate with firestore, then:
         loginView.gotoDashboard()
     }
+
+    override fun signup() {
+        loginView.gotoSignUp()
+    }
 }

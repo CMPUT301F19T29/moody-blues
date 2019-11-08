@@ -18,4 +18,12 @@ class DashboardPresenter(val dashboardView: DashboardContract.View) : DashboardC
     override fun gotoHistory() {
         dashboardView.gotoHistory()
     }
+
+    override fun gotoFeed() {
+        dashboardView.gotoFeed()
+    }
+
+    override fun gotoRequests() {
+        dashboardView.gotoRequests()
+    }
 }
