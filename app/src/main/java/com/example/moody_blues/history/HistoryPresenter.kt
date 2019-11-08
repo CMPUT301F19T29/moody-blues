@@ -4,6 +4,10 @@ import android.location.Location
 import android.util.Log
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.models.Mood
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -26,7 +30,11 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     }
 
     override fun fetchMoods(): ArrayList<Mood> {
-        return AppManager.getUserMoods()
+        return runBlocking {
+            var moods = AppManager.getMoods().values
+            moods.sortedByDescending { mood -> mood.getDate() }
+            ArrayList<Mood>(moods)
+        }
     }
 
     override fun createMood(location: Location?) {
@@ -35,20 +43,29 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     }
 
     override fun addMood(mood: Mood) {
-        AppManager.addUserMood(mood)
-        historyView.refreshMoods(AppManager.getUserMoods())
+        GlobalScope.launch{
+            AppManager.addMood(mood)
+            var moods = ArrayList<Mood>(AppManager.getMoods().values)
+            historyView.refreshMoods(moods)
+        }
     }
 
-    override fun editMood(pos: Int) {
-        historyView.gotoEditMood(pos)
+    override fun editMood(mood: Mood) {
+        GlobalScope.launch {
+            historyView.gotoEditMood(mood.id)
+        }
     }
 
-    override fun updateMood(mood: Mood, pos: Int) {
-        AppManager.updateMood(mood, pos)
+    override fun updateMood(mood: Mood) {
+        GlobalScope.launch {
+            AppManager.updateMood(mood.id, mood)
+        }
     }
 
     override fun deleteMood(mood: Mood) {
-        AppManager.deleteMood(mood)
+        GlobalScope.launch {
+            AppManager.deleteMood(mood.id)
+        }
     }
 
     override fun refreshMoods(emotion: String) {

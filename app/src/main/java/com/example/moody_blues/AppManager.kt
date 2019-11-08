@@ -1,49 +1,79 @@
 package com.example.moody_blues
 
-import android.util.Log
 import com.example.moody_blues.models.Mood
+import com.google.firebase.auth.AuthResult
 
-object AppManager { // todo: inherit from DbManager
-    private var userMoods: ArrayList<Mood> = ArrayList()
-    private var username: String = ""
+object AppManager : DbManager(){ // todo: inherit from DbManager
+    private var userMoods: HashMap<String, Mood> = HashMap<String, Mood>()
+    private var userEmail: String = ""
 
-
-    fun updateUserMoods() {
+    suspend fun updateUserMoods() {
         this.userMoods.clear()
+        if (this.userEmail != ""){
+            userMoods = getMoods(userEmail)
+        }
     }
 
-    fun getFilteredUserMoods(emotion: String, username: String = this.username): ArrayList<Mood> {
-        val moods: ArrayList<Mood> = getUserMoods(username)
-        return moods.filter { mood -> mood.getEmotion() == emotion } as ArrayList<Mood>
+    override suspend fun signIn(email: String, password: String): AuthResult? {
+        var authResult = super.signIn(email, password)
+        return if (authResult != null && authResult.user != null){
+            updateUserMoods()
+            authResult
+        }
+        else{
+            authResult
+        }
     }
 
-    fun getUserMoods(username: String = this.username): ArrayList<Mood> {
-        userMoods.sortByDescending { it.getDate() }
-        return this.userMoods
+    override suspend fun createUser(email: String, password: String, username: String): AuthResult? {
+        var authResult = super.createUser(email, password, username)
+        return if (authResult != null && authResult.user != null){
+            this.userEmail = authResult.user!!.email.toString()
+            updateUserMoods()
+            authResult
+        }
+        else{
+            authResult
+        }
     }
 
-    fun addUserMood(mood: Mood, username: String = this.username) {
-        this.userMoods.add(mood)
+    override suspend fun deleteCurrentUser(): Void? {
+        this.userEmail = ""
+        this.userMoods.clear()
+        return super.deleteCurrentUser()
     }
 
-    fun updateMood(mood: Mood, pos: Int) {
-        this.userMoods[pos] = mood
+    override fun signOut() {
+        this.userEmail = ""
+        this.userMoods.clear()
+        super.signOut()
     }
 
-    fun deleteMood(mood: Mood) {
-        this.userMoods.remove(mood)
+    suspend fun getFilteredUserMoods(emotion: String): Map<String, Mood> {
+        return this.userMoods.filter { entry-> entry.value.getEmotion() == emotion }
     }
 
-    fun getUsername(): String {
-        return this.username
+    fun getMood(id: String) : Mood? {
+        return this.userMoods[id]
     }
 
-    fun setUsername(username: String) {
-        this.username = username
+    fun getMoods(): HashMap<String, Mood> {
+        return userMoods
     }
 
-    // mock get mood method placeholder
-    fun getMood(pos: Int): Mood {
-        return userMoods[pos]
+    suspend fun addMood(mood: Mood): String {
+        var id = addMood(mood,this.userEmail)
+        this.userMoods[id] = mood
+        return id
+    }
+
+    suspend fun deleteMood(id: String){
+        this.userMoods.remove(id)
+        deleteMood(id, this.userEmail)
+    }
+
+    suspend fun updateMood(id: String, mood: Mood){
+        this.userMoods[id] = mood
+        updateMood(id, mood, this.userEmail)
     }
 }

@@ -1,78 +1,106 @@
 package com.example.moody_blues
 
-import android.content.ContentValues.TAG
-import android.util.Log
-import androidx.core.app.ActivityCompat.startActivityForResult
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.User
-import com.firebase.ui.auth.AuthUI
-import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 
 // TODO: Put in everything but dashboard
-class DbManager() {
-    private val db : FirebaseFirestore
-    private val auth : FirebaseAuth
-    init{
-        // Access a Cloud Firestore instance from your Activity
-        db = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance()
-    }
+open class DbManager {
+    private val auth : FirebaseAuth = FirebaseAuth.getInstance()
+    private var userMoods : ArrayList<Mood> = ArrayList()
 
     // This is based on the following source:
     // https://firebase.google.com/docs/auth/android/firebaseui
-    suspend fun signIn(username: String, password: String){
-
+    open suspend fun signIn(email: String, password: String): AuthResult? {
+        var authResult = auth.signInWithEmailAndPassword(email,password).await()
+        return authResult
     }
 
-    fun signOut(){
-//        auth.getInstance.signOut()
+    open suspend fun createUser(email: String, password: String, username: String): AuthResult? {
+        val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+        if (authResult.user != null){
+//            sendEmailVerification()
+            val db = FirebaseFirestore.getInstance()
+            var user = User(username)
+            db.collection("users").document(email)
+                    .set(user)
+        }
+        return authResult
     }
 
-    suspend fun getSignedInUsername(){
-//        return auth.currentUser.displayName
+    open suspend fun deleteCurrentUser(): Void? {
+        return auth.currentUser?.delete()?.await()
     }
 
-//    suspend fun addUser(user: User): Void? {
-//            return db.collection("users").document(user.username)
-//                    .set(user)
-//                    .await()
-//    }
-
-    suspend fun getUser(username: String, onSuccess: (User?) -> Void, onFailure: (Exception) -> Void): User? {
-        val document = db.collection("users").document(username)
-                .get()
-                .await()
-        return document.toObject(User::class.java)
+    fun sendEmailVerification(){
+        auth.currentUser?.sendEmailVerification()
     }
 
-    suspend fun removeUser(username: String, onSuccess: () -> Void, onFailure: (Exception) -> Void): Void? {
-        return db.collection("users").document(username)
-                .delete()
-                .await()
+    fun getSignedInUserEmail(): String? {
+        return auth.currentUser?.email
     }
 
-    suspend fun addMood(username: String, mood: Mood): String {
-        val documentReference = db.collection("users").document(username).collection("moods")
+    open fun signOut(){
+        auth.signOut()
+    }
+
+    protected suspend fun addMood(mood: Mood, email: String): String {
+        val db = FirebaseFirestore.getInstance()
+        val documentReference = db.collection("users")
+                .document(email).collection("moods")
                 .add(mood)
                 .await()
         return documentReference.id
     }
 
-    suspend fun getMoods(username: String): QuerySnapshot? {
-        return db.collection("users").document(username).collection("moods")
-                .get()
-                .await()
+    suspend fun getFilteredMood(emotion: String, email: String): HashMap<String, Mood> {
+        var moods = FirebaseFirestore.getInstance().collection("users").document(email)
+                .collection("moods").whereEqualTo("emotion", emotion)
+                .get().await()
+        var moodMap = HashMap<String, Mood>()
+        for (doc in moods){
+            moodMap[doc.id] = doc.toObject(Mood::class.java)
+        }
+        return moodMap
     }
 
-    suspend fun removeMood(username: String, documentId: String): Void? {
-        return db.collection("users").document(documentId)
+    suspend fun getMood(id: String, email: String): Mood? {
+        val db = FirebaseFirestore.getInstance()
+        return db.collection("users").document(email)
+                .collection("moods").document(id)
+                .get().await().toObject(Mood::class.java)
+    }
+
+    suspend fun getMoods(email: String): HashMap<String, Mood> {
+        val db = FirebaseFirestore.getInstance()
+
+        val moodSnapshot = db.collection("users")
+                .document(email).collection("moods")
+                .get()
+                .await()
+        var moodMap = HashMap<String, Mood>()
+        for (doc in moodSnapshot){
+            moodMap[doc.id] = doc.toObject(Mood::class.java)
+        }
+        return moodMap
+    }
+
+    protected suspend fun deleteMood(documentId: String, email: String): Void? {
+        val db = FirebaseFirestore.getInstance()
+        return db.collection("users").document(email)
+                .collection("moods").document(documentId)
                 .delete()
                 .await()
     }
 
+    protected suspend fun updateMood(documentId: String, mood: Mood, email: String): Void? {
+        val db = FirebaseFirestore.getInstance()
+        return db.collection("users").document(email)
+                .collection("moods").document(documentId)
+                .set(mood)
+                .await()
+    }
 }

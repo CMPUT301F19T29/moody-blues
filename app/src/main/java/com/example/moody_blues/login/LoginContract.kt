@@ -6,6 +6,7 @@ interface LoginContract {
     interface View : BaseView<Presenter> {
         fun gotoDashboard()
         fun gotoSignUp()
+//        fun clear()
     }
 
     interface Presenter : BasePresenter {

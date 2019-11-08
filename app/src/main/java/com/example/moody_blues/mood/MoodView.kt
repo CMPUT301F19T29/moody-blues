@@ -1,11 +1,9 @@
 package com.example.moody_blues.mood
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -13,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_MOOD
-import com.example.moody_blues.map.MapView
 import com.example.moody_blues.models.Mood
 
 class MoodView : AppCompatActivity(), MoodContract.View {
@@ -120,7 +117,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             returnIntent.putExtra(INTENT_MOOD_RESULT, mood)
 
             if (flag == "edit") {
-                val pos =intent.getIntExtra(HistoryView.INTENT_EDIT_POS, -1)
+                val pos =intent.getIntExtra(HistoryView.INTENT_EDIT_ID, -1)
                 returnIntent.putExtra(INTENT_POS_RESULT, pos)
             }
 

@@ -13,6 +13,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class Mood(
+    var id: String = "",
     private var date: LocalDateTime? = null,
     private var reason_text: String? = null,
     private var reason_image: Image? = null,
