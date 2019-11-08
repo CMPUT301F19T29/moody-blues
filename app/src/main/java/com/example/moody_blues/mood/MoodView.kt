@@ -2,59 +2,128 @@ package com.example.moody_blues.mood
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.*
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_MOOD
-import com.example.moody_blues.map.MapView
 import com.example.moody_blues.models.Mood
-import org.w3c.dom.Text
 
 class MoodView : AppCompatActivity(), MoodContract.View {
     override lateinit var presenter: MoodContract.Presenter
     private lateinit var mood: Mood
 
+//    var color = Color.WHITE
+    private lateinit var confirmButton: Button
+    private lateinit var dateField: TextView
+    private lateinit var emotionField: Spinner
+    private lateinit var socialField: Spinner
+    private lateinit var reasonField: TextView
+    private lateinit var locationField: Switch
+    private lateinit var locationData: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mood_view)
-        mood = this.intent.extras?.getSerializable(HistoryView.INTENT_MOOD) as Mood
-        title = "New Mood"
+        mood = this.intent.extras?.getSerializable(INTENT_MOOD) as Mood
+        val flag = this.intent.getStringExtra(HistoryView.FLAG) as String
+
+        if (flag == "add") {
+            title = "New Mood"
+        }
+        else if (flag == "edit") {
+            title = "Edit Mood"
+        }
+
+        confirmButton = findViewById(R.id.mood_save_button)
+        dateField = findViewById(R.id.mood_date_field)
+        emotionField = findViewById(R.id.mood_emotion_field)
+        socialField = findViewById(R.id.mood_social_field)
+        reasonField = findViewById(R.id.mood_reason_field)
+        locationField = findViewById(R.id.mood_location_field)
+        locationData = findViewById(R.id.mood_location_data)
+
+
+        // Emotional state spinner stuff
+
+        // TODO: For some reason some colors crash the app lol maybe find out why later (currently none of these do though)
+
+        if (emotionField != null) {
+            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.EMOTION_STATES)
+            emotionField.adapter = arrayAdapter
+
+            emotionField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View,
+                    position: Int,
+                    id: Long
+                ) {
+                    Mood.EMOTION_STATES[position]
+                    val color = Mood.EMOTION_COLORS[position]
+                    findViewById<View>(android.R.id.content).setBackgroundColor(color)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Code to perform some action when nothing is selected
+                }
+            }
+        }
+
+        // Social spinner stuff
+
+        if (socialField != null) {
+            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.SOCIAL_REASONS)
+            socialField.adapter = arrayAdapter
+
+            socialField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                    Mood.SOCIAL_REASONS[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Code to perform some action when nothing is selected
+                }
+            }
+        }
 
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
 
-        val mood = intent.getSerializableExtra(INTENT_MOOD) as Mood
-        // make buttons for mood
-        val confirmButton: Button = findViewById(R.id.mood_save_button)
-
-        // value fields
-        val dateField: TextView = findViewById(R.id.mood_date_field)
-        val emotionField: TextView = findViewById(R.id.mood_emotion_field)
-        val socialField: TextView = findViewById(R.id.mood_social_field)
-        val reasonField: TextView = findViewById(R.id.mood_reason_field)
-        val locationField: TextView = findViewById(R.id.mood_location_field)
-
-        dateField.text = mood.getDate()
-        emotionField.text = mood.getEmotion()
-        socialField.text = mood.getSocial()
+        emotionField.setSelection(mood.emotion?: 0)
+        socialField.setSelection(mood.social?: 0)
+        dateField.text = mood.getDateString()
         reasonField.text = mood.getReasonText()
-        //locationField.text = mood.getLocation()
+        locationData.text = mood.location
+        locationField.setChecked(mood.showLocation)
 
         // confirm button
         confirmButton.setOnClickListener {
-            mood.setDate(dateField.text.toString())
-            mood.setEmotion(emotionField.text.toString())
-            mood.setSocial(socialField.text.toString())
+            if (!verifyMood()) {
+                Toast.makeText(applicationContext, "Invalid input", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            mood.emotion = emotionField.selectedItemPosition
+            mood.social = socialField.selectedItemPosition
             mood.setReasonText(reasonField.text.toString())
-            mood.setLocation(locationField.text.toString())
+            mood.showLocation = locationField.isChecked
 
-            val intent = Intent()
-            intent.putExtra(INTENT_MOOD_RESULT, mood)
-            setResult(RESULT_OK, intent)
+            val returnIntent = Intent()
+            returnIntent.putExtra(INTENT_MOOD_RESULT, mood)
 
-            presenter.confirmMood()
+            if (flag == "edit") {
+                val pos =intent.getIntExtra(HistoryView.INTENT_EDIT_ID, -1)
+                returnIntent.putExtra(INTENT_POS_RESULT, pos)
+            }
+
+            setResult(RESULT_OK, returnIntent)
+
+            presenter.confirmMood(mood)
         }
     }
 
@@ -62,8 +131,20 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         finish()
     }
 
+    private fun verifyMood(): Boolean {
+//        if (emotionField.selectedItem.toString().isEmpty())
+//            return false
+        if (reasonField.text.length > 20)
+            return false
+        if (reasonField.text.split(" ").size > 3)
+            return false
+
+        return true
+    }
+
     companion object {
         const val INTENT_MOOD_RESULT = "mood_result"
+        const val INTENT_POS_RESULT = "edit_pos"
     }
 
 //    override fun gotoMap() {

@@ -10,6 +10,8 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.example.moody_blues.dashboard.DashboardView
 import com.example.moody_blues.login.LoginView
+import com.example.moody_blues.signup.SignupView
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
@@ -22,6 +24,7 @@ class LoginViewTest {
     @get:Rule
     val intentsTestRule = IntentsTestRule(LoginView::class.java)
 
+    @Ignore
     @Test
     fun testSubmit() {
         // Click the button
@@ -34,7 +37,8 @@ class LoginViewTest {
 
     @Test
     fun testSignUp() {
-        // TODO: Write with SignUp
+        onView(withId(R.id.login_signup_button)).perform(click())
+        intended(hasComponent(SignupView::class.java.name))
     }
 
 }

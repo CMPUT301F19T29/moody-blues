@@ -9,12 +9,11 @@ import org.mockito.Mockito.mock
 class LoginPresenterTest {
 
     @Test
-    fun testsLogin() {
+    fun testsSignup() {
         val mockView = mock(LoginContract.View::class.java)
         val presenter = LoginPresenter(mockView)
-
-        presenter.login("User", "pass")
-        Mockito.verify(mockView).gotoDashboard()
+        presenter.signup()
+        Mockito.verify(mockView).gotoSignUp()
     }
 
 }

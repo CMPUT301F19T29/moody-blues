@@ -15,4 +15,8 @@ class SignupPresenter(val signupView: SignupContract.View) : SignupContract.Pres
 
     override fun start() {
     }
+
+    override fun confirmSignup() {
+        signupView.backtoLogin()
+    }
 }

@@ -2,6 +2,7 @@ package com.example.moody_blues.signup
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
 import com.example.moody_blues.map.SignupPresenter
@@ -18,7 +19,17 @@ class SignupView : AppCompatActivity(), SignupContract.View {
         presenter = SignupPresenter(this)
 
         // Do stuff with the presenter
+        val confirm: Button = findViewById(R.id.signup_confirm_button)
 
+        confirm.setOnClickListener {
+            presenter.confirmSignup()
+        }
+    }
+
+    override fun backtoLogin() {
+        // send username and password to database
+        // other databasey stuff
+        finish()
     }
 }
 

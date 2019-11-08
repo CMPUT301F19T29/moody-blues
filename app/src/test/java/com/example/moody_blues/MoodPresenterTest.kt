@@ -1,20 +1,16 @@
 package com.example.moody_blues
 
-import com.example.moody_blues.login.LoginContract
-import com.example.moody_blues.login.LoginPresenter
+import com.example.moody_blues.mood.MoodContract
+import com.example.moody_blues.mood.MoodPresenter
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
 
 class MoodPresenterTest {
 
     @Test
     fun testsLogin() {
-        val mockView = mock(LoginContract.View::class.java)
-        val presenter = LoginPresenter(mockView)
-
-        presenter.login("User", "pass")
-        Mockito.verify(mockView).gotoDashboard()
+        val mockView = mock(MoodContract.View::class.java)
+        val presenter = MoodPresenter(mockView)
     }
 
 }
