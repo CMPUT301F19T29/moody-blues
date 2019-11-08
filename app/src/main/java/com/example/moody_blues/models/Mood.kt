@@ -50,24 +50,24 @@ class Mood(
         return this.reason_image
     }
 
-    fun getSocial(): String {
-        return SOCIAL_REASONS[this.getSocialID()]
-    }
-
-    fun getSocialID(): Int {
+    fun getSocial(): Int {
         return this.social?: 0
     }
 
-    fun getEmotion(): String {
-        return EMOTION_STATES[this.getEmotionID()]
+    fun getSocialString(): String {
+        return SOCIAL_REASONS[this.getSocial()]
+    }
+
+    fun getEmotion(): Int {
+        return this.emotion?: 0
+    }
+
+    fun getEmotionString(): String {
+        return EMOTION_STATES[this.getEmotion()]
     }
 
     fun getColor(): Int {
-        return EMOTION_COLORS[this.getEmotionID()]
-    }
-
-    fun getEmotionID(): Int {
-        return this.emotion?: 0
+        return EMOTION_COLORS[this.getEmotion()]
     }
 
     fun getLocation(): String? {

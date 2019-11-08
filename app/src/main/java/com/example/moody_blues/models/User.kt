@@ -1,4 +1,6 @@
 package com.example.moody_blues.models
 
+import java.io.Serializable
+
 // id is email
-class User(val id: String, val username: String) { }
+data class User(val id: String = "", val username: String = "") { }

@@ -24,7 +24,7 @@ object AppManager : DbManager(){ // todo: inherit from DbManager
     override suspend fun signIn(email: String, password: String): AuthResult? {
         var authResult = super.signIn(email, password)
         return if (authResult == null || authResult.user == null){
-            authResult
+            null
         }
         else{
             this.user = getUser(email)
@@ -67,7 +67,7 @@ object AppManager : DbManager(){ // todo: inherit from DbManager
     }
 
     fun getFilteredUserMoods(emotion: String): Map<String, Mood> {
-        return this.userMoods.filter { entry-> entry.value.getEmotion() == emotion }
+        return this.userMoods.filter { entry-> entry.value.getEmotionString() == emotion }
     }
 
     fun getMood(id: String) : Mood? {

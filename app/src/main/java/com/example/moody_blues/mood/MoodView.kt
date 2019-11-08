@@ -94,8 +94,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
 
-        emotionField.setSelection(mood.getEmotionID())
-        socialField.setSelection(mood.getSocialID())
+        emotionField.setSelection(mood.getEmotion())
+        socialField.setSelection(mood.getSocial())
         dateField.text = mood.getDateString()
         reasonField.text = mood.getReasonText()
         locationData.text = mood.getLocation()
