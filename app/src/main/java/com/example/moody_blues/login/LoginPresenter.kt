@@ -7,6 +7,9 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
+/**
+ * The presenter for the login activity
+ */
 class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presenter {
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -23,6 +26,11 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
     override fun start() {
     }
 
+    /**
+     * Attempt to log the user in
+     * @param user The attempted username / email
+     * @param pass The attempted password
+     */
     override fun login(user: String, pass: String) {
         MainScope().launch {
 
@@ -42,6 +50,9 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
         }
     }
 
+    /**
+     * Tell the view to go to the sign up activity
+     */
     override fun signup() {
         loginView.gotoSignUp()
     }

@@ -11,6 +11,9 @@ import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
 
+/**
+ * An adapter class for a mood row
+ */
 class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener: (Mood, Int) -> Unit, private val longListener: (Mood, Int) -> Boolean) : RecyclerView.Adapter<MoodAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,11 +36,18 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
 
     override fun getItemCount() = moods.size
 
+    /**
+     * Replace the list of moods
+     * @param moods The new list of mooods
+     */
     fun refresh(moods: ArrayList<Mood>) {
         this.moods = moods
         notifyDataSetChanged()
     }
 
+    /**
+     * A class representing a view holder for the mood adapter
+     */
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val date: TextView = itemView.findViewById(R.id.row_mood_date)
         val emotion: TextView = itemView.findViewById(R.id.row_mood_emotion)
