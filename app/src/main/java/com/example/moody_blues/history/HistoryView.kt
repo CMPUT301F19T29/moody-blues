@@ -38,19 +38,19 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         filterField = findViewById(R.id.filter_moods)
 
         val filters = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
-        if (filterField != null) {
-            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filters)
-            filterField.adapter = arrayAdapter
-//            filterPosition = arrayAdapter.getPosition(mood.getFilter())
-
-            filterField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    filters[position]
+        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filters)
+        filterField.adapter = arrayAdapter
+        filterField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                if(filters[position] != "❌ No filter") {
+                    presenter.refreshMoods(filters[position])
+                } else {
+                    presenter.refreshMoods()
                 }
+            }
 
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Code to perform some action when nothing is selected
-                }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
             }
         }
 
@@ -95,8 +95,14 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GET_MOOD_CODE && resultCode == RESULT_OK) {
+            val filters = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
             val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
             presenter.addMood(mood)
+            if(filterField.getSelectedItemPosition() != 0) {
+                presenter.refreshMoods(filters[filterField.getSelectedItemPosition()])
+            } else {
+                presenter.refreshMoods()
+            }
         }
 
         if (requestCode == GET_EDITED_MOOD_CODE && resultCode == RESULT_OK) {

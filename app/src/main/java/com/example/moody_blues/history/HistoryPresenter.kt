@@ -21,6 +21,10 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     override fun start() {
     }
 
+    override fun fetchMoods(emotion: String): ArrayList<Mood> {
+        return AppManager.getFilteredUserMoods(emotion)
+    }
+
     override fun fetchMoods(): ArrayList<Mood> {
         return AppManager.getUserMoods()
     }
@@ -45,5 +49,13 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
 
     override fun deleteMood(mood: Mood) {
         AppManager.deleteMood(mood)
+    }
+
+    override fun refreshMoods(emotion: String) {
+        historyView.refreshMoods(AppManager.getFilteredUserMoods(emotion))
+    }
+
+    override fun refreshMoods() {
+        historyView.refreshMoods(AppManager.getUserMoods())
     }
 }

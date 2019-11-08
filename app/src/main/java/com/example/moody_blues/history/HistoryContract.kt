@@ -12,11 +12,14 @@ interface HistoryContract {
     }
 
     interface Presenter : BasePresenter {
+        fun fetchMoods(emotion: String): ArrayList<Mood>
         fun fetchMoods(): ArrayList<Mood>
         fun createMood(location: Location?)
         fun addMood(mood: Mood)
         fun editMood(pos: Int)
         fun updateMood(mood: Mood, pos: Int)
         fun deleteMood(mood: Mood)
+        fun refreshMoods(emotion: String)
+        fun refreshMoods()
     }
 }
