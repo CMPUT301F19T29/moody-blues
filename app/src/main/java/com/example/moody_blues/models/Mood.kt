@@ -22,7 +22,6 @@ class Mood(
     var showLocation: Boolean = true,
     var id: String = ""
 ): Serializable {
-
     constructor(location: String?) : this() {
         this.date = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
                 .format(LocalDateTime.now())

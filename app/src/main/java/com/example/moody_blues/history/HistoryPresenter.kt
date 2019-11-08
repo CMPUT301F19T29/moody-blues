@@ -26,7 +26,6 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
         var moods : Collection<Mood> = AppManager.getFilteredUserMoods(emotion).values
         moods.sortedByDescending { mood -> mood.date }
         return ArrayList<Mood>(moods)
-
     }
 
     override fun fetchMoods(): ArrayList<Mood> {
@@ -80,5 +79,13 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
             var moods = AppManager.getMoods().values.sortedByDescending { mood -> mood.date }
             historyView.refreshMoods(ArrayList<Mood>(moods))
         }
+    }
+
+    override fun refreshMoods(emotion: String) {
+        historyView.refreshMoods(AppManager.getFilteredUserMoods(emotion))
+    }
+
+    override fun refreshMoods() {
+        historyView.refreshMoods(AppManager.getUserMoods())
     }
 }
