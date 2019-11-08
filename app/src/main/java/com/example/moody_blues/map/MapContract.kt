@@ -10,6 +10,9 @@ interface MapContract {
      * The map view
      */
     interface View : BaseView<Presenter> {
+        /**
+         * Transition to the mood page
+         */
         fun gotoMood()
     }
 
@@ -17,6 +20,9 @@ interface MapContract {
      * The login prsenter
      */
     interface Presenter : BasePresenter {
+        /**
+         * Select the location to be used in the mood
+         */
         fun selectLocation()
     }
 }

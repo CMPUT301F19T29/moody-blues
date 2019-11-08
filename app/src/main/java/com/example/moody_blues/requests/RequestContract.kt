@@ -10,6 +10,9 @@ interface RequestContract {
      * The request view
      */
     interface View : BaseView<Presenter> {
+        /**
+         * Open a popup to select a user to follow
+         */
         fun gotoFollowUser()
     }
 
@@ -17,6 +20,10 @@ interface RequestContract {
      * The request prsenter
      */
     interface Presenter : BasePresenter {
+        /**
+         * Request to follow the specified uesr
+         * @param user The user to follow
+         */
         fun requestFollow(user: String)
     }
 }

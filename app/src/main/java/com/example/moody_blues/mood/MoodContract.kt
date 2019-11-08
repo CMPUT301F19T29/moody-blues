@@ -11,6 +11,9 @@ interface MoodContract {
      * The mood view
      */
     interface View : BaseView<Presenter> {
+        /**
+         * Transition back to the history activity
+         */
         fun backtoHistory()
 //        fun gotoMap()
     }
@@ -19,6 +22,9 @@ interface MoodContract {
      * The mood prsenter
      */
     interface Presenter : BasePresenter {
+        /**
+         * Confirm adding or editing a mood
+         */
         fun confirmMood(mood: Mood)
     }
 }
