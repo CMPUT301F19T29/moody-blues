@@ -19,6 +19,7 @@ import com.example.moody_blues.models.Mood
 class MoodView : AppCompatActivity(), MoodContract.View {
     override lateinit var presenter: MoodContract.Presenter
     private lateinit var mood: Mood
+
 //    var color = Color.WHITE
     private lateinit var confirmButton: Button
     private lateinit var dateField: TextView
@@ -93,7 +94,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
-
+        mood = intent.getSerializableExtra(INTENT_MOOD) as Mood
 
         emotionField.setSelection(emotionPosition)
         socialField.setSelection(socialPosition)
