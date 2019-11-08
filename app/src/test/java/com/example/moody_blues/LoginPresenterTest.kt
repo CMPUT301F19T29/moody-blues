@@ -6,7 +6,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 
-class SignupPresentertest {
+class LoginPresenterTest {
 
     @Test
     fun testsLogin() {

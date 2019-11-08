@@ -9,6 +9,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasFlag
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.example.moody_blues.dashboard.DashboardView
+import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.login.LoginView
 import org.junit.Rule
 import org.junit.Test
@@ -20,21 +21,16 @@ import org.junit.Test
  */
 class HistoryViewTest {
     @get:Rule
-    val intentsTestRule = IntentsTestRule(LoginView::class.java)
+    val intentsTestRule = IntentsTestRule(HistoryView::class.java)
 
     @Test
-    fun testSubmit() {
+    fun addMood() {
         // Click the button
         onView(withId(R.id.login_submit_button)).perform(click())
         // Ensure
         intended(hasFlag(Intent.FLAG_ACTIVITY_NEW_TASK))
         // Goes to dashboard
         intended(hasComponent(DashboardView::class.java.name))
-    }
-
-    @Test
-    fun testSignUp() {
-        // TODO: Write with SignUp
     }
 
 }
