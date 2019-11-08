@@ -2,19 +2,26 @@ package com.example.moody_blues.mood
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_MOOD
 import com.example.moody_blues.map.MapView
 import com.example.moody_blues.models.Mood
-import org.w3c.dom.Text
 
 class MoodView : AppCompatActivity(), MoodContract.View {
     override lateinit var presenter: MoodContract.Presenter
     private lateinit var mood: Mood
+    private lateinit var confirmButton: Button
+    private lateinit var dateField: TextView
+    private lateinit var emotionField: TextView
+    private lateinit var socialField: TextView
+    private lateinit var reasonField: TextView
+    private lateinit var locationField: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,17 +31,14 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
+        mood = intent.getSerializableExtra(INTENT_MOOD) as Mood
 
-        val mood = intent.getSerializableExtra(INTENT_MOOD) as Mood
-        // make buttons for mood
-        val confirmButton: Button = findViewById(R.id.mood_save_button)
-
-        // value fields
-        val dateField: TextView = findViewById(R.id.mood_date_field)
-        val emotionField: TextView = findViewById(R.id.mood_emotion_field)
-        val socialField: TextView = findViewById(R.id.mood_social_field)
-        val reasonField: TextView = findViewById(R.id.mood_reason_field)
-//        val locationField: TextView = findViewById(R.id.mood_location_field)
+        confirmButton = findViewById(R.id.mood_save_button)
+        dateField = findViewById(R.id.mood_date_field)
+        emotionField = findViewById(R.id.mood_emotion_field)
+        socialField = findViewById(R.id.mood_social_field)
+        reasonField = findViewById(R.id.mood_reason_field)
+        locationField = findViewById(R.id.mood_location_field)
 
         dateField.text = mood.getDateString()
         emotionField.text = mood.getEmotion()
@@ -44,6 +48,11 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // confirm button
         confirmButton.setOnClickListener {
+            if (!verifyMood()) {
+                Toast.makeText(applicationContext, "Invalid input", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             mood.setEmotion(emotionField.text.toString())
             mood.setSocial(socialField.text.toString())
             mood.setReasonText(reasonField.text.toString())
@@ -58,6 +67,17 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
     override fun backtoHistory() {
         finish()
+    }
+
+    private fun verifyMood(): Boolean {
+        if (emotionField.text.isEmpty())
+            return false
+        if (reasonField.text.length > 20)
+            return false
+        if (reasonField.text.split(" ").size > 3)
+            return false
+
+        return true
     }
 
     companion object {
