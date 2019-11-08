@@ -26,7 +26,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
     private lateinit var emotionField: Spinner
     private lateinit var socialField: Spinner
     private lateinit var reasonField: TextView
-    private lateinit var locationField: TextView
+    private lateinit var locationField: Switch
+    private lateinit var locationData: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +48,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         socialField = findViewById(R.id.mood_social_field)
         reasonField = findViewById(R.id.mood_reason_field)
         locationField = findViewById(R.id.mood_location_field)
+        locationData = findViewById(R.id.mood_location_data)
 
 
         // Emotional state spinner stuff
@@ -99,6 +101,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         socialField.setSelection(mood.getSocialID())
         dateField.text = mood.getDateString()
         reasonField.text = mood.getReasonText()
+        locationData.text = mood.getLocation()
+        locationField.setChecked(mood.getShowLocation())
 
         // confirm button
         confirmButton.setOnClickListener {
@@ -110,6 +114,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             mood.setEmotion(emotionField.selectedItemPosition)
             mood.setSocial(socialField.selectedItemPosition)
             mood.setReasonText(reasonField.text.toString())
+            mood.setShowLocation(locationField.isChecked)
 
             val returnIntent = Intent()
             returnIntent.putExtra(INTENT_MOOD_RESULT, mood)

@@ -18,7 +18,8 @@ class Mood(
     private var reason_image: Image? = null,
     private var social: Int? = null,
     private var emotion: Int? = null,
-    private var location: String? = null // todo: revert back to Location
+    private var location: String? = null, // todo: revert back to Location
+    private var showLocation: Boolean = true
 ) : Serializable {
 
     constructor(location: String?) : this() {
@@ -67,6 +68,10 @@ class Mood(
         return this.location
     }
 
+    fun getShowLocation(): Boolean {
+        return this.showLocation
+    }
+
     fun setDate(date: LocalDateTime?) {
         this.date = date
     }
@@ -89,6 +94,10 @@ class Mood(
 
     fun setLocation(location: String?) {
         this.location = location
+    }
+
+    fun setShowLocation(showLocation: Boolean) {
+        this.showLocation = showLocation
     }
 
     private class Emotion(
