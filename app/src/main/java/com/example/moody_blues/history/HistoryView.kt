@@ -5,6 +5,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moody_blues.AppManager
@@ -21,12 +25,32 @@ import kotlinx.android.synthetic.main.history_view.*
 class HistoryView : AppCompatActivity(), HistoryContract.View {
     override lateinit var presenter: HistoryContract.Presenter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var filterField: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.history_view)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         title = "History"
+
+        filterField = findViewById(R.id.filter_moods)
+
+        val filters = arrayOf("\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
+        if (filterField != null) {
+            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filters)
+            filterField.adapter = arrayAdapter
+//            filterPosition = arrayAdapter.getPosition(mood.getFilter())
+
+            filterField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                    filters[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Code to perform some action when nothing is selected
+                }
+            }
+        }
 
         // Pass the view to the presenter
         presenter = HistoryPresenter(this)
