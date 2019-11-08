@@ -7,7 +7,9 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.example.moody_blues.dashboard.DashboardView
+import com.example.moody_blues.feed.FeedView
 import com.example.moody_blues.history.HistoryView
+import com.example.moody_blues.requests.RequestView
 import org.junit.Rule
 import org.junit.Test
 
@@ -21,11 +23,26 @@ class DashboardViewTest {
     val intentsTestRule = IntentsTestRule(DashboardView::class.java)
 
     @Test
-    fun testHistory() {
-
+    fun testHistoryLink() {
         // Click the button
         onView(withId(R.id.dashboard_history_button)).perform(click())
         // Goes to dashboard
         intended(hasComponent(HistoryView::class.java.name))
+    }
+
+    @Test
+    fun testFeedLink() {
+        // Click the button
+        onView(withId(R.id.dashboard_feed_button)).perform(click())
+        // Goes to dashboard
+        intended(hasComponent(FeedView::class.java.name))
+    }
+
+    @Test
+    fun testRequestLink() {
+        // Click the button
+        onView(withId(R.id.dashboard_requests_button)).perform(click())
+        // Goes to dashboard
+        intended(hasComponent(RequestView::class.java.name))
     }
 }
