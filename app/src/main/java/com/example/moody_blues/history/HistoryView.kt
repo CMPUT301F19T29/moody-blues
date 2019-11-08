@@ -37,7 +37,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
 
         filterField = findViewById(R.id.filter_moods)
 
-        val filters = arrayOf("\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
+        val filters = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
         if (filterField != null) {
             val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filters)
             filterField.adapter = arrayAdapter
