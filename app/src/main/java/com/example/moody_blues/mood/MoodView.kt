@@ -13,6 +13,9 @@ import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_MOOD
 import com.example.moody_blues.models.Mood
 
+/**
+ * The view for the mood activity
+ */
 class MoodView : AppCompatActivity(), MoodContract.View {
     override lateinit var presenter: MoodContract.Presenter
     private lateinit var mood: Mood
@@ -127,10 +130,17 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         }
     }
 
+    /**
+     * Transition back to the history activity
+     */
     override fun backtoHistory() {
         finish()
     }
 
+    /**
+     * Confirm the mood matches the requirements
+     * @return If all conditions are met
+     */
     private fun verifyMood(): Boolean {
 //        if (emotionField.selectedItem.toString().isEmpty())
 //            return false

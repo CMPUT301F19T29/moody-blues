@@ -5,9 +5,10 @@ import com.example.moody_blues.BaseView
 interface SignupContract {
     interface View : BaseView<Presenter> {
         fun backtoLogin()
+        fun clear()
     }
 
     interface Presenter : BasePresenter {
-        fun confirmSignup()
+        fun confirmSignup(email: String, password: String, username: String)
     }
 }
