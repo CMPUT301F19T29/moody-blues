@@ -123,7 +123,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
             setResult(RESULT_OK, returnIntent)
 
-            presenter.confirmMood()
+            presenter.confirmMood(mood)
         }
     }
 

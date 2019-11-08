@@ -33,8 +33,13 @@ class Mood(
     }
 
     fun getDateString(): String? {
-        return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
-                .format(this.date)
+        return if (this.date == null){
+            null
+        }
+        else{
+            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
+                    .format(this.date)
+        }
     }
 
     fun getReasonText(): String? {

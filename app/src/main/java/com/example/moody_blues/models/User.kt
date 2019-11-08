@@ -1,3 +1,4 @@
 package com.example.moody_blues.models
 
-class User(val username: String) { }
+// id is email
+class User(val id: String, val username: String) { }

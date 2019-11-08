@@ -10,7 +10,6 @@ import kotlinx.coroutines.tasks.await
 // TODO: Put in everything but dashboard
 open class DbManager {
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
-    private var userMoods : ArrayList<Mood> = ArrayList()
 
     // This is based on the following source:
     // https://firebase.google.com/docs/auth/android/firebaseui
@@ -24,9 +23,9 @@ open class DbManager {
         if (authResult.user != null){
 //            sendEmailVerification()
             val db = FirebaseFirestore.getInstance()
-            var user = User(username)
+            var user = User(email, username)
             db.collection("users").document(email)
-                    .set(user)
+                    .set(user).await()
         }
         return authResult
     }
@@ -39,8 +38,20 @@ open class DbManager {
         auth.currentUser?.sendEmailVerification()
     }
 
-    fun getSignedInUserEmail(): String? {
+    fun getUserEmail(): String? {
         return auth.currentUser?.email
+    }
+
+    protected suspend fun getUser(email: String): User? {
+        val db = FirebaseFirestore.getInstance()
+        if (email == null){
+            return null
+        }
+        else {
+            return db.collection("users")
+                    .document(email).get().await()
+                    .toObject(User::class.java)
+        }
     }
 
     open fun signOut(){
