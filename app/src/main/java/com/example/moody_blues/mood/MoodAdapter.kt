@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
 
-class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener: (Mood, Int) -> Unit) : RecyclerView.Adapter<MoodAdapter.ViewHolder>() {
+class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener: (Mood, Int) -> Unit, private val longListener: (Mood, Int) -> Boolean) : RecyclerView.Adapter<MoodAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_mood, parent, false)
@@ -25,6 +25,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
 
         val item: Mood = moods[position]
         holder.itemView.setOnClickListener { clickListener(item, position) }
+        holder.itemView.setOnLongClickListener { longListener(item, position) }
     }
 
     override fun getItemCount() = moods.size

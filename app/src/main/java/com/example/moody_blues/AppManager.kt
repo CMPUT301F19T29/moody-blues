@@ -30,6 +30,10 @@ object AppManager { // todo: inherit from DbManager
         this.userMoods[pos] = mood
     }
 
+    fun deleteMood(mood: Mood) {
+        this.userMoods.remove(mood)
+    }
+
     fun getUsername(): String {
         return this.username
     }

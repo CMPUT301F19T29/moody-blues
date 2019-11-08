@@ -17,5 +17,6 @@ interface HistoryContract {
         fun addMood(mood: Mood)
         fun editMood(pos: Int)
         fun updateMood(mood: Mood, pos: Int)
+        fun deleteMood(mood: Mood)
     }
 }

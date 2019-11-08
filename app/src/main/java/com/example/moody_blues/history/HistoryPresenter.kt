@@ -42,4 +42,8 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     override fun updateMood(mood: Mood, pos: Int) {
         AppManager.updateMood(mood, pos)
     }
+
+    override fun deleteMood(mood: Mood) {
+        AppManager.deleteMood(mood)
+    }
 }

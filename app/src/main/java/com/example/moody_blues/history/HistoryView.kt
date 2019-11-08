@@ -47,9 +47,11 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
             }
         }
 
-        history_list_mood.adapter = MoodAdapter(presenter.fetchMoods()) { item: Mood, pos: Int ->
-            presenter.editMood(pos)
-        }
+        history_list_mood.adapter = MoodAdapter(presenter.fetchMoods(),
+            { item: Mood, pos: Int -> presenter.editMood(pos) },
+            { item: Mood, pos: Int -> presenter.deleteMood(item)
+                history_list_mood.adapter!!.notifyDataSetChanged()
+                true })
         history_list_mood.layoutManager = LinearLayoutManager(this)
     }
 
