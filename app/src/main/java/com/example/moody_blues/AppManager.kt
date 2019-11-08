@@ -26,11 +26,20 @@ object AppManager { // todo: inherit from DbManager
         this.userMoods.add(mood)
     }
 
+    fun updateMood(mood: Mood, pos: Int) {
+        this.userMoods[pos] = mood
+    }
+
     fun getUsername(): String {
         return this.username
     }
 
     fun setUsername(username: String) {
         this.username = username
+    }
+
+    // mock get mood method placeholder
+    fun getMood(pos: Int): Mood {
+        return userMoods[pos]
     }
 }

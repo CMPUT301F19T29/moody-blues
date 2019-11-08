@@ -32,7 +32,14 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mood_view)
         mood = this.intent.extras?.getSerializable(INTENT_MOOD) as Mood
-        title = "New Mood"
+        val flag = this.intent.getStringExtra(HistoryView.FLAG) as String
+
+        if (flag == "add") {
+            title = "New Mood"
+        }
+        else if (flag == "edit") {
+            title = "Edit Mood"
+        }
 
         confirmButton = findViewById(R.id.mood_save_button)
         dateField = findViewById(R.id.mood_date_field)
@@ -47,9 +54,11 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         // Emotional state spinner stuff
 
         val emotionalStates = arrayOf("\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
+
         // TODO: For some reason some colors crash the app lol maybe find out why later (currently none of these do though)
         val colors = arrayOf(Color.GREEN, Color.parseColor("#33FFF4"), Color.YELLOW, Color.parseColor("#FF6D66"), Color.LTGRAY, Color.parseColor("#FE9DFF"))
         val emotionField = findViewById<Spinner>(R.id.mood_emotion_field)
+
         if (emotionField != null) {
             val arrayAdapter =
                 ArrayAdapter(this, android.R.layout.simple_spinner_item, emotionalStates)
@@ -95,7 +104,6 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
-        mood = intent.getSerializableExtra(INTENT_MOOD) as Mood
 
         emotionField.setSelection(emotionPosition)
         socialField.setSelection(socialPosition)
@@ -113,9 +121,15 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             mood.setSocial(socialField.selectedItem.toString())
             mood.setReasonText(reasonField.text.toString())
 
-            val intent = Intent()
-            intent.putExtra(INTENT_MOOD_RESULT, mood)
-            setResult(RESULT_OK, intent)
+            val returnIntent = Intent()
+            returnIntent.putExtra(INTENT_MOOD_RESULT, mood)
+
+            if (flag == "edit") {
+                val pos =intent.getIntExtra(HistoryView.INTENT_EDIT_POS, -1)
+                returnIntent.putExtra(INTENT_POS_RESULT, pos)
+            }
+
+            setResult(RESULT_OK, returnIntent)
 
             presenter.confirmMood()
         }
@@ -138,6 +152,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
     companion object {
         const val INTENT_MOOD_RESULT = "mood_result"
+        const val INTENT_POS_RESULT = "edit_pos"
     }
 
 //    override fun gotoMap() {
