@@ -48,22 +48,14 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         reasonField = findViewById(R.id.mood_reason_field)
         locationField = findViewById(R.id.mood_location_field)
 
-        var emotionPosition: Int = 0
-        var socialPosition: Int = 0
 
         // Emotional state spinner stuff
 
-        val emotionalStates = arrayOf("\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
-
         // TODO: For some reason some colors crash the app lol maybe find out why later (currently none of these do though)
-        val colors = arrayOf(Color.GREEN, Color.parseColor("#33FFF4"), Color.YELLOW, Color.parseColor("#FF6D66"), Color.LTGRAY, Color.parseColor("#FE9DFF"))
-        val emotionField = findViewById<Spinner>(R.id.mood_emotion_field)
-      
+
         if (emotionField != null) {
-            val arrayAdapter =
-                ArrayAdapter(this, android.R.layout.simple_spinner_item, emotionalStates)
+            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.EMOTION_STATES)
             emotionField.adapter = arrayAdapter
-            emotionPosition = arrayAdapter.getPosition(mood.getEmotion())
 
             emotionField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -72,8 +64,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
                     position: Int,
                     id: Long
                 ) {
-                    emotionalStates[position]
-                    val color = colors[position]
+                    Mood.EMOTION_STATES[position]
+                    val color = Mood.EMOTION_COLORS[position]
                     findViewById<View>(android.R.id.content).setBackgroundColor(color)
                 }
 
@@ -85,15 +77,13 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // Social spinner stuff
 
-        val socialSituations = arrayOf("None", "Alone", "With one other person", "With two to several people", "With a group")
         if (socialField != null) {
-            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, socialSituations)
+            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.SOCIAL_REASONS)
             socialField.adapter = arrayAdapter
-            socialPosition = arrayAdapter.getPosition(mood.getSocial())
 
             socialField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    socialSituations[position]
+                    Mood.SOCIAL_REASONS[position]
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -105,8 +95,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
 
-        emotionField.setSelection(emotionPosition)
-        socialField.setSelection(socialPosition)
+        emotionField.setSelection(mood.getEmotionID())
+        socialField.setSelection(mood.getSocialID())
         dateField.text = mood.getDateString()
         reasonField.text = mood.getReasonText()
 
@@ -117,8 +107,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
                 return@setOnClickListener
             }
 
-            mood.setEmotion(emotionField.selectedItem.toString())
-            mood.setSocial(socialField.selectedItem.toString())
+            mood.setEmotion(emotionField.selectedItemPosition)
+            mood.setSocial(socialField.selectedItemPosition)
             mood.setReasonText(reasonField.text.toString())
 
             val returnIntent = Intent()
