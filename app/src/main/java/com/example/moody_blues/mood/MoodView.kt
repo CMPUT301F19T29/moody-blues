@@ -58,7 +58,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         // TODO: For some reason some colors crash the app lol maybe find out why later (currently none of these do though)
         val colors = arrayOf(Color.GREEN, Color.parseColor("#33FFF4"), Color.YELLOW, Color.parseColor("#FF6D66"), Color.LTGRAY, Color.parseColor("#FE9DFF"))
         val emotionField = findViewById<Spinner>(R.id.mood_emotion_field)
-      
+
         if (emotionField != null) {
             val arrayAdapter =
                 ArrayAdapter(this, android.R.layout.simple_spinner_item, emotionalStates)
