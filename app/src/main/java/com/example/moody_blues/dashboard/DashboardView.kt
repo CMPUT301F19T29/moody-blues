@@ -9,6 +9,9 @@ import com.example.moody_blues.feed.FeedView
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.requests.RequestView
 
+/**
+ * This is the view for the dashboard activity
+ */
 class DashboardView : AppCompatActivity(), DashboardContract.View {
     override lateinit var presenter: DashboardContract.Presenter
 
@@ -37,16 +40,25 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         }
     }
 
+    /**
+     * Transition to the history activity
+     */
     override fun gotoHistory() {
         val intent = Intent(this, HistoryView::class.java)
         startActivity(intent)
     }
 
+    /**
+     * Transition to the feed activity
+     */
     override fun gotoFeed() {
         val intent = Intent(this, FeedView::class.java)
         startActivity(intent)
     }
 
+    /**
+     * Transition to the requests activity
+     */
     override fun gotoRequests() {
         val intent = Intent(this, RequestView::class.java)
         startActivity(intent)

@@ -24,6 +24,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.history_view.*
 import kotlinx.coroutines.GlobalScope
 
+/**
+ * The view for the history activity
+ */
 class HistoryView : AppCompatActivity(), HistoryContract.View {
     override lateinit var presenter: HistoryContract.Presenter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -84,6 +87,9 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
             getLocationResult()
     }
 
+    /**
+     * Create a new mood when location is obtained
+     */
     private fun getLocationResult() {
         fusedLocationClient
                 .lastLocation
@@ -92,6 +98,12 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
                 }
     }
 
+    /**
+     * Callback function after a user returns from the mood activity
+     * @param requestCode A code for creating a new mood or editing an existing one
+     * @param resultCode A code for success
+     * @param data The intent passed by the mood activity
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GET_MOOD_CODE && resultCode == RESULT_OK) {
@@ -113,6 +125,10 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         }
     }
 
+    /**
+     * Open the mood activity for a mood
+     * @param mood The mood the edit or view
+     */
     override fun gotoMood(mood: Mood) {
         val intent = Intent(this, MoodView::class.java)
         intent.putExtra(FLAG, "add")
@@ -120,18 +136,26 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         startActivityForResult(intent, GET_MOOD_CODE)
     }
 
+    /**
+     * Update the list of displayed moods
+     * @param moods The new list of moods
+     */
     override fun refreshMoods(moods: ArrayList<Mood>) {
         val moodAdapter = history_list_mood.adapter as MoodAdapter
         moodAdapter.refresh(moods)
     }
 
+    /**
+     * Open the mood activity for a mood
+     * @param id The id of the mood the edit or view
+     */
     override fun gotoEditMood(id: String) {
-            val mood: Mood? = AppManager.getMood(id)
-            val intent = Intent(this, MoodView::class.java)
-            intent.putExtra(FLAG, "edit")
-            intent.putExtra(INTENT_MOOD, mood)
-            intent.putExtra(INTENT_EDIT_ID, id)
-            startActivityForResult(intent, GET_EDITED_MOOD_CODE)
+        val mood: Mood? = AppManager.getMood(id)
+        val intent = Intent(this, MoodView::class.java)
+        intent.putExtra(FLAG, "edit")
+        intent.putExtra(INTENT_MOOD, mood)
+        intent.putExtra(INTENT_EDIT_ID, id)
+        startActivityForResult(intent, GET_EDITED_MOOD_CODE)
     }
 
     companion object {
