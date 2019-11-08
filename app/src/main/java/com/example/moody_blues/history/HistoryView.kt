@@ -25,8 +25,6 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     override lateinit var presenter: HistoryContract.Presenter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var moods: ArrayList<Mood>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.history_view)
@@ -49,13 +47,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
             }
         }
 
-        moods = presenter.fetchMoods()
-
-//        val listener: View.OnClickListener = View.OnClickListener {
-//
-//        }
-
-        history_list_mood.adapter = MoodAdapter(moods) { item: Mood, pos: Int ->
+        history_list_mood.adapter = MoodAdapter(presenter.fetchMoods()) { item: Mood, pos: Int ->
             presenter.editMood(pos)
         }
         history_list_mood.layoutManager = LinearLayoutManager(this)
@@ -80,7 +72,6 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         if (requestCode == GET_MOOD_CODE && resultCode == RESULT_OK) {
             val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
             presenter.addMood(mood)
-            history_list_mood.adapter!!.notifyDataSetChanged()
         }
 
         if (requestCode == GET_EDITED_MOOD_CODE && resultCode == RESULT_OK) {
@@ -98,8 +89,13 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         startActivityForResult(intent, GET_MOOD_CODE)
     }
 
+    override fun refreshMoods(moods: ArrayList<Mood>) {
+        val moodAdapter = history_list_mood.adapter as MoodAdapter
+        moodAdapter.refresh(moods)
+    }
+
     override fun gotoEditMood(pos: Int) {
-        val mood: Mood = moods[pos]
+        val mood: Mood = AppManager.getMood(pos)
         val intent = Intent(this, MoodView::class.java)
         intent.putExtra(FLAG, "edit")
         intent.putExtra(INTENT_MOOD, mood)

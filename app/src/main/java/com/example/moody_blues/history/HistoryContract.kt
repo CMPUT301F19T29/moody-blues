@@ -8,6 +8,7 @@ interface HistoryContract {
     interface View : BaseView<Presenter> {
         fun gotoMood(mood: Mood)
         fun gotoEditMood(pos: Int)
+        fun refreshMoods(moods: ArrayList<Mood>)
     }
 
     interface Presenter : BasePresenter {

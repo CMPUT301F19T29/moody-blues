@@ -103,7 +103,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
+        <Spinner
             android:id="@+id/mood_emotion_field"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
+        <Spinner
             android:id="@+id/mood_social_field"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
