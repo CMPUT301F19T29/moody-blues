@@ -24,18 +24,21 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
 
     override fun login(user: String, pass: String) {
         MainScope().launch {
-            try{
-                var authResult = AppManager.signIn(user, pass)
-                loginView.gotoDashboard()
-            }
-            catch (ex: Exception) {
-                try {
-                    var authResult = AppManager.createUser(user, pass, user)
-                    loginView.gotoDashboard()
-                } catch (ex2: Exception) {
 
-                }
-            }
+            var authResult = AppManager.signIn(user, pass)
+            loginView.gotoDashboard()
+//            try{
+//                var authResult = AppManager.signIn(user, pass)
+//                loginView.gotoDashboard()
+//            }
+//            catch (ex: Exception) {
+//                try {
+//                    var authResult = AppManager.createUser(user, pass, user)
+//                    loginView.gotoDashboard()
+//                } catch (ex2: Exception) {
+//
+//                }
+//            }
             // TODO: Show an error of some kind to the user
 //                loginView.clear()
         }

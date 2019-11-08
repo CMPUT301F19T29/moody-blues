@@ -13,33 +13,24 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class Mood(
-    var id: String = "",
-    private var date: LocalDateTime? = null,
-    private var reason_text: String? = null,
-    private var reason_image: Image? = null,
-    private var social: Int? = null,
-    private var emotion: Int? = null,
-    private var location: String? = null, // todo: revert back to Location
-    private var showLocation: Boolean = true
-) : Serializable {
+    var location: String? = null, // todo: revert back to Location
+    var date: String? = null,
+    var reason_text: String? = null,
+    var reason_image: Image? = null,
+    var social: Int? = null,
+    var emotion: Int? = null,
+    var showLocation: Boolean = true,
+    var id: String = ""
+): Serializable {
 
     constructor(location: String?) : this() {
-        this.date = LocalDateTime.now()
+        this.date = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
+                .format(LocalDateTime.now())
         this.location = location
     }
 
-    fun getDate(): LocalDateTime? {
-        return this.date
-    }
-
     fun getDateString(): String? {
-        return if (this.date == null){
-            null
-        }
-        else{
-            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
-                    .format(this.date)
-        }
+        return this.date
     }
 
     fun getReasonText(): String? {
@@ -50,36 +41,16 @@ class Mood(
         return this.reason_image
     }
 
-    fun getSocial(): Int {
-        return this.social?: 0
-    }
-
     fun getSocialString(): String {
-        return SOCIAL_REASONS[this.getSocial()]
-    }
-
-    fun getEmotion(): Int {
-        return this.emotion?: 0
+        return SOCIAL_REASONS[this.social?: 0]
     }
 
     fun getEmotionString(): String {
-        return EMOTION_STATES[this.getEmotion()]
+        return EMOTION_STATES[this.emotion?: 0]
     }
 
     fun getColor(): Int {
-        return EMOTION_COLORS[this.getEmotion()]
-    }
-
-    fun getLocation(): String? {
-        return this.location
-    }
-
-    fun getShowLocation(): Boolean {
-        return this.showLocation
-    }
-
-    fun setDate(date: LocalDateTime?) {
-        this.date = date
+        return EMOTION_COLORS[this.emotion?: 0]
     }
 
     fun setReasonText(reason_text: String?) {
@@ -88,22 +59,6 @@ class Mood(
 
     fun setReasonImage(reason_image: Image?) {
         this.reason_image = reason_image
-    }
-
-    fun setSocial(social: Int?) {
-        this.social = social
-    }
-
-    fun setEmotion(emotion: Int?) {
-        this.emotion = emotion
-    }
-
-    fun setLocation(location: String?) {
-        this.location = location
-    }
-
-    fun setShowLocation(showLocation: Boolean) {
-        this.showLocation = showLocation
     }
 
     private class Emotion(

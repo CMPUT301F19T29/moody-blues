@@ -94,12 +94,12 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
 
-        emotionField.setSelection(mood.getEmotion())
-        socialField.setSelection(mood.getSocial())
+        emotionField.setSelection(mood.emotion?: 0)
+        socialField.setSelection(mood.social?: 0)
         dateField.text = mood.getDateString()
         reasonField.text = mood.getReasonText()
-        locationData.text = mood.getLocation()
-        locationField.setChecked(mood.getShowLocation())
+        locationData.text = mood.location
+        locationField.setChecked(mood.showLocation)
 
         // confirm button
         confirmButton.setOnClickListener {
@@ -108,10 +108,10 @@ class MoodView : AppCompatActivity(), MoodContract.View {
                 return@setOnClickListener
             }
 
-            mood.setEmotion(emotionField.selectedItemPosition)
-            mood.setSocial(socialField.selectedItemPosition)
+            mood.emotion = emotionField.selectedItemPosition
+            mood.social = socialField.selectedItemPosition
             mood.setReasonText(reasonField.text.toString())
-            mood.setShowLocation(locationField.isChecked)
+            mood.showLocation = locationField.isChecked
 
             val returnIntent = Intent()
             returnIntent.putExtra(INTENT_MOOD_RESULT, mood)

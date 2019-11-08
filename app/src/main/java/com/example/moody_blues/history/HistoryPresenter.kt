@@ -23,20 +23,16 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     }
 
     override fun fetchMoods(emotion: String): ArrayList<Mood> {
-        return runBlocking {
-            var moods : Collection<Mood> = AppManager.getFilteredUserMoods(emotion).values
-            moods.sortedByDescending { mood -> mood.getDate() }
-            ArrayList<Mood>(moods)
-        }
+        var moods : Collection<Mood> = AppManager.getFilteredUserMoods(emotion).values
+        moods.sortedByDescending { mood -> mood.date }
+        return ArrayList<Mood>(moods)
 
     }
 
     override fun fetchMoods(): ArrayList<Mood> {
-        return runBlocking {
-            var moods = AppManager.getMoods().values
-            moods.sortedByDescending { mood -> mood.getDate() }
-            ArrayList<Mood>(moods)
-        }
+        var moods : Collection<Mood> = AppManager.getMoods().values
+        moods.sortedByDescending { mood -> mood.date }
+        return ArrayList<Mood>(moods)
     }
 
     override fun createMood(location: Location?) {
@@ -67,20 +63,21 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     override fun deleteMood(mood: Mood) {
         MainScope().launch{
             AppManager.deleteMood(mood.id)
+            var moods = ArrayList<Mood>(AppManager.getMoods().values)
+            historyView.refreshMoods(moods)
         }
     }
 
     override fun refreshMoods(emotion: String) {
         MainScope().launch{
-            var moods = AppManager.getFilteredUserMoods(emotion).values.sortedByDescending { mood -> mood.getDate() }
+            var moods = AppManager.getFilteredUserMoods(emotion).values.sortedByDescending { mood -> mood.date }
             historyView.refreshMoods(ArrayList<Mood>(moods))
         }
     }
 
     override fun refreshMoods() {
-        suspend {
-            AppManager.refreshMoods()
-            var moods = AppManager.getMoods().values.sortedByDescending { mood -> mood.getDate() }
+        MainScope().launch{
+            var moods = AppManager.getMoods().values.sortedByDescending { mood -> mood.date }
             historyView.refreshMoods(ArrayList<Mood>(moods))
         }
     }
