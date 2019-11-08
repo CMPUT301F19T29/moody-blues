@@ -2,7 +2,7 @@ package com.example.moody_blues
 
 import android.content.Intent
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasFlag
@@ -11,6 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.example.moody_blues.dashboard.DashboardView
 import com.example.moody_blues.login.LoginView
 import com.example.moody_blues.signup.SignupView
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
@@ -24,9 +25,12 @@ class LoginViewTest {
     @get:Rule
     val intentsTestRule = IntentsTestRule(LoginView::class.java)
 
+    // TODO: Figure out why Failing due to login
     @Ignore
     @Test
     fun testSubmit() {
+        onView(withId(R.id.login_user_field)).perform(typeText("los@ualberta.ca"))
+        onView(withId(R.id.login_pass_field)).perform(typeText("password"))
         // Click the button
         onView(withId(R.id.login_submit_button)).perform(click())
         // Ensure
