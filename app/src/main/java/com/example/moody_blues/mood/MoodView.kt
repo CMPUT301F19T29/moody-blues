@@ -32,7 +32,14 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mood_view)
         mood = this.intent.extras?.getSerializable(INTENT_MOOD) as Mood
-        title = "New Mood"
+        val flag = this.intent.getStringExtra(HistoryView.FLAG) as String
+
+        if (flag == "add") {
+            title = "New Mood"
+        }
+        else if (flag == "edit") {
+            title = "Edit Mood"
+        }
 
         confirmButton = findViewById(R.id.mood_save_button)
         dateField = findViewById(R.id.mood_date_field)
@@ -97,8 +104,6 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
-
-        val flag = this.intent.getStringExtra(HistoryView.FLAG) as String
 
         emotionField.setSelection(emotionPosition)
         socialField.setSelection(socialPosition)
