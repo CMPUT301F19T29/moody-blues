@@ -5,7 +5,7 @@ import com.example.moody_blues.BaseView
 
 interface LoginContract {
     interface View : BaseView<Presenter> {
-        fun gotoDashboard(intent: Intent)
+        fun gotoDashboard()
     }
 
     interface Presenter : BasePresenter {

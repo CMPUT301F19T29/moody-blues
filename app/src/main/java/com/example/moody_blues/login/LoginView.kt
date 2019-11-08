@@ -2,7 +2,6 @@ package com.example.moody_blues.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +28,8 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         }
     }
 
-    override fun gotoDashboard(intent: Intent) {
+    override fun gotoDashboard() {
+        val intent = Intent(this, DashboardView::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // clear activity stack
         startActivity(intent)
     }
