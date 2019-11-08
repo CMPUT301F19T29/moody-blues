@@ -19,11 +19,14 @@ class MoodView : AppCompatActivity(), MoodContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mood_view)
-        mood = this.intent.extras?.getSerializable(HistoryView.INTENT_MOOD) as Mood
-        title = "New Mood"
 
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
+
+        val flag = this.intent.getStringExtra(HistoryView.FLAG) as String
+
+        mood = this.intent.extras?.getSerializable(INTENT_MOOD) as Mood
+        title = "New Mood"
 
         val mood = intent.getSerializableExtra(INTENT_MOOD) as Mood
         // make buttons for mood
@@ -50,9 +53,15 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             mood.setReasonText(reasonField.text.toString())
             mood.setLocation(locationField.text.toString())
 
-            val intent = Intent()
-            intent.putExtra(INTENT_MOOD_RESULT, mood)
-            setResult(RESULT_OK, intent)
+            val returnIntent = Intent()
+            returnIntent.putExtra(INTENT_MOOD_RESULT, mood)
+
+            if (flag == "edit") {
+                val pos =intent.getIntExtra(HistoryView.INTENT_EDIT_POS, -1)
+                returnIntent.putExtra(INTENT_POS_RESULT, pos)
+            }
+
+            setResult(RESULT_OK, returnIntent)
 
             presenter.confirmMood()
         }
@@ -64,6 +73,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
     companion object {
         const val INTENT_MOOD_RESULT = "mood_result"
+        const val INTENT_POS_RESULT = "edit_pos"
     }
 
 //    override fun gotoMap() {

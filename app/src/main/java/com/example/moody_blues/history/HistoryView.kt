@@ -1,10 +1,12 @@
 package com.example.moody_blues.history
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moody_blues.AppManager
@@ -12,9 +14,10 @@ import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.mood.MoodAdapter
 import com.example.moody_blues.mood.MoodView
+import com.example.moody_blues.mood.MoodView.Companion.INTENT_MOOD_RESULT
+import com.example.moody_blues.mood.MoodView.Companion.INTENT_POS_RESULT
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.example.moody_blues.mood.MoodView.Companion.INTENT_MOOD_RESULT
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.history_view.*
 
@@ -46,12 +49,15 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
             }
         }
 
-//        // testing by initialising with fake moods
-//        val fakeMood: Mood = Mood("2019-11-05", "1:22", "to test", null, "social", "confused")
-//        moods.add(fakeMood)
-
         moods = presenter.fetchMoods()
-        history_list_mood.adapter = MoodAdapter(moods)
+
+//        val listener: View.OnClickListener = View.OnClickListener {
+//
+//        }
+
+        history_list_mood.adapter = MoodAdapter(moods) { item: Mood, pos: Int ->
+            presenter.editMood(pos)
+        }
         history_list_mood.layoutManager = LinearLayoutManager(this)
     }
 
@@ -76,17 +82,37 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
             presenter.addMood(mood)
             history_list_mood.adapter!!.notifyDataSetChanged()
         }
+
+        if (requestCode == GET_EDITED_MOOD_CODE && resultCode == RESULT_OK) {
+            val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
+            val pos: Int = data.getIntExtra(INTENT_POS_RESULT, -1)
+            presenter.updateMood(mood, pos)
+            history_list_mood.adapter!!.notifyDataSetChanged()
+        }
     }
 
     override fun gotoMood(mood: Mood) {
         val intent = Intent(this, MoodView::class.java)
+        intent.putExtra(FLAG, "add")
         intent.putExtra(INTENT_MOOD, mood)
         startActivityForResult(intent, GET_MOOD_CODE)
     }
 
+    override fun gotoEditMood(pos: Int) {
+        val mood: Mood = moods[pos]
+        val intent = Intent(this, MoodView::class.java)
+        intent.putExtra(FLAG, "edit")
+        intent.putExtra(INTENT_MOOD, mood)
+        intent.putExtra(INTENT_EDIT_POS, pos)
+        startActivityForResult(intent, GET_EDITED_MOOD_CODE)
+    }
+
     companion object {
+        const val FLAG = "flag"
         const val INTENT_MOOD = "mood"
+        const val INTENT_EDIT_POS = "editPos"
         const val GET_MOOD_CODE = 1
+        const val GET_EDITED_MOOD_CODE = 2
     }
 }
 

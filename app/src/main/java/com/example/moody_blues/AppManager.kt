@@ -18,6 +18,10 @@ object AppManager { // todo: inherit from dbManager
         this.userMoods.add(mood)
     }
 
+    fun updateMood(mood: Mood, pos: Int) {
+        this.userMoods[pos] = mood
+    }
+
     fun getUsername(): String {
         return this.username
     }
