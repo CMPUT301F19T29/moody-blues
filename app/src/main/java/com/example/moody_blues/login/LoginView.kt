@@ -35,13 +35,13 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         }
     }
 
-//    override fun clear(){
-//        val user: EditText = findViewById(R.id.login_user_field)
-//        val pass: EditText = findViewById(R.id.login_pass_field)
-//
-//        user.text.clear()
-//        pass.text.clear()
-//    }
+    override fun clear(){
+        val user: EditText = findViewById(R.id.login_user_field)
+        val pass: EditText = findViewById(R.id.login_pass_field)
+
+        user.text.clear()
+        pass.text.clear()
+    }
 
     override fun gotoDashboard() {
         val intent = Intent(this, DashboardView::class.java)

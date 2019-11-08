@@ -1,6 +1,10 @@
 package com.example.moody_blues.map
 
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.signup.SignupContract
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class SignupPresenter(val signupView: SignupContract.View) : SignupContract.Presenter {
 
@@ -16,7 +20,19 @@ class SignupPresenter(val signupView: SignupContract.View) : SignupContract.Pres
     override fun start() {
     }
 
-    override fun confirmSignup() {
-        signupView.backtoLogin()
+    override fun confirmSignup(email: String, password: String, username: String) {
+        MainScope().launch {
+            try{
+                if (AppManager.createUser(email, password, username) == null){
+                    signupView.clear()
+                }
+                else{
+                    signupView.backtoLogin()
+                }
+            }
+            catch (ex: Exception){
+                signupView.clear()
+            }
+        }
     }
 }
