@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
@@ -22,7 +23,8 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.social.text = moods[position].getSocial()
         holder.reason.text = moods[position].getReasonText()
         holder.image.setImageResource(R.drawable.moody_blues_icon_background)
-
+        holder.containerPrimary.setBackgroundColor(moods[position].getColor())
+        holder.containerSecondary.setBackgroundColor(moods[position].getColor())
         val item: Mood = moods[position]
         holder.itemView.setOnClickListener { clickListener(item, position) }
     }
@@ -40,5 +42,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         val social: TextView = itemView.findViewById(R.id.row_mood_social)
         val reason: TextView = itemView.findViewById(R.id.row_mood_reason_text)
         val image: ImageView = itemView.findViewById(R.id.row_mood_image)
+        val containerPrimary: ConstraintLayout = itemView.findViewById(R.id.row_mood_primary_bar)
+        val containerSecondary: ConstraintLayout = itemView.findViewById(R.id.row_mood_secondary_bar)
     }
 }
