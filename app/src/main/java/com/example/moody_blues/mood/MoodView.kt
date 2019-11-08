@@ -34,9 +34,9 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         val emotionField: TextView = findViewById(R.id.mood_emotion_field)
         val socialField: TextView = findViewById(R.id.mood_social_field)
         val reasonField: TextView = findViewById(R.id.mood_reason_field)
-        val locationField: TextView = findViewById(R.id.mood_location_field)
+//        val locationField: TextView = findViewById(R.id.mood_location_field)
 
-        dateField.text = mood.getDate()
+        dateField.text = mood.getDateString()
         emotionField.text = mood.getEmotion()
         socialField.text = mood.getSocial()
         reasonField.text = mood.getReasonText()
@@ -44,11 +44,9 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // confirm button
         confirmButton.setOnClickListener {
-            mood.setDate(dateField.text.toString())
             mood.setEmotion(emotionField.text.toString())
             mood.setSocial(socialField.text.toString())
             mood.setReasonText(reasonField.text.toString())
-            mood.setLocation(locationField.text.toString())
 
             val intent = Intent()
             intent.putExtra(INTENT_MOOD_RESULT, mood)
