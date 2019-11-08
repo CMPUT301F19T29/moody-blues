@@ -35,6 +35,9 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         }
     }
 
+    /**
+     * Clear the fields for username and password
+     */
     override fun clear(){
         val user: EditText = findViewById(R.id.login_user_field)
         val pass: EditText = findViewById(R.id.login_pass_field)
@@ -43,12 +46,18 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         pass.text.clear()
     }
 
+    /**
+     * Transition to the dashboard activity
+     */
     override fun gotoDashboard() {
         val intent = Intent(this, DashboardView::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // clear activity stack
         startActivity(intent)
     }
 
+    /**
+     * Transition to the sign up activity
+     */
     override fun gotoSignUp() {
         val intent = Intent(this, SignupView::class.java)
         startActivity(intent)

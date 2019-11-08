@@ -13,6 +13,9 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
+/**
+ * The view for the sign up activity
+ */
 class SignupView : AppCompatActivity(), SignupContract.View {
     override lateinit var presenter: SignupContract.Presenter
 
@@ -35,6 +38,9 @@ class SignupView : AppCompatActivity(), SignupContract.View {
         }
     }
 
+    /**
+     * Clear the fields for email, password, and username
+     */
     override fun clear(){
         var email = findViewById<EditText>(R.id.signup_email_field)
         var pass = findViewById<EditText>(R.id.signup_password_field)
@@ -45,6 +51,9 @@ class SignupView : AppCompatActivity(), SignupContract.View {
         username.text.clear()
     }
 
+    /**
+     * Return to the login activity
+     */
     override fun backtoLogin() {
         finish()
     }
