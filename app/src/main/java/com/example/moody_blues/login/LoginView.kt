@@ -29,11 +29,11 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         }
     }
 
-    override fun gotoDashboard() {
-        val intent = Intent(this, DashboardView::class.java)
+    override fun gotoDashboard(intent: Intent) {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // clear activity stack
         startActivity(intent)
     }
+
 
 }
 

@@ -1,6 +1,8 @@
 package com.example.moody_blues.login
 
-import com.example.moody_blues.models.User
+import android.content.Context
+import android.content.Intent
+import com.example.moody_blues.dashboard.DashboardView
 
 class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presenter {
     // Constructor cannot contain any code
@@ -10,8 +12,6 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
     init {
         // Links the presenter to the view
         loginView.presenter = this
-        val user: User
-9
         this.start()
     }
 
@@ -20,6 +20,6 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
 
     override fun login(user: String, pass: String) {
         // validate with firestore, then:
-        loginView.gotoDashboard()
+        loginView.gotoDashboard(Intent(loginView as Context, DashboardView::class.java))
     }
 }
