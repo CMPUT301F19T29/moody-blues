@@ -4,10 +4,14 @@ import android.location.Location
 import android.media.Image
 import java.io.Serializable
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 
 class Mood(
-    private var date: String? = null,
+    private var date: LocalDateTime? = null,
     private var reason_text: String? = null,
     private var reason_image: Image? = null,
     private var social: String? = null,
@@ -15,15 +19,18 @@ class Mood(
     private var location: String? = null // todo: revert back to Location
 ) : Serializable {
 
-    constructor(_location: String?) : this() {
-        val calendar = Calendar.getInstance().time
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CANADA)
-        this.date = dateFormat.format(calendar)
-        this.location = _location
+    constructor(location: String?) : this() {
+        this.date = LocalDateTime.now()
+        this.location = location
     }
 
-    fun getDate(): String? {
+    fun getDate(): LocalDateTime? {
         return this.date
+    }
+
+    fun getDateString(): String? {
+        return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
+                .format(this.date)
     }
 
     fun getReasonText(): String? {
@@ -46,7 +53,7 @@ class Mood(
         return this.location
     }
 
-    fun setDate(date: String?) {
+    fun setDate(date: LocalDateTime?) {
         this.date = date
     }
 
