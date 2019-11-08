@@ -97,7 +97,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
-        mood = intent.getSerializableExtra(INTENT_MOOD) as Mood
+
+        val flag = this.intent.getStringExtra(HistoryView.FLAG) as String
 
         emotionField.setSelection(emotionPosition)
         socialField.setSelection(socialPosition)
@@ -115,9 +116,15 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             mood.setSocial(socialField.selectedItem.toString())
             mood.setReasonText(reasonField.text.toString())
 
-            val intent = Intent()
-            intent.putExtra(INTENT_MOOD_RESULT, mood)
-            setResult(RESULT_OK, intent)
+            val returnIntent = Intent()
+            returnIntent.putExtra(INTENT_MOOD_RESULT, mood)
+
+            if (flag == "edit") {
+                val pos =intent.getIntExtra(HistoryView.INTENT_EDIT_POS, -1)
+                returnIntent.putExtra(INTENT_POS_RESULT, pos)
+            }
+
+            setResult(RESULT_OK, returnIntent)
 
             presenter.confirmMood()
         }
@@ -140,6 +147,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
     companion object {
         const val INTENT_MOOD_RESULT = "mood_result"
+        const val INTENT_POS_RESULT = "edit_pos"
     }
 
 //    override fun gotoMap() {

@@ -34,4 +34,12 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
         AppManager.addUserMood(mood)
         historyView.refreshMoods(AppManager.getUserMoods())
     }
+
+    override fun editMood(pos: Int) {
+        historyView.gotoEditMood(pos)
+    }
+
+    override fun updateMood(mood: Mood, pos: Int) {
+        AppManager.updateMood(mood, pos)
+    }
 }
