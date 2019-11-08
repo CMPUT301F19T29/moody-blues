@@ -18,6 +18,9 @@ class RequestView : AppCompatActivity(), RequestContract.View {
 
     }
 
+    /**
+     * Open a popup to select a user to follow
+     */
     override fun gotoFollowUser() {
         // opens a popup to enter a user to follow
     }
