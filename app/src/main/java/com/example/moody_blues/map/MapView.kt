@@ -27,6 +27,9 @@ class MapView : AppCompatActivity(), MapContract.View {
 
     }
 
+    /**
+     * Transition to the mood page
+     */
     override fun gotoMood() {
         val intent = Intent(this, MoodView::class.java)
         startActivity(intent)

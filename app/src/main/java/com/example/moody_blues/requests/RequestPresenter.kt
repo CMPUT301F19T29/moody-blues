@@ -14,6 +14,10 @@ class RequestPresenter(val requestView: RequestContract.View) : RequestContract.
     override fun start() {
     }
 
+    /**
+     * Request to follow the specified uesr
+     * @param user The user to follow
+     */
     override fun requestFollow(user: String) {
         // checks username with firebase database for valid user to follow
         // exit popup
