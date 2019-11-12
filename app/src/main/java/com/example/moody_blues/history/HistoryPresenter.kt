@@ -1,17 +1,14 @@
 package com.example.moody_blues.history
 
 import android.location.Location
-import android.util.Log
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.models.Mood
 import kotlinx.coroutines.*
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 /**
  * This is the presenter for the history activity
  */
-class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryContract.Presenter {
+class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -19,10 +16,7 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     // Can use val/vars from [primary
     init {
         // Links the presenter to the view
-        historyView.presenter = this
-    }
-
-    override fun start() {
+        view.presenter = this
     }
 
     /**
@@ -52,7 +46,7 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
      */
     override fun createMood(location: Location?) {
         val mood = Mood(location.toString())
-        historyView.gotoMood(mood)
+        view.gotoMood(mood)
     }
 
     /**
@@ -63,7 +57,7 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
         MainScope().launch {
             AppManager.addMood(mood)
             var moods = ArrayList<Mood>(AppManager.getMoods().values)
-            historyView.refreshMoods(moods)
+            view.refreshMoods(moods)
         }
     }
 
@@ -72,7 +66,7 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
      * @param mood The mood to edit or view
      */
     override fun editMood(mood: Mood) {
-        historyView.gotoEditMood(mood.id)
+        view.gotoEditMood(mood.id)
     }
 
     /**
@@ -81,9 +75,9 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
      */
     override fun updateMood(mood: Mood) {
         MainScope().launch{
-            AppManager.updateMood(mood.id, mood)
+            AppManager.editMood(mood.id, mood)
             var moods = ArrayList<Mood>(AppManager.getMoods().values)
-            historyView.refreshMoods(moods)
+            view.refreshMoods(moods)
         }
     }
 
@@ -95,7 +89,7 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
         MainScope().launch{
             AppManager.deleteMood(mood.id)
             var moods = ArrayList<Mood>(AppManager.getMoods().values)
-            historyView.refreshMoods(moods)
+            view.refreshMoods(moods)
         }
     }
 
@@ -106,7 +100,7 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     override fun refreshMoods(emotion: String) {
         MainScope().launch{
             var moods = AppManager.getFilteredUserMoods(emotion).values.sortedByDescending { mood -> mood.date }
-            historyView.refreshMoods(ArrayList<Mood>(moods))
+            view.refreshMoods(ArrayList<Mood>(moods))
         }
     }
 
@@ -116,7 +110,7 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     override fun refreshMoods() {
         MainScope().launch{
             var moods = AppManager.getMoods().values.sortedByDescending { mood -> mood.date }
-            historyView.refreshMoods(ArrayList<Mood>(moods))
+            view.refreshMoods(ArrayList<Mood>(moods))
         }
     }
 

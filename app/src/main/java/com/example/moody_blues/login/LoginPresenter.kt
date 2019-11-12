@@ -10,20 +10,14 @@ import java.lang.Exception
 /**
  * The presenter for the login activity
  */
-class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presenter {
+class LoginPresenter(private val view: LoginContract.View) : LoginContract.Presenter {
     // Constructor cannot contain any code
     // Init gets called after constructor
     // Called in same order as body
     // Can use val/vars from [primary
     init {
         // Links the presenter to the view
-        loginView.presenter = this
-        val user: User
-9
-        this.start()
-    }
-
-    override fun start() {
+        view.presenter = this
     }
 
     /**
@@ -34,17 +28,11 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
     override fun login(user: String, pass: String) {
         MainScope().launch {
 
-            try{
-                if (AppManager.signIn(user, pass) == null){
-                    loginView.clear()
-                }
-                else{
-                    loginView.gotoDashboard()
-                }
-            }
-            catch (ex: Exception){
-                loginView.clear()
-            }
+            if (AppManager.signIn(user, pass))
+                view.gotoDashboard()
+            else
+                view.clear()
+
             // TODO: Show an error of some kind to the user
 //                loginView.clear()
         }
@@ -54,6 +42,6 @@ class LoginPresenter(val loginView: LoginContract.View) : LoginContract.Presente
      * Tell the view to go to the sign up activity
      */
     override fun signup() {
-        loginView.gotoSignUp()
+        view.gotoSignUp()
     }
 }

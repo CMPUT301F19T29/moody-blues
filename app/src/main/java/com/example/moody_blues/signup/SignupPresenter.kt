@@ -9,7 +9,7 @@ import java.lang.Exception
 /**
  * The presenter for the sign up activity
  */
-class SignupPresenter(val signupView: SignupContract.View) : SignupContract.Presenter {
+class SignupPresenter(private val view: SignupContract.View) : SignupContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -17,10 +17,7 @@ class SignupPresenter(val signupView: SignupContract.View) : SignupContract.Pres
     // Can use val/vars from [primary
     init {
         // Links the presenter to the view
-        signupView.presenter = this
-    }
-
-    override fun start() {
+        view.presenter = this
     }
 
     /**
@@ -31,17 +28,10 @@ class SignupPresenter(val signupView: SignupContract.View) : SignupContract.Pres
      */
     override fun confirmSignup(email: String, password: String, username: String) {
         MainScope().launch {
-            try{
-                if (AppManager.createUser(email, password, username) == null){
-                    signupView.clear()
-                }
-                else{
-                    signupView.backtoLogin()
-                }
-            }
-            catch (ex: Exception){
-                signupView.clear()
-            }
+            if (AppManager.createUser(email, password, username))
+                view.backtoLogin()
+            else
+                view.clear()
         }
     }
 }

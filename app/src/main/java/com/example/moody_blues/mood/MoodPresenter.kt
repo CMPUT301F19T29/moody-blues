@@ -6,7 +6,7 @@ import com.example.moody_blues.models.Mood
 /**
  * The presenter for the mood activity
  */
-class MoodPresenter(val moodView: MoodContract.View) : MoodContract.Presenter {
+class MoodPresenter(private val view: MoodContract.View) : MoodContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -14,17 +14,14 @@ class MoodPresenter(val moodView: MoodContract.View) : MoodContract.Presenter {
     // Can use val/vars from [primary
     init {
         // Links the presenter to the view
-        moodView.presenter = this
-    }
-
-    override fun start() {
+        view.presenter = this
     }
 
     /**
      * Confirm adding or editing a mood
      */
     override fun confirmMood(mood: Mood) {
-        moodView.backtoHistory()
+        view.backtoHistory()
     }
 
 }
