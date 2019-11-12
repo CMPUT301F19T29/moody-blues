@@ -26,15 +26,14 @@ class LoginPresenter(private val view: LoginContract.View) : LoginContract.Prese
      * @param pass The attempted password
      */
     override fun login(user: String, pass: String) {
-        MainScope().launch {
+        // TODO: show waiting animation
 
+        MainScope().launch {
             if (AppManager.signIn(user, pass))
                 view.gotoDashboard()
             else
-                view.clear()
+                view.clear() // TODO: Show error to the user
 
-            // TODO: Show an error of some kind to the user
-//                loginView.clear()
         }
     }
 

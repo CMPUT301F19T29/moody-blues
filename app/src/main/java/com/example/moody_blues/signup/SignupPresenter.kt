@@ -27,11 +27,13 @@ class SignupPresenter(private val view: SignupContract.View) : SignupContract.Pr
      * @param username The username for the new user
      */
     override fun confirmSignup(email: String, password: String, username: String) {
+        // TODO: show waiting animation
+
         MainScope().launch {
             if (AppManager.createUser(email, password, username))
                 view.backtoLogin()
             else
-                view.clear()
+                view.clear() // TODO: show error to user
         }
     }
 }

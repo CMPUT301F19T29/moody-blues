@@ -108,7 +108,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GET_MOOD_CODE && resultCode == RESULT_OK) {
             val filters = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
-            val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
+            val mood: Mood = data?.getParcelableExtra(INTENT_MOOD_RESULT) as Mood
             presenter.addMood(mood)
             if(filterField.getSelectedItemPosition() != 0) {
                 presenter.refreshMoods(filters[filterField.getSelectedItemPosition()])
@@ -118,7 +118,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         }
 
         if (requestCode == GET_EDITED_MOOD_CODE && resultCode == RESULT_OK) {
-            val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
+            val mood: Mood = data?.getParcelableExtra(INTENT_MOOD_RESULT) as Mood
             val pos: Int = data.getIntExtra(INTENT_POS_RESULT, -1)
             presenter.updateMood(mood)
             history_list_mood.adapter!!.notifyDataSetChanged()
@@ -131,7 +131,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
      */
     override fun gotoMood(mood: Mood) {
         val intent = Intent(this, MoodView::class.java)
-        intent.putExtra(FLAG, "add")
+        intent.putExtra(INTENT_PURPOSE, INTENT_PURPOSE_ADD)
         intent.putExtra(INTENT_MOOD, mood)
         startActivityForResult(intent, GET_MOOD_CODE)
     }
@@ -152,16 +152,18 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     override fun gotoEditMood(id: String) {
         val mood: Mood? = AppManager.getMood(id)
         val intent = Intent(this, MoodView::class.java)
-        intent.putExtra(FLAG, "edit")
+        intent.putExtra(INTENT_PURPOSE, INTENT_PURPOSE_EDIT)
         intent.putExtra(INTENT_MOOD, mood)
         intent.putExtra(INTENT_EDIT_ID, id)
         startActivityForResult(intent, GET_EDITED_MOOD_CODE)
     }
 
     companion object {
-        const val FLAG = "flag"
+        const val INTENT_PURPOSE = "purpose"
+        const val INTENT_PURPOSE_EDIT = "Edit Mood"
+        const val INTENT_PURPOSE_ADD = "New Mood"
         const val INTENT_MOOD = "mood"
-        const val INTENT_EDIT_ID = "editId"
+        const val INTENT_EDIT_ID = "edit id"
         const val GET_MOOD_CODE = 1
         const val GET_EDITED_MOOD_CODE = 2
     }

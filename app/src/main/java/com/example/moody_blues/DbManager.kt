@@ -1,9 +1,11 @@
 package com.example.moody_blues
 
 import com.example.moody_blues.models.Mood
+import com.example.moody_blues.models.MoodWrapper
 import com.example.moody_blues.models.User
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
@@ -13,10 +15,15 @@ open class DbManager {
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
 
     /**
-     * Shortcut method
+     * Shortcut methods
      */
     private fun getFF(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
+    }
+
+    private fun getFFMoods(email: String): CollectionReference {
+        return getFF().collection(PATH_USERS)
+                .document(email).collection(PATH_MOODS)
     }
 
     // This is based on the following source:
@@ -124,12 +131,11 @@ open class DbManager {
      *  retrieve the mood
      * @return The mood with the given id, owned by the given user
      */
-    suspend fun getMood(id: String, email: String): Mood? {
-        val snapshot = getFF().collection(PATH_USERS).document(email)
-                .collection(PATH_MOODS).document(id)
+    suspend fun getMood(id: String, email: String): Mood {
+        val snapshot = getFFMoods(email).document(id)
                 .get()
                 .await()
-        return snapshot.toObject(Mood::class.java)!!
+        return Mood(snapshot.toObject(MoodWrapper::class.java)!!)
     }
 
     /**
@@ -143,18 +149,14 @@ open class DbManager {
         val moodMap = HashMap<String, Mood>()
         email?: return moodMap
 
-        val moodSnapshot = getFF().collection(PATH_USERS)
-                .document(email).collection(PATH_MOODS)
+        val moodSnapshot = getFFMoods(email)
                 .get()
                 .await()
 
-        for (doc in moodSnapshot) {
-            val mood = doc.toObject(Mood::class.java)
-            mood.id = doc.id // TODO: deprecate this line by forcing moods to be added with an id
-            moodMap[doc.id] = mood
-        }
+        for (doc in moodSnapshot)
+            moodMap[doc.id] = Mood(doc.toObject(MoodWrapper::class.java))
 
-        return moodMap // TODO: use factory?
+        return moodMap
     }
 
     /**
@@ -167,15 +169,13 @@ open class DbManager {
      * @return The id of the mood in the database
      */
     protected suspend fun addMood(mood: Mood, email: String): String {
-        val id = getFF().collection(PATH_USERS)
-                .document(email).collection(PATH_MOODS)
-                .add(Mood())
+        val doc = getFFMoods(email)
+                .add(mood.wrap())
                 .await()
-                .id
 
-        mood.id = id
-        this.editMood(id, mood, email)
-        return id
+        doc.update("id", doc.id) // TODO: double check this?
+        mood.id = doc.id
+        return doc.id
     }
 
     /**
@@ -186,8 +186,7 @@ open class DbManager {
      * @return The result of deleting the mood from the database
      */
     protected suspend fun deleteMood(id: String, email: String): Void? {
-        return getFF().collection(PATH_USERS).document(email)
-                .collection(PATH_MOODS).document(id)
+        return getFFMoods(email).document(id)
                 .delete()
                 .await()
     }
@@ -201,9 +200,8 @@ open class DbManager {
      * @return The result of replacing the mood in the database
      */
     protected suspend fun editMood(id: String, mood: Mood, email: String): Void? {
-        return getFF().collection(PATH_USERS).document(email)
-                .collection(PATH_MOODS).document(id)
-                .set(mood)
+        return getFFMoods(email).document(id)
+                .set(mood.wrap())
                 .await()
     }
 

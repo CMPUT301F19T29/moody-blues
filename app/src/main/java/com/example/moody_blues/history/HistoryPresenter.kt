@@ -3,6 +3,7 @@ package com.example.moody_blues.history
 import android.location.Location
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.models.Mood
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.*
 
 /**
@@ -27,7 +28,7 @@ class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract
     override fun fetchMoods(emotion: String): ArrayList<Mood> {
         var moods : Collection<Mood> = AppManager.getFilteredUserMoods(emotion).values
         moods.sortedByDescending { mood -> mood.date }
-        return ArrayList<Mood>(moods)
+        return ArrayList(moods)
     }
 
     /**
@@ -37,7 +38,7 @@ class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract
     override fun fetchMoods(): ArrayList<Mood> {
         var moods : Collection<Mood> = AppManager.getMoods().values
         moods.sortedByDescending { mood -> mood.date }
-        return ArrayList<Mood>(moods)
+        return ArrayList(moods)
     }
 
     /**
@@ -45,7 +46,7 @@ class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract
      * @param location The current location of the user
      */
     override fun createMood(location: Location?) {
-        val mood = Mood(location.toString())
+        val mood = Mood(location)
         view.gotoMood(mood)
     }
 

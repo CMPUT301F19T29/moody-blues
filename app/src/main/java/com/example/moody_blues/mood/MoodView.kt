@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_MOOD
+import com.example.moody_blues.history.HistoryView.Companion.INTENT_PURPOSE_EDIT
 import com.example.moody_blues.models.Mood
 
 /**
@@ -18,9 +19,7 @@ import com.example.moody_blues.models.Mood
  */
 class MoodView : AppCompatActivity(), MoodContract.View {
     override lateinit var presenter: MoodContract.Presenter
-    private lateinit var mood: Mood
 
-//    var color = Color.WHITE
     private lateinit var confirmButton: Button
     private lateinit var dateField: TextView
     private lateinit var emotionField: Spinner
@@ -29,18 +28,13 @@ class MoodView : AppCompatActivity(), MoodContract.View {
     private lateinit var locationField: Switch
     private lateinit var locationData: TextView
 
+    private lateinit var mood: Mood
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mood_view)
-        mood = this.intent.extras?.getSerializable(INTENT_MOOD) as Mood
-        val flag = this.intent.getStringExtra(HistoryView.FLAG) as String
-
-        if (flag == "add") {
-            title = "New Mood"
-        }
-        else if (flag == "edit") {
-            title = "Edit Mood"
-        }
+        mood = this.intent.getParcelableExtra(INTENT_MOOD) as Mood
+        title = this.intent.getStringExtra(HistoryView.INTENT_PURPOSE) as String
 
         confirmButton = findViewById(R.id.mood_save_button)
         dateField = findViewById(R.id.mood_date_field)
@@ -97,12 +91,12 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
 
-        emotionField.setSelection(mood.emotion?: 0)
-        socialField.setSelection(mood.social?: 0)
+        emotionField.setSelection(mood.emotion)
+        socialField.setSelection(mood.social)
         dateField.text = mood.getDateString()
-        reasonField.text = mood.getReasonText()
-        locationData.text = mood.location
-        locationField.setChecked(mood.showLocation)
+        reasonField.text = mood.reason_text
+//        locationData.text = mood.location
+        locationField.isChecked = mood.showLocation
 
         // confirm button
         confirmButton.setOnClickListener {
@@ -113,13 +107,13 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
             mood.emotion = emotionField.selectedItemPosition
             mood.social = socialField.selectedItemPosition
-            mood.setReasonText(reasonField.text.toString())
+            mood.reason_text = reasonField.text.toString()
             mood.showLocation = locationField.isChecked
 
             val returnIntent = Intent()
             returnIntent.putExtra(INTENT_MOOD_RESULT, mood)
 
-            if (flag == "edit") {
+            if (title == INTENT_PURPOSE_EDIT) {
                 val pos =intent.getIntExtra(HistoryView.INTENT_EDIT_ID, -1)
                 returnIntent.putExtra(INTENT_POS_RESULT, pos)
             }
