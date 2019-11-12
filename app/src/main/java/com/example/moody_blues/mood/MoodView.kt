@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_MOOD
+import com.example.moody_blues.history.HistoryView.Companion.INTENT_PURPOSE_ADD
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_PURPOSE_EDIT
 import com.example.moody_blues.models.Mood
 
@@ -49,44 +50,37 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // TODO: For some reason some colors crash the app lol maybe find out why later (currently none of these do though)
 
-        if (emotionField != null) {
-            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.EMOTION_STATES)
-            emotionField.adapter = arrayAdapter
+        emotionField.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.EMOTION_STATES)
 
-            emotionField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
+        emotionField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
                     parent: AdapterView<*>,
                     view: View,
                     position: Int,
                     id: Long
-                ) {
-                    Mood.EMOTION_STATES[position]
-                    val color = Mood.EMOTION_COLORS[position]
-                    findViewById<View>(android.R.id.content).setBackgroundColor(color)
-                }
+            ) {
+                presenter.onSelectEmotion(position)
+            }
 
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Code to perform some action when nothing is selected
-                }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
             }
         }
 
         // Social spinner stuff
 
-        if (socialField != null) {
-            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.SOCIAL_REASONS)
-            socialField.adapter = arrayAdapter
+        socialField.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.SOCIAL_REASONS)
 
-            socialField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    Mood.SOCIAL_REASONS[position]
-                }
+        socialField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                presenter.onSelectSocial(position)
+            }
 
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Code to perform some action when nothing is selected
-                }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
             }
         }
+
 
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
@@ -100,34 +94,34 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // confirm button
         confirmButton.setOnClickListener {
-            if (!verifyMood()) {
-                Toast.makeText(applicationContext, "Invalid input", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            mood.emotion = emotionField.selectedItemPosition
-            mood.social = socialField.selectedItemPosition
-            mood.reason_text = reasonField.text.toString()
-            mood.showLocation = locationField.isChecked
-
-            val returnIntent = Intent()
-            returnIntent.putExtra(INTENT_MOOD_RESULT, mood)
-
-            if (title == INTENT_PURPOSE_EDIT) {
-                val pos =intent.getIntExtra(HistoryView.INTENT_EDIT_ID, -1)
-                returnIntent.putExtra(INTENT_POS_RESULT, pos)
-            }
-
-            setResult(RESULT_OK, returnIntent)
-
-            presenter.confirmMood(mood)
+            presenter.verifyMoodFields(reasonField.text.toString())
         }
+    }
+
+    override fun changeBgColor(color: Int) {
+        findViewById<View>(android.R.id.content).setBackgroundColor(color)
+    }
+
+    override fun preBacktoHistory() {
+        presenter.setMoodFields(
+                mood,
+                emotionField.selectedItemPosition,
+                socialField.selectedItemPosition,
+                reasonField.text.toString(),
+                locationField.isChecked
+        )
+
+        if (title == INTENT_PURPOSE_ADD)
+            presenter.addMood(mood)
+        else if (title == INTENT_PURPOSE_EDIT)
+            presenter.editMood(mood)
     }
 
     /**
      * Transition back to the history activity
      */
     override fun backtoHistory() {
+        setResult(RESULT_OK, Intent())
         finish()
     }
 
@@ -135,15 +129,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
      * Confirm the mood matches the requirements
      * @return If all conditions are met
      */
-    private fun verifyMood(): Boolean {
-//        if (emotionField.selectedItem.toString().isEmpty())
-//            return false
-        if (reasonField.text.length > 20)
-            return false
-        if (reasonField.text.split(" ").size > 3)
-            return false
-
-        return true
+    override fun showVerifyError() {
+        Toast.makeText(applicationContext, "Invalid input", Toast.LENGTH_SHORT).show()
     }
 
     companion object {

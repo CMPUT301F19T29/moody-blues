@@ -114,6 +114,10 @@ object AppManager : DbManager(){
             this.userMoods.filter { entry -> entry.value.emotion == emotion } as HashMap
     }
 
+    fun getOrderedUserMoods(emotion: Int?): ArrayList<Mood> {
+        return ArrayList(this.getUserMoods(emotion).values.sortedByDescending { mood -> mood.date })
+    }
+
     /**
      * Add the given mood to the user's list of moods in the database
      * @param mood The mood to add to the database
@@ -135,11 +139,10 @@ object AppManager : DbManager(){
 
     /**
      * Update the mood specified by id
-     * @param id The id of the mood in the database to replace with the given mood
      * @param mood The mood to replace the existing mood in the database
      */
-    suspend fun editMood(id: String, mood: Mood) {
-        super.editMood(id, mood, this.user!!.id)
-        this.userMoods[id] = mood
+    suspend fun editMood(mood: Mood) {
+        super.editMood(mood.id, mood, this.user!!.id)
+        this.userMoods[mood.id] = mood
     }
 }

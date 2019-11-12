@@ -27,7 +27,7 @@ class Mood(
 ): Parcelable {
 
     constructor(location: Location?): this() {
-        this.location = if (location == null) null else LatLng(location!!.latitude, location!!.longitude)
+        this.location = if (location == null) null else LatLng(location.latitude, location.longitude)
     }
 
     constructor(parcel: Parcel): this(
@@ -43,14 +43,16 @@ class Mood(
 
     constructor(wrapper: MoodWrapper): this(
             wrapper.id?: "",
-            LatLng(wrapper.location_lat?: 0.0, wrapper.location_lon?: 0.0),
+            null,
             LocalDateTime.parse(wrapper.date_string, DATE_FORMAT),
             wrapper.reason_text,
             wrapper.reason_image,
             wrapper.social?: 0,
             wrapper.emotion?: 0,
             wrapper.showLocation?: true
-    )
+    ) {
+        this.location = if (location == null) null else LatLng(location!!.latitude, location!!.longitude)
+    }
 
     fun wrap(): MoodWrapper {
         return MoodWrapper(
@@ -115,6 +117,7 @@ class Mood(
 
     companion object CREATOR : Parcelable.Creator<Mood> {
         val EMOTION_STATES: Array<String> = arrayOf("\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
+        val EMOTION_FILTERS: Array<String> = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
         val EMOTION_COLORS: Array<Int> = arrayOf(Color.GREEN, Color.parseColor("#33FFF4"), Color.YELLOW, Color.parseColor("#FF6D66"), Color.LTGRAY, Color.parseColor("#FE9DFF"))
         val SOCIAL_REASONS: Array<String> = arrayOf("None", "Alone", "With one other person", "With two to several people", "With a group")
         private val DATE_FORMAT = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
