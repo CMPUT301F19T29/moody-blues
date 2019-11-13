@@ -2,11 +2,13 @@ package com.example.moody_blues.mood
 
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.models.Mood
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 /**
  * The presenter for the mood activity
  */
-class MoodPresenter(val moodView: MoodContract.View) : MoodContract.Presenter {
+class MoodPresenter(private val view: MoodContract.View) : MoodContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -14,17 +16,43 @@ class MoodPresenter(val moodView: MoodContract.View) : MoodContract.Presenter {
     // Can use val/vars from [primary
     init {
         // Links the presenter to the view
-        moodView.presenter = this
+        view.presenter = this
     }
 
-    override fun start() {
+    override fun onSelectEmotion(emotion: Int) {
+        view.changeBgColor(Mood.EMOTION_COLORS[emotion])
     }
 
-    /**
-     * Confirm adding or editing a mood
-     */
-    override fun confirmMood(mood: Mood) {
-        moodView.backtoHistory()
+    override fun onSelectSocial(social: Int) {
+    }
+
+    override fun setMoodFields(mood: Mood, emotion: Int, social: Int, reasonText: String, showLocation: Boolean) {
+        mood.emotion = emotion
+        mood.social = social
+        mood.reason_text = reasonText
+        mood.showLocation = showLocation
+    }
+
+    override fun verifyMoodFields(reasonText: String) {
+        if (reasonText.length > 20 || reasonText.split(" ").size > 3)
+            view.showVerifyError()
+        else
+            view.preBacktoHistory()
+    }
+
+
+    override fun addMood(mood: Mood) {
+        MainScope().launch {
+            AppManager.addMood(mood)
+            view.backtoHistory()
+        }
+    }
+
+    override fun editMood(mood: Mood) {
+        MainScope().launch {
+            AppManager.editMood(mood)
+            view.backtoHistory()
+        }
     }
 
 }

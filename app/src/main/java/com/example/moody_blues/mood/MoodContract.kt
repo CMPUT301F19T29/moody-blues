@@ -11,20 +11,32 @@ interface MoodContract {
      * The mood view
      */
     interface View : BaseView<Presenter> {
+
+        fun preBacktoHistory()
         /**
          * Transition back to the history activity
          */
         fun backtoHistory()
 //        fun gotoMap()
+        fun changeBgColor(color: Int)
+
+        fun showVerifyError()
     }
 
     /**
-     * The mood prsenter
+     * The mood presenter
      */
     interface Presenter : BasePresenter {
-        /**
-         * Confirm adding or editing a mood
-         */
-        fun confirmMood(mood: Mood)
+        fun onSelectEmotion(emotion: Int)
+
+        fun onSelectSocial(social: Int)
+
+        fun setMoodFields(mood: Mood, emotion: Int, social: Int, reasonText: String, showLocation: Boolean)
+
+        fun verifyMoodFields(reasonText: String)
+
+        fun addMood(mood: Mood)
+
+        fun editMood(mood: Mood)
     }
 }

@@ -1,17 +1,15 @@
 package com.example.moody_blues.history
 
 import android.location.Location
-import android.util.Log
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.models.Mood
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.*
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 /**
  * This is the presenter for the history activity
  */
-class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryContract.Presenter {
+class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -19,10 +17,7 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     // Can use val/vars from [primary
     init {
         // Links the presenter to the view
-        historyView.presenter = this
-    }
-
-    override fun start() {
+        view.presenter = this
     }
 
     /**
@@ -33,17 +28,28 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     override fun fetchMoods(emotion: String): ArrayList<Mood> {
         var moods : Collection<Mood> = AppManager.getFilteredUserMoods(emotion).values
         moods.sortedByDescending { mood -> mood.date }
-        return ArrayList<Mood>(moods)
+        return ArrayList(moods)
     }
 
     /**
      * Get the full list of moods
      * @return the full list of moods
      */
-    override fun fetchMoods(): ArrayList<Mood> {
-        var moods : Collection<Mood> = AppManager.getMoods().values
-        moods.sortedByDescending { mood -> mood.date }
-        return ArrayList<Mood>(moods)
+    override fun fetchMoods(filter: Int): ArrayList<Mood> {
+        val emotion = if (filter == 0) null else filter - 1
+        return AppManager.getOrderedUserMoods(emotion)
+    }
+
+    /**
+     * Get the list of moods in memory
+     * @param filter The index of the filter selection. 0 = no filter
+     */
+    override fun refreshMoods(filter: Int) {
+        view.refreshMoods(this.fetchMoods(filter))
+    }
+
+    override fun onAddMood() {
+        view.getLocation()
     }
 
     /**
@@ -51,40 +57,16 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
      * @param location The current location of the user
      */
     override fun createMood(location: Location?) {
-        val mood = Mood(location.toString())
-        historyView.gotoMood(mood)
-    }
-
-    /**
-     * Adds a new mood to the database
-     * @param mood The new mood to add
-     */
-    override fun addMood(mood: Mood) {
-        MainScope().launch {
-            AppManager.addMood(mood)
-            var moods = ArrayList<Mood>(AppManager.getMoods().values)
-            historyView.refreshMoods(moods)
-        }
+        val mood = Mood(location)
+        view.gotoMood(mood)
     }
 
     /**
      * Tells the view to open a mood
      * @param mood The mood to edit or view
      */
-    override fun editMood(mood: Mood) {
-        historyView.gotoEditMood(mood.id)
-    }
-
-    /**
-     * Update an existing mood in the database
-     * @param mood The mood to update
-     */
-    override fun updateMood(mood: Mood) {
-        MainScope().launch{
-            AppManager.updateMood(mood.id, mood)
-            var moods = ArrayList<Mood>(AppManager.getMoods().values)
-            historyView.refreshMoods(moods)
-        }
+    override fun onEditMood(mood: Mood) {
+        view.gotoEditMood(mood)
     }
 
     /**
@@ -94,30 +76,8 @@ class HistoryPresenter(private val historyView: HistoryContract.View) : HistoryC
     override fun deleteMood(mood: Mood) {
         MainScope().launch{
             AppManager.deleteMood(mood.id)
-            var moods = ArrayList<Mood>(AppManager.getMoods().values)
-            historyView.refreshMoods(moods)
+            val moods = ArrayList<Mood>(AppManager.getMoods().values)
+            view.refreshMoods(moods)
         }
     }
-
-    /**
-     * Filter the displayed moods
-     * @param emotion The emotion to filter for
-     */
-    override fun refreshMoods(emotion: String) {
-        MainScope().launch{
-            var moods = AppManager.getFilteredUserMoods(emotion).values.sortedByDescending { mood -> mood.date }
-            historyView.refreshMoods(ArrayList<Mood>(moods))
-        }
-    }
-
-    /**
-     * Remove the filter for existing moods
-     */
-    override fun refreshMoods() {
-        MainScope().launch{
-            var moods = AppManager.getMoods().values.sortedByDescending { mood -> mood.date }
-            historyView.refreshMoods(ArrayList<Mood>(moods))
-        }
-    }
-
 }

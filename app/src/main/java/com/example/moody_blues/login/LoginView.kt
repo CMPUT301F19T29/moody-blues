@@ -12,6 +12,11 @@ import com.example.moody_blues.signup.SignupView
 class LoginView : AppCompatActivity(), LoginContract.View {
     override lateinit var presenter: LoginContract.Presenter
 
+    private lateinit var submit: Button
+    private lateinit var signup: Button
+    private lateinit var user: EditText
+    private lateinit var pass: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_view)
@@ -19,12 +24,12 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         // Pass the view to the presenter
         presenter = LoginPresenter(this)
 
-        // Do stuff with the presenter
-        val submit: Button = findViewById(R.id.login_submit_button)
-        val signup: Button = findViewById(R.id.login_signup_button)
-        val user: EditText = findViewById(R.id.login_user_field)
-        val pass: EditText = findViewById(R.id.login_pass_field)
+        submit = findViewById(R.id.login_submit_button)
+        signup = findViewById(R.id.login_signup_button)
+        user = findViewById(R.id.login_user_field)
+        pass = findViewById(R.id.login_pass_field)
 
+        // Do stuff with the presenter
         submit.setOnClickListener {
             presenter.login(user.text.toString(), pass.text.toString())
         }
@@ -38,9 +43,6 @@ class LoginView : AppCompatActivity(), LoginContract.View {
      * Clear the fields for username and password
      */
     override fun clear(){
-        val user: EditText = findViewById(R.id.login_user_field)
-        val pass: EditText = findViewById(R.id.login_pass_field)
-
         user.text.clear()
         pass.text.clear()
     }

@@ -31,6 +31,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     override lateinit var presenter: HistoryContract.Presenter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var filterField: Spinner
+    private lateinit var add: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,18 +39,12 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         title = "History"
 
+        add =  findViewById(R.id.history_add_button)
         filterField = findViewById(R.id.filter_moods)
-
-        val filters = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
-        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filters)
-        filterField.adapter = arrayAdapter
+        filterField.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.EMOTION_FILTERS)
         filterField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                if(filters[position] != "❌ No filter") {
-                    presenter.refreshMoods(filters[position])
-                } else {
-                    presenter.refreshMoods()
-                }
+                presenter.refreshMoods(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -61,24 +56,26 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         presenter = HistoryPresenter(this)
 
         // Do stuff with the presenter
-        val add: FloatingActionButton = findViewById(R.id.history_add_button)
-
         add.setOnClickListener {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_DENIED) {
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
-            }
-            else {
-                getLocationResult()
-            }
+            presenter.onAddMood()
         }
 
-        history_list_mood.adapter = MoodAdapter(presenter.fetchMoods(),
-            { item: Mood, pos: Int -> presenter.editMood(item) },
-            { item: Mood, pos: Int -> presenter.deleteMood(item)
+        history_list_mood.adapter = MoodAdapter(presenter.fetchMoods(0),
+            { item: Mood, _: Int -> presenter.onEditMood(item) },
+            { item: Mood, _: Int -> presenter.deleteMood(item)
                 history_list_mood.adapter!!.notifyDataSetChanged()
                 true })
         history_list_mood.layoutManager = LinearLayoutManager(this)
+    }
+
+    override fun getLocation() {
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_DENIED) {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
+        }
+        else {
+            getLocationResult()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -106,23 +103,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == GET_MOOD_CODE && resultCode == RESULT_OK) {
-            val filters = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
-            val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
-            presenter.addMood(mood)
-            if(filterField.getSelectedItemPosition() != 0) {
-                presenter.refreshMoods(filters[filterField.getSelectedItemPosition()])
-            } else {
-                presenter.refreshMoods()
-            }
-        }
-
-        if (requestCode == GET_EDITED_MOOD_CODE && resultCode == RESULT_OK) {
-            val mood: Mood = data?.getSerializableExtra(INTENT_MOOD_RESULT) as Mood
-            val pos: Int = data.getIntExtra(INTENT_POS_RESULT, -1)
-            presenter.updateMood(mood)
-            history_list_mood.adapter!!.notifyDataSetChanged()
-        }
+        presenter.refreshMoods(filterField.getSelectedItemPosition())
     }
 
     /**
@@ -131,7 +112,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
      */
     override fun gotoMood(mood: Mood) {
         val intent = Intent(this, MoodView::class.java)
-        intent.putExtra(FLAG, "add")
+        intent.putExtra(INTENT_PURPOSE, INTENT_PURPOSE_ADD)
         intent.putExtra(INTENT_MOOD, mood)
         startActivityForResult(intent, GET_MOOD_CODE)
     }
@@ -147,21 +128,21 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
 
     /**
      * Open the mood activity for a mood
-     * @param id The id of the mood the edit or view
+     * @param mood The mood to edit or view
      */
-    override fun gotoEditMood(id: String) {
-        val mood: Mood? = AppManager.getMood(id)
+    override fun gotoEditMood(mood: Mood) {
         val intent = Intent(this, MoodView::class.java)
-        intent.putExtra(FLAG, "edit")
+        intent.putExtra(INTENT_PURPOSE, INTENT_PURPOSE_EDIT)
         intent.putExtra(INTENT_MOOD, mood)
-        intent.putExtra(INTENT_EDIT_ID, id)
         startActivityForResult(intent, GET_EDITED_MOOD_CODE)
     }
 
     companion object {
-        const val FLAG = "flag"
+        const val INTENT_PURPOSE = "purpose"
+        const val INTENT_PURPOSE_EDIT = "Edit Mood"
+        const val INTENT_PURPOSE_ADD = "New Mood"
         const val INTENT_MOOD = "mood"
-        const val INTENT_EDIT_ID = "editId"
+        const val INTENT_EDIT_ID = "edit id"
         const val GET_MOOD_CODE = 1
         const val GET_EDITED_MOOD_CODE = 2
     }
