@@ -80,4 +80,8 @@ class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract
             view.refreshMoods(moods)
         }
     }
+
+    override fun gotoMap() {
+        view.gotoMap()
+    }
 }
