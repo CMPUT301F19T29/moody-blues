@@ -87,11 +87,17 @@ class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback {
 
         // for each mood in user's moods add marker
         for ((_, mood) in presenter.fetchMoods()) {
+            if (mood.location == null) {
+                continue
+            }
             mMap.addMarker(MarkerOptions().position(mood.location!!))
         }
 
 //        // for each mood in following users' moods add marker
 //        for ((_, mood) in presenter.fetchFollowingMoods()) {  TODO: fetch following users' moods
+//            if (mood.location == null) {
+//                continue
+//            }
 //            mMap.addMarker(MarkerOptions().position(mood.location!!).title(user.name))  TODO: fetch usernames of moods
 //        }
 

@@ -51,7 +51,7 @@ class Mood(
             wrapper.emotion?: 0,
             wrapper.showLocation?: true
     ) {
-        this.location = if (location == null) null else LatLng(location!!.latitude, location!!.longitude)
+        this.location = if (wrapper.location_lat == null) null else LatLng(wrapper.location_lat!!, wrapper.location_lon!!)
     }
 
     fun wrap(): MoodWrapper {
