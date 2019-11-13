@@ -1,7 +1,11 @@
 package com.example.moody_blues.mood
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.*
 import android.widget.Button
@@ -14,6 +18,7 @@ import com.example.moody_blues.history.HistoryView.Companion.INTENT_MOOD
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_PURPOSE_ADD
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_PURPOSE_EDIT
 import com.example.moody_blues.models.Mood
+import java.lang.Exception
 
 /**
  * The view for the mood activity
@@ -27,7 +32,12 @@ class MoodView : AppCompatActivity(), MoodContract.View {
     private lateinit var socialField: Spinner
     private lateinit var reasonField: TextView
     private lateinit var locationField: Switch
-    private lateinit var locationData: TextView
+//    private lateinit var locationData: TextView
+    private lateinit var photoField: ImageView
+    private var photoBitmap: Bitmap? = null
+    private lateinit var photoAddButton: Button
+    private lateinit var photoUploadButton: Button
+    private lateinit var photoDeleteButton: Button
 
     private lateinit var mood: Mood
 
@@ -43,7 +53,12 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         socialField = findViewById(R.id.mood_social_field)
         reasonField = findViewById(R.id.mood_reason_field)
         locationField = findViewById(R.id.mood_location_field)
-        locationData = findViewById(R.id.mood_location_data)
+//        locationData = findViewById(R.id.mood_location_data)
+        photoField = findViewById(R.id.mood_photo_field)
+        photoBitmap = mood.reason_image
+        photoAddButton = findViewById(R.id.mood_photo_add_button)
+        photoUploadButton = findViewById(R.id.mood_photo_upload_button)
+        photoDeleteButton = findViewById(R.id.mood_photo_delete_button)
 
 
         // Emotional state spinner stuff
@@ -81,6 +96,23 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             }
         }
 
+        photoAddButton.setOnClickListener {
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+                takePictureIntent.resolveActivity(packageManager)?.also {
+                    startActivityForResult(takePictureIntent, REQUEST_PHOTO_ADD)
+                }
+            }
+        }
+
+        photoUploadButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, REQUEST_PHOTO_UPLOAD)
+        }
+
+        photoDeleteButton.setOnClickListener {
+            presenter.setPhoto(null)
+        }
 
         // Pass the view to the presenter
         presenter = MoodPresenter(this)
@@ -91,6 +123,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         reasonField.text = mood.reason_text
 //        locationData.text = mood.location
         locationField.isChecked = mood.showLocation
+        photoField.setImageBitmap(mood.reason_image)
 
         // confirm button
         confirmButton.setOnClickListener {
@@ -108,7 +141,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
                 emotionField.selectedItemPosition,
                 socialField.selectedItemPosition,
                 reasonField.text.toString(),
-                locationField.isChecked
+                locationField.isChecked,
+                null //photoBitmap // TODO: set to cloud firebase image url
         )
 
         if (title == INTENT_PURPOSE_ADD)
@@ -133,9 +167,37 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         Toast.makeText(applicationContext, "Invalid input", Toast.LENGTH_SHORT).show()
     }
 
+    override fun changePhoto(bitmap: Bitmap?) {
+        photoField.setImageBitmap(bitmap)
+        photoBitmap = bitmap
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK)
+            return
+
+        if (requestCode == REQUEST_PHOTO_ADD) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            presenter.setPhoto(imageBitmap)
+        }
+        else if (requestCode == REQUEST_PHOTO_UPLOAD) {
+            try {
+                val uri = data?.data
+                val stream = contentResolver.openInputStream(uri!!)
+                val bitmap = BitmapFactory.decodeStream(stream)
+                presenter.setPhoto(bitmap)
+            } catch (e: Exception) {
+                return
+            }
+        }
+    }
+
     companion object {
         const val INTENT_MOOD_RESULT = "mood_result"
         const val INTENT_POS_RESULT = "edit_pos"
+        const val REQUEST_PHOTO_ADD = 1
+        const val REQUEST_PHOTO_UPLOAD = 2
     }
 
 //    override fun gotoMap() {
