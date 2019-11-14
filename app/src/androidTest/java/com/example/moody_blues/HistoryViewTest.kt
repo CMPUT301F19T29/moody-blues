@@ -22,15 +22,4 @@ import org.junit.Test
 class HistoryViewTest {
     @get:Rule
     val intentsTestRule = IntentsTestRule(HistoryView::class.java)
-//
-//    @Test
-//    fun addMood() {
-//        // Click the button
-//        onView(withId(R.id.login_submit_button)).perform(click())
-//        // Ensure
-//        intended(hasFlag(Intent.FLAG_ACTIVITY_NEW_TASK))
-//        // Goes to dashboard
-//        intended(hasComponent(DashboardView::class.java.name))
-//    }
-//
 }

@@ -15,6 +15,11 @@ import com.example.moody_blues.requests.RequestView
 class DashboardView : AppCompatActivity(), DashboardContract.View {
     override lateinit var presenter: DashboardContract.Presenter
 
+    private lateinit var history: Button
+    private lateinit var feed: Button
+    private lateinit var requests: Button
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard_view)
@@ -22,11 +27,11 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         // Pass the view to the presenter
         presenter = DashboardPresenter(this)
 
-        // Do stuff with the presenter
-        val history: Button = findViewById(R.id.dashboard_history_button)
-        val feed: Button = findViewById(R.id.dashboard_feed_button)
-        val requests: Button = findViewById(R.id.dashboard_requests_button)
+        history = findViewById(R.id.dashboard_history_button)
+        feed = findViewById(R.id.dashboard_feed_button)
+        requests = findViewById(R.id.dashboard_requests_button)
 
+        // Do stuff with the presenter
         history.setOnClickListener {
             presenter.gotoHistory()
         }

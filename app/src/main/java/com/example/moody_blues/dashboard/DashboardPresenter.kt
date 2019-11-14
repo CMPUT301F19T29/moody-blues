@@ -3,7 +3,7 @@ package com.example.moody_blues.dashboard
 /**
  * This is the presenter for the dashboard activity
  */
-class DashboardPresenter(val dashboardView: DashboardContract.View) : DashboardContract.Presenter {
+class DashboardPresenter(private val view: DashboardContract.View) : DashboardContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -11,30 +11,27 @@ class DashboardPresenter(val dashboardView: DashboardContract.View) : DashboardC
     // Can use val/vars from [primary
     init {
         // Links the presenter to the view
-        dashboardView.presenter = this
-    }
-
-    override fun start() {
+        view.presenter = this
     }
 
     /**
      * Tell the view to transition to the history activity
      */
     override fun gotoHistory() {
-        dashboardView.gotoHistory()
+        view.gotoHistory()
     }
 
     /**
      * Tell the view to transition to the feed activity
      */
     override fun gotoFeed() {
-        dashboardView.gotoFeed()
+        view.gotoFeed()
     }
 
     /**
      * Tell the view to transition to the requests activity
      */
     override fun gotoRequests() {
-        dashboardView.gotoRequests()
+        view.gotoRequests()
     }
 }

@@ -16,7 +16,7 @@
         android:layout_marginLeft="32dp"
         android:layout_marginBottom="24dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/login_pass_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

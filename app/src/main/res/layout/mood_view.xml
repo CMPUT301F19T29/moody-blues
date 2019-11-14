@@ -89,10 +89,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:text="Emotion"
+            android:text="My Emotion"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -125,10 +124,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:text="Social"
+            android:text="Social Situation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -162,10 +160,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:text="Reason"
+            android:text="Reasoning"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -175,10 +172,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="200dp"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:hint="Reason"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -227,12 +221,66 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/mood_location_data"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mood_photo_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mood_location_container" />
+        app:layout_constraintTop_toBottomOf="@+id/mood_location_container">
+
+        <TextView
+            android:id="@+id/mood_photo_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Photograph"
+            app:layout_constraintBaseline_toBaselineOf="@+id/mood_photo_delete_button"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/mood_photo_field"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/mood_photo_label"
+            app:layout_constraintStart_toStartOf="@+id/mood_photo_label"
+            app:layout_constraintTop_toBottomOf="@+id/mood_photo_label"
+            tools:srcCompat="@tools:sample/avatars[2]" />
+
+        <Button
+            android:id="@+id/mood_photo_add_button"
+            android:layout_width="64dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="New..."
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/mood_photo_upload_button"
+            android:layout_width="64dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:text="Upload"
+            android:textSize="10sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/mood_photo_add_button"
+            app:layout_constraintEnd_toStartOf="@+id/mood_photo_add_button" />
+
+        <Button
+            android:id="@+id/mood_photo_delete_button"
+            android:layout_width="64dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:text="Delete"
+            android:textSize="10sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/mood_photo_upload_button"
+            app:layout_constraintEnd_toStartOf="@+id/mood_photo_upload_button" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
