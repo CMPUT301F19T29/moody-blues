@@ -1,6 +1,9 @@
 package com.example.moody_blues.map
+import android.location.Location
 import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
+import com.example.moody_blues.models.Mood
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * The contract between the map view and the presenter
@@ -14,6 +17,9 @@ interface MapContract {
          * Transition to the mood page
          */
         fun gotoMood()
+
+        fun getLocation()
+        fun setDefaultLocation(location: Location?)
     }
 
     /**
@@ -24,5 +30,8 @@ interface MapContract {
          * Select the location to be used in the mood
          */
         fun selectLocation()
+
+        fun fetchMoods(): HashMap<String, Mood>
+        fun getLocation()
     }
 }
