@@ -49,12 +49,15 @@ open class DbManager {
             if (authResult == null || authResult.user == null)
                 return null
 
-            getFF().collection(PATH_EMAILS).document(email)
+            val user = getFF().collection(PATH_EMAILS).document(email)
                 .get()
                 .await()
-                .toObject(String::class.java)
+                .toObject(User::class.java)
+
+            return user!!.username
 
         } catch (e: Exception) {
+            Log.e("signIn", e.toString())
             null // TODO: list exceptions
         }
     }
@@ -79,10 +82,11 @@ open class DbManager {
                     .set(user)
                     .await()
             getFF().collection(PATH_EMAILS).document(email)
-                .set(username)
+                .set(user)
                 .await()
             true
         } catch (e: Exception) {
+            Log.e("createUser", e.toString())
             false
         }
     }
@@ -184,7 +188,9 @@ open class DbManager {
 
             for (doc in moodSnapshot)
                 moodMap[doc.id] = Mood(doc.toObject(MoodWrapper::class.java))
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+            Log.e("fetchMoods", e.toString())
+        }
 
         return moodMap
     }
@@ -266,7 +272,9 @@ open class DbManager {
 
             for (doc in requestSnapshot)
                 requests.add(doc.toObject(Request::class.java))
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+            Log.e("fetchRequests", e.toString())
+        }
 
         return requests
 

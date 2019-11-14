@@ -125,7 +125,6 @@ object AppManager : DbManager(){
     }
 
     fun getOrderedUserMoods(emotion: Int?): ArrayList<Mood> {
-        return userFeed
         return ArrayList(this.getUserMoods(emotion).values.sortedByDescending { mood -> mood.date })
     }
 
