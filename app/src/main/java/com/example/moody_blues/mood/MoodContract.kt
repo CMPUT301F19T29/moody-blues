@@ -1,4 +1,5 @@
 package com.example.moody_blues.mood
+import android.graphics.Bitmap
 import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
 import com.example.moody_blues.models.Mood
@@ -21,6 +22,8 @@ interface MoodContract {
         fun changeBgColor(color: Int)
 
         fun showVerifyError()
+
+        fun changePhoto(bitmap: Bitmap?)
     }
 
     /**
@@ -31,12 +34,14 @@ interface MoodContract {
 
         fun onSelectSocial(social: Int)
 
-        fun setMoodFields(mood: Mood, emotion: Int, social: Int, reasonText: String, showLocation: Boolean)
+        fun setMoodFields(mood: Mood, emotion: Int, social: Int, reasonText: String, showLocation: Boolean, reasonImage: Bitmap?)
 
         fun verifyMoodFields(reasonText: String)
 
         fun addMood(mood: Mood)
 
         fun editMood(mood: Mood)
+
+        fun setPhoto(bitmap: Bitmap?)
     }
 }

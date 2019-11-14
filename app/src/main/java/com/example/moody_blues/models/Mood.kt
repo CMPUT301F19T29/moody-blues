@@ -5,11 +5,15 @@ import android.graphics.Color
 import android.location.Location
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Base64
 import com.google.android.gms.maps.model.LatLng
-import java.time.LocalDate
+import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import android.graphics.BitmapFactory
+import android.util.Log
+
 
 /**
  * A model class for a mood
@@ -46,7 +50,7 @@ class Mood(
             null,
             LocalDateTime.parse(wrapper.date_string, DATE_FORMAT),
             wrapper.reason_text,
-            wrapper.reason_image,
+            null, //wrapper.reason_image, // TODO: set to cloud firebase image url
             wrapper.social?: 0,
             wrapper.emotion?: 0,
             wrapper.showLocation?: true
@@ -61,7 +65,7 @@ class Mood(
                 this.location?.longitude,
                 this.getDateString(),
                 this.reason_text,
-                this.reason_image,
+                null, //this.reason_image, // TODO: set to cloud firebase image url
                 this.social,
                 this.emotion,
                 this.showLocation

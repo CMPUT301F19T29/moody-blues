@@ -1,11 +1,9 @@
 package com.example.moody_blues.map
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -70,7 +68,7 @@ class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback {
 
     override fun setDefaultLocation(location: Location?) {
         here = LatLng(location!!.latitude, location!!.longitude)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(here, 8.toFloat()))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(here, 10f))
     }
 
     /**
