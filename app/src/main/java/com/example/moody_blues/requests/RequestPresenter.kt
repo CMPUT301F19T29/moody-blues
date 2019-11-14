@@ -1,5 +1,9 @@
 package com.example.moody_blues.requests
 
+import com.example.moody_blues.AppManager
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+
 class RequestPresenter(private val view: RequestContract.View) : RequestContract.Presenter {
 
     // Constructor cannot contain any code
@@ -16,8 +20,8 @@ class RequestPresenter(private val view: RequestContract.View) : RequestContract
      * @param user The user to follow
      */
     override fun requestFollow(user: String) {
-        // checks username with firebase database for valid user to follow
-        // exit popup
-
+        MainScope().launch {
+            AppManager.addRequest(user)
+        }
     }
 }
