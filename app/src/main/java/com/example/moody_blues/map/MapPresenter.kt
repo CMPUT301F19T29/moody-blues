@@ -1,5 +1,8 @@
 package com.example.moody_blues.map
 
+import com.example.moody_blues.AppManager
+import com.example.moody_blues.models.Mood
+
 class MapPresenter(private val view: MapContract.View) : MapContract.Presenter {
 
     // Constructor cannot contain any code
@@ -9,6 +12,14 @@ class MapPresenter(private val view: MapContract.View) : MapContract.Presenter {
     init {
         // Links the presenter to the view
         view.presenter = this
+    }
+
+    override fun fetchMoods(): HashMap<String, Mood> {
+        return AppManager.getUserMoods(null)
+    }
+
+    override fun getLocation() {
+        view.getLocation()
     }
 
     /**

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
+import com.example.moody_blues.map.MapView
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.mood.MoodAdapter
 import com.example.moody_blues.mood.MoodView
@@ -32,6 +33,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var filterField: Spinner
     private lateinit var add: FloatingActionButton
+    private lateinit var mapButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         title = "History"
 
         add =  findViewById(R.id.history_add_button)
+        mapButton = findViewById(R.id.goto_map_button)
         filterField = findViewById(R.id.filter_moods)
         filterField.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.EMOTION_FILTERS)
         filterField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -58,6 +61,10 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         // Do stuff with the presenter
         add.setOnClickListener {
             presenter.onAddMood()
+        }
+
+        mapButton.setOnClickListener {
+            presenter.gotoMap()
         }
 
         history_list_mood.adapter = MoodAdapter(presenter.fetchMoods(0),
@@ -103,7 +110,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        presenter.refreshMoods(filterField.getSelectedItemPosition())
+        presenter.refreshMoods(filterField.selectedItemPosition)
     }
 
     /**
@@ -135,6 +142,11 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         intent.putExtra(INTENT_PURPOSE, INTENT_PURPOSE_EDIT)
         intent.putExtra(INTENT_MOOD, mood)
         startActivityForResult(intent, GET_EDITED_MOOD_CODE)
+    }
+
+    override fun gotoMap() {
+        val intent = Intent(this, MapView::class.java)
+        startActivity(intent)
     }
 
     companion object {

@@ -29,6 +29,7 @@ interface HistoryContract {
         fun refreshMoods(moods: ArrayList<Mood>)
 
         fun getLocation()
+        fun gotoMap()
     }
 
     /**
@@ -73,5 +74,7 @@ interface HistoryContract {
          * @param mood The mood to delete
          */
         fun deleteMood(mood: Mood)
+
+        fun gotoMap()
     }
 }
