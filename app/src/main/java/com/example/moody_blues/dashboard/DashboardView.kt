@@ -2,12 +2,18 @@ package com.example.moody_blues.dashboard
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.moody_blues.R
 import com.example.moody_blues.feed.FeedView
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.requests.RequestView
+import com.google.android.material.navigation.NavigationView
 
 /**
  * This is the view for the dashboard activity
@@ -18,6 +24,11 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     private lateinit var history: Button
     private lateinit var feed: Button
     private lateinit var requests: Button
+    private lateinit var mDrawer: DrawerLayout
+    private lateinit var toolbar: Toolbar
+    private lateinit var nvDrawer: NavigationView
+
+    private lateinit var drawerToggle: ActionBarDrawerToggle
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +42,22 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         feed = findViewById(R.id.dashboard_feed_button)
         requests = findViewById(R.id.dashboard_requests_button)
 
+        // Set a Toolbar to replace the ActionBar
+        toolbar = findViewById(R.id.toolbar) as Toolbar
+        setSupportActionBar(toolbar);
+
+        // Display an Up icon (<-)
+        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
+
+        // Find drawer view
+        mDrawer = findViewById(R.id.drawer_layout) as DrawerLayout
+
+        // Initialize nvDrawer
+        nvDrawer = findViewById(R.id.nvView) as NavigationView
+
+        // Setup drawer view
+        setupDrawerContent(nvDrawer)
+
         // Do stuff with the presenter
         history.setOnClickListener {
             presenter.gotoHistory()
@@ -43,6 +70,45 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         requests.setOnClickListener {
             presenter.gotoRequests()
         }
+    }
+
+    private fun setupDrawerContent(navigationView:NavigationView) {
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            selectDrawerItem(menuItem)
+            true
+        }
+    }
+
+    private fun selectDrawerItem(menuItem: MenuItem) {
+        // Go to activity when item is clicked
+        when (menuItem.itemId) {
+            R.id.nav_history -> startActivity(Intent(this, HistoryView::class.java))
+            R.id.nav_feed -> startActivity(Intent(this, FeedView::class.java))
+            R.id.nav_requests -> startActivity(Intent(this, RequestView::class.java))
+//            else -> fragmentClass = HistoryView::class.java
+        }
+
+//        // Insert the fragment by replacing any existing fragment
+//        val fragmentManager = supportFragmentManager
+//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
+
+        // Highlight the selected item has been done by NavigationView
+        menuItem.isChecked = true
+//        // Set action bar title
+//        title = menuItem.title
+        // Close the navigation drawer
+        mDrawer.closeDrawers()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // The action bar home/up action should open or close the drawer.
+        when (item.getItemId()) {
+            android.R.id.home -> {
+                mDrawer.openDrawer(GravityCompat.START)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /**
