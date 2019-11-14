@@ -1,5 +1,6 @@
 package com.example.moody_blues
 
+import android.util.Log
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.MoodWrapper
 import com.example.moody_blues.models.Request
@@ -40,13 +41,21 @@ open class DbManager {
      * @param password The password to use to attempt a sign in
      * @return The result of attempting to sign the user in
      */
-    open suspend fun signIn(email: String, password: String): Boolean {
+    open suspend fun signIn(email: String, password: String): String? {
         return try {
             val authResult = auth.signInWithEmailAndPassword(email, password)
                     .await()
-            authResult != null && authResult.user != null
+
+            if (authResult == null || authResult.user == null)
+                return null
+
+            getFF().collection(PATH_EMAILS).document(email)
+                .get()
+                .await()
+                .toObject(String::class.java)
+
         } catch (e: Exception) {
-            false // TODO: list exceptions
+            null // TODO: list exceptions
         }
     }
 
@@ -69,9 +78,12 @@ open class DbManager {
             getFF().collection(PATH_USERS).document(username)
                     .set(user)
                     .await()
+            getFF().collection(PATH_EMAILS).document(email)
+                .set(username)
+                .await()
             true
         } catch (e: Exception) {
-            false // TODO: list exceptions
+            false
         }
     }
 
@@ -92,6 +104,15 @@ open class DbManager {
                 ?.delete()
                 ?.await()
         return true
+    }
+
+    open suspend fun deleteUser(username: String, email: String) {
+        getFF().collection(PATH_USERS).document(username)
+            .delete()
+            .await()
+        getFF().collection(PATH_EMAILS).document(email)
+            .delete()
+            .await()
     }
 
     /**
@@ -152,16 +173,18 @@ open class DbManager {
      *  retrieve moods
      * @return A hashmap of ids and Moods belonging to the given user
      */
-    open suspend fun fetchMoods (username: String?): HashMap<String, Mood> {
+    protected suspend fun fetchMoods (username: String?): HashMap<String, Mood> {
         val moodMap = HashMap<String, Mood>()
         username?: return moodMap
 
-        val moodSnapshot = getFFMoods(username)
+        try {
+            val moodSnapshot = getFFMoods(username)
                 .get()
                 .await()
 
-        for (doc in moodSnapshot)
-            moodMap[doc.id] = Mood(doc.toObject(MoodWrapper::class.java))
+            for (doc in moodSnapshot)
+                moodMap[doc.id] = Mood(doc.toObject(MoodWrapper::class.java))
+        } catch (e: Exception) { }
 
         return moodMap
     }
@@ -212,7 +235,7 @@ open class DbManager {
                 .await()
     }
 
-    open suspend fun addRequest(request: Request) {
+    open suspend fun setRequest(request: Request) {
         getFFRequests(request.from).document(request.to)
             .set(request)
             .await()
@@ -234,16 +257,25 @@ open class DbManager {
 
     protected suspend fun fetchRequests(username: String?): ArrayList<Request> {
         val requests = ArrayList<Request>()
-        username?: return requests
+        try {
+            username?: return requests
 
-        getFFRequests(username)
+            val requestSnapshot = getFFRequests(username)
+                .get()
+                .await()
+
+            for (doc in requestSnapshot)
+                requests.add(doc.toObject(Request::class.java))
+        } catch (e: Exception) { }
 
         return requests
+
     }
 
     companion object {
         private const val PATH_USERS: String = "users"
         private const val PATH_MOODS: String = "moods"
         private const val PATH_REQUESTS: String = "requests"
+        private const val PATH_EMAILS: String = "emails"
     }
 }

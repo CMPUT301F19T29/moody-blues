@@ -7,6 +7,8 @@ import com.google.firebase.auth.AuthResult
 
 object AppManager : DbManager(){
     private var userMoods: HashMap<String, Mood> = HashMap()
+    private var userRequests: ArrayList<Request> = ArrayList()
+    private var userFeed: ArrayList<Mood> = ArrayList()
     private var user: User? = null
 
     /**
@@ -16,13 +18,19 @@ object AppManager : DbManager(){
      * @param password The password to use to attempt a sign in
      * @return The result of attempting to sign the user in
      */
-    override suspend fun signIn(email: String, password: String): Boolean {
-        if (!super.signIn(email, password))
-            return false
+    override suspend fun signIn(email: String, password: String): String? {
+        val username = super.signIn(email, password)
+        username?: return null
 
-        this.user = getUser(email)
-        this.fetchMoods(user?.username)
-        return true
+        this.user = getUser(username)
+        this.fetchMoods()
+        this.fetchRequests()
+        this.fetchFeed()
+        return username
+    }
+
+    override suspend fun deleteUser(username: String, email: String) {
+        super.deleteUser(username, email)
     }
 
     /**
@@ -36,8 +44,8 @@ object AppManager : DbManager(){
         return super.createUser(email, password, username) // probably not needed
     }
 
-    override suspend fun fetchMoods(username: String?): HashMap<String, Mood> {
-        val moods = super.fetchMoods(username)
+    suspend fun fetchMoods(): HashMap<String, Mood> {
+        val moods = super.fetchMoods(user!!.username)
         this.userMoods = moods
         return moods
     }
@@ -117,6 +125,7 @@ object AppManager : DbManager(){
     }
 
     fun getOrderedUserMoods(emotion: Int?): ArrayList<Mood> {
+        return userFeed
         return ArrayList(this.getUserMoods(emotion).values.sortedByDescending { mood -> mood.date })
     }
 
@@ -149,7 +158,7 @@ object AppManager : DbManager(){
     }
 
     suspend fun addRequest(to: String) {
-        super.addRequest(Request(user!!.username, to))
+        super.setRequest(Request(user!!.username, to))
     }
 
     suspend fun cancelRequest(to: String) {
@@ -160,11 +169,59 @@ object AppManager : DbManager(){
         super.deleteRequest(Request(from, user!!.username))
     }
 
-//    suspend fun getRequestsToOthers(): ArrayList<Request> {
-//
-//    }
-//
-//    suspend fun getRequestsFromSelf(): ArrayList<Request> {
-//
-//    }
+    suspend fun acceptRequest(from: String) {
+        super.setRequest(Request(from, user!!.username, true))
+    }
+
+    suspend fun fetchRequests(): ArrayList<Request> {
+        this.userRequests = super.fetchRequests(user!!.username)
+        return this.userRequests
+    }
+
+    fun getRequests(): ArrayList<Request> {
+        return this.userRequests
+    }
+
+    fun getRequestsFromOthers(): ArrayList<Request> {
+        val requests = ArrayList<Request>()
+
+        for (r in userRequests)
+            if (r.to == user!!.username)
+                requests.add(r)
+
+        return requests
+    }
+
+    fun getRequestsFromSelf(): ArrayList<Request> {
+        val requests = ArrayList<Request>()
+
+        for (r in userRequests)
+            if (r.from == user!!.username)
+                requests.add(r)
+
+        return requests
+    }
+
+    private suspend fun fetchMostRecentMood(username: String): Mood? {
+        val moodMap = super.fetchMoods(username)
+        val moodArray = ArrayList(moodMap.values.sortedByDescending { mood -> mood.date })
+        return if (moodArray.size == 0) null else moodArray[0]
+    }
+
+    suspend fun fetchFeed(): ArrayList<Mood> {
+        // MUST FETCH REQUESTS FIRST
+
+        val feed = ArrayList<Mood>()
+        val requests = getRequestsFromSelf()
+
+        for (r in requests) {
+//            if (!r.accepted)
+//                continue
+            val m = fetchMostRecentMood(r.to)
+            if (m != null) feed.add(m)
+        }
+
+        this.userFeed = feed
+        return feed
+    }
 }
