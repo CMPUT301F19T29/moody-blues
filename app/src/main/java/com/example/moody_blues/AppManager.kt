@@ -1,6 +1,7 @@
 package com.example.moody_blues
 
 import com.example.moody_blues.models.Mood
+import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
 import com.google.firebase.auth.AuthResult
 
@@ -20,7 +21,7 @@ object AppManager : DbManager(){
             return false
 
         this.user = getUser(email)
-        this.fetchMoods(email)
+        this.fetchMoods(user?.username)
         return true
     }
 
@@ -35,8 +36,8 @@ object AppManager : DbManager(){
         return super.createUser(email, password, username) // probably not needed
     }
 
-    override suspend fun fetchMoods(email: String?): HashMap<String, Mood> {
-        val moods = super.fetchMoods(email)
+    override suspend fun fetchMoods(username: String?): HashMap<String, Mood> {
+        val moods = super.fetchMoods(username)
         this.userMoods = moods
         return moods
     }
@@ -89,6 +90,7 @@ object AppManager : DbManager(){
      * @param id The id of the mood to return
      * @return The mood with the specified id, belonging to the signed in user
      */
+    @Deprecated("use username getters instead")
     fun getMood(id: String) : Mood? {
         return this.userMoods[id]
     }
@@ -123,7 +125,7 @@ object AppManager : DbManager(){
      * @param mood The mood to add to the database
      */
     suspend fun addMood(mood: Mood) {
-        val id = super.addMood(mood, this.user!!.id)
+        val id = super.addMood(mood, this.user!!.username)
         this.userMoods[id] = mood
     }
 
@@ -133,7 +135,7 @@ object AppManager : DbManager(){
      * @param id The id of the mood to delete
      */
     suspend fun deleteMood(id: String) {
-        super.deleteMood(id, this.user!!.id)
+        super.deleteMood(id, this.user!!.username)
         this.userMoods.remove(id)
     }
 
@@ -142,7 +144,27 @@ object AppManager : DbManager(){
      * @param mood The mood to replace the existing mood in the database
      */
     suspend fun editMood(mood: Mood) {
-        super.editMood(mood.id, mood, this.user!!.id)
+        super.editMood(mood.id, mood, this.user!!.username)
         this.userMoods[mood.id] = mood
     }
+
+    suspend fun addRequest(to: String) {
+        super.addRequest(Request(user!!.username, to))
+    }
+
+    suspend fun cancelRequest(to: String) {
+        super.deleteRequest(Request(user!!.username, to))
+    }
+
+    suspend fun rejectRequest(from: String) {
+        super.deleteRequest(Request(from, user!!.username))
+    }
+
+//    suspend fun getRequestsToOthers(): ArrayList<Request> {
+//
+//    }
+//
+//    suspend fun getRequestsFromSelf(): ArrayList<Request> {
+//
+//    }
 }

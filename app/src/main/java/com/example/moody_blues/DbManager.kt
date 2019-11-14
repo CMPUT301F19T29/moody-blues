@@ -2,6 +2,7 @@ package com.example.moody_blues
 
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.MoodWrapper
+import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -21,9 +22,14 @@ open class DbManager {
         return FirebaseFirestore.getInstance()
     }
 
-    private fun getFFMoods(email: String): CollectionReference {
+    private fun getFFMoods(username: String): CollectionReference {
         return getFF().collection(PATH_USERS)
-                .document(email).collection(PATH_MOODS)
+                .document(username).collection(PATH_MOODS)
+    }
+
+    private fun getFFRequests(username:String): CollectionReference {
+        return getFF().collection(PATH_USERS)
+            .document(username).collection(PATH_REQUESTS)
     }
 
     // This is based on the following source:
@@ -60,7 +66,7 @@ open class DbManager {
             if (authResult == null || authResult.user == null)
                 return false
 //            sendEmailVerification()
-            getFF().collection(PATH_USERS).document(email)
+            getFF().collection(PATH_USERS).document(username)
                     .set(user)
                     .await()
             true
@@ -74,6 +80,7 @@ open class DbManager {
      * from the database
      * @return The result of deleting the user's account
      */
+    @Deprecated("use username key instead")
     open suspend fun deleteCurrentUser(): Boolean {
         val email = getUserEmail()
         email?: return false
@@ -85,7 +92,6 @@ open class DbManager {
                 ?.delete()
                 ?.await()
         return true
-
     }
 
     /**
@@ -110,9 +116,9 @@ open class DbManager {
      * @return The user with the given email, if they existed in
      *  the database, else null
      */
-    protected suspend fun getUser(email: String): User? {
+    protected suspend fun getUser(username: String): User? {
         return getFF().collection(PATH_USERS)
-                .document(email).get()
+                .document(username).get()
                 .await()
                 .toObject(User::class.java)
     }
@@ -131,8 +137,9 @@ open class DbManager {
      *  retrieve the mood
      * @return The mood with the given id, owned by the given user
      */
-    suspend fun getMood(id: String, email: String): Mood {
-        val snapshot = getFFMoods(email).document(id)
+    @Deprecated("Use username getters instead")
+    suspend fun getMood(id: String, username: String): Mood {
+        val snapshot = getFFMoods(username).document(id)
                 .get()
                 .await()
         return Mood(snapshot.toObject(MoodWrapper::class.java)!!)
@@ -145,11 +152,11 @@ open class DbManager {
      *  retrieve moods
      * @return A hashmap of ids and Moods belonging to the given user
      */
-    open suspend fun fetchMoods (email: String?): HashMap<String, Mood> {
+    open suspend fun fetchMoods (username: String?): HashMap<String, Mood> {
         val moodMap = HashMap<String, Mood>()
-        email?: return moodMap
+        username?: return moodMap
 
-        val moodSnapshot = getFFMoods(email)
+        val moodSnapshot = getFFMoods(username)
                 .get()
                 .await()
 
@@ -168,12 +175,12 @@ open class DbManager {
      * @param email The email of the user who will own the mood
      * @return The id of the mood in the database
      */
-    protected suspend fun addMood(mood: Mood, email: String): String {
-        val doc = getFFMoods(email)
+    protected suspend fun addMood(mood: Mood, username: String): String {
+        val doc = getFFMoods(username)
                 .add(mood.wrap())
                 .await()
 
-        doc.update("id", doc.id) // TODO: double check this?
+        doc.update("id", doc.id).await()
         mood.id = doc.id
         return doc.id
     }
@@ -185,8 +192,8 @@ open class DbManager {
      * @param email The email of the user who owns the mood
      * @return The result of deleting the mood from the database
      */
-    protected suspend fun deleteMood(id: String, email: String): Void? {
-        return getFFMoods(email).document(id)
+    protected suspend fun deleteMood(id: String, username: String): Void? {
+        return getFFMoods(username).document(id)
                 .delete()
                 .await()
     }
@@ -199,14 +206,44 @@ open class DbManager {
      * @param email The email of the user owning the mood to be updated
      * @return The result of replacing the mood in the database
      */
-    protected suspend fun editMood(id: String, mood: Mood, email: String): Void? {
-        return getFFMoods(email).document(id)
+    protected suspend fun editMood(id: String, mood: Mood, username: String): Void? {
+        return getFFMoods(username).document(id)
                 .set(mood.wrap())
                 .await()
+    }
+
+    open suspend fun addRequest(request: Request) {
+        getFFRequests(request.from).document(request.to)
+            .set(request)
+            .await()
+
+        getFFRequests(request.to).document(request.from)
+            .set(request)
+            .await()
+    }
+
+    protected suspend fun deleteRequest(request: Request) {
+        getFFRequests(request.from).document(request.to)
+            .delete()
+            .await()
+
+        getFFRequests(request.to).document(request.from)
+            .delete()
+            .await()
+    }
+
+    protected suspend fun fetchRequests(username: String?): ArrayList<Request> {
+        val requests = ArrayList<Request>()
+        username?: return requests
+
+        getFFRequests(username)
+
+        return requests
     }
 
     companion object {
         private const val PATH_USERS: String = "users"
         private const val PATH_MOODS: String = "moods"
+        private const val PATH_REQUESTS: String = "requests"
     }
 }
