@@ -18,6 +18,7 @@ import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.requests.RequestView
 import com.example.moody_blues.signup.SignupView
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.login_view.view.*
 
 class LoginView : AppCompatActivity(), LoginContract.View {
     override lateinit var presenter: LoginContract.Presenter
@@ -49,10 +50,13 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         setSupportActionBar(toolbar);
 
         // Display an Up icon (<-)
-        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
         // Find drawer view
-        mDrawer = findViewById(R.id.drawer_layout) as DrawerLayout;
+        mDrawer = findViewById(R.id.drawer_layout) as DrawerLayout
+
+        // Initialize nvDrawer
+        nvDrawer = findViewById(R.id.nvView) as NavigationView
 
         // Setup drawer view
         setupDrawerContent(nvDrawer);
