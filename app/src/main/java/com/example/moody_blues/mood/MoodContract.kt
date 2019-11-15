@@ -34,7 +34,7 @@ interface MoodContract {
 
         fun onSelectSocial(social: Int)
 
-        fun setMoodFields(mood: Mood, emotion: Int, social: Int, reasonText: String, showLocation: Boolean, reasonImage: Bitmap?)
+        fun setMoodFields(mood: Mood, emotion: Int, social: Int, reasonText: String, showLocation: Boolean, reasonImage: String?)
 
         fun verifyMoodFields(reasonText: String)
 

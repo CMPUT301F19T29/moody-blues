@@ -1,5 +1,6 @@
 package com.example.moody_blues
 
+import android.graphics.Bitmap
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
@@ -222,5 +223,9 @@ object AppManager : DbManager(){
 
         this.userFeed = feed
         return feed
+    }
+
+    suspend fun storeImage(image: Bitmap): String? {
+        return this.user?.username?.let { super.storeImage(it, image) }
     }
 }

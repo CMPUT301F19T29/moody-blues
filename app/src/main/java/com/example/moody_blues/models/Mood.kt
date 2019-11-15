@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import android.graphics.BitmapFactory
 import android.util.Log
+import com.example.moody_blues.AppManager
 
 
 /**
@@ -21,10 +22,12 @@ import android.util.Log
  */
 class Mood(
         var id: String = "",
+        var username: String = "",
         var location: LatLng? = null,
         var date: LocalDateTime = LocalDateTime.now(),
         var reason_text: String? = null,
-        var reason_image: Bitmap? = null,
+        var reason_image_thumbnail: Bitmap? = null,
+        var reason_image_url: String? = null,
         var social: Int = 0,
         var emotion: Int = 0,
         var showLocation: Boolean = true
@@ -36,21 +39,25 @@ class Mood(
 
     constructor(parcel: Parcel): this(
             parcel.readString()?: "",
+            parcel.readString()?: "",
             parcel.readParcelable(LatLng::class.java.classLoader),
             parcel.readSerializable() as LocalDateTime,
             parcel.readString(),
             parcel.readParcelable(Bitmap::class.java.classLoader),
+            parcel.readString(),
             parcel.readInt(),
             parcel.readInt(),
             parcel.readByte() != 0.toByte()
     )
 
-    constructor(wrapper: MoodWrapper): this(
-            wrapper.id?: "",
+    constructor(wrapper: MoodWrapper, id: String, username: String): this(
+            id,
+            username,
             null,
             LocalDateTime.parse(wrapper.date_string, DATE_FORMAT),
             wrapper.reason_text,
-            null, //wrapper.reason_image, // TODO: set to cloud firebase image url
+            wrapper.reason_image_thumbnail,
+            wrapper.reason_image_url,
             wrapper.social?: 0,
             wrapper.emotion?: 0,
             wrapper.showLocation?: true
@@ -60,12 +67,12 @@ class Mood(
 
     fun wrap(): MoodWrapper {
         return MoodWrapper(
-                this.id,
                 this.location?.latitude,
                 this.location?.longitude,
                 this.getDateString(),
                 this.reason_text,
-                null, //this.reason_image, // TODO: set to cloud firebase image url
+                this.reason_image_thumbnail,
+                this.reason_image_url,
                 this.social,
                 this.emotion,
                 this.showLocation
@@ -109,7 +116,8 @@ class Mood(
         parcel.writeParcelable(location, flags)
         parcel.writeSerializable(date)
         parcel.writeString(reason_text)
-        parcel.writeParcelable(reason_image, flags)
+        parcel.writeParcelable(reason_image_thumbnail, flags)
+        parcel.writeString(reason_image_url)
         parcel.writeInt(social)
         parcel.writeInt(emotion)
         parcel.writeByte(if (showLocation) 1 else 0)

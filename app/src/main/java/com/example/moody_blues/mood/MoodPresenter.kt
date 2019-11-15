@@ -27,12 +27,12 @@ class MoodPresenter(private val view: MoodContract.View) : MoodContract.Presente
     override fun onSelectSocial(social: Int) {
     }
 
-    override fun setMoodFields(mood: Mood, emotion: Int, social: Int, reasonText: String, showLocation: Boolean, reasonImage: Bitmap?) {
+    override fun setMoodFields(mood: Mood, emotion: Int, social: Int, reasonText: String, showLocation: Boolean, reasonImage: String?) {
         mood.emotion = emotion
         mood.social = social
         mood.reason_text = reasonText
         mood.showLocation = showLocation
-        mood.reason_image = reasonImage
+        mood.reason_image_url = reasonImage
     }
 
     override fun verifyMoodFields(reasonText: String) {

@@ -12,12 +12,14 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_MOOD
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_PURPOSE_ADD
 import com.example.moody_blues.history.HistoryView.Companion.INTENT_PURPOSE_EDIT
 import com.example.moody_blues.models.Mood
+import com.squareup.picasso.Picasso
 import java.lang.Exception
 
 /**
@@ -55,7 +57,9 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         locationField = findViewById(R.id.mood_location_field)
 //        locationData = findViewById(R.id.mood_location_data)
         photoField = findViewById(R.id.mood_photo_field)
-        photoBitmap = mood.reason_image
+        if (mood.reason_image_url != null){
+            photoBitmap = Picasso.get().load(mood.reason_image_url).into(R.id.mood_photo_field)
+        }
         photoAddButton = findViewById(R.id.mood_photo_add_button)
         photoUploadButton = findViewById(R.id.mood_photo_upload_button)
         photoDeleteButton = findViewById(R.id.mood_photo_delete_button)
@@ -123,7 +127,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         reasonField.text = mood.reason_text
 //        locationData.text = mood.location
         locationField.isChecked = mood.showLocation
-        photoField.setImageBitmap(mood.reason_image)
+        photoField.setImageBitmap(mood.getImage())
 
         // confirm button
         confirmButton.setOnClickListener {
