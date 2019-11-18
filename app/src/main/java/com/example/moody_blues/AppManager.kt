@@ -1,10 +1,14 @@
 package com.example.moody_blues
 
 import android.graphics.Bitmap
+import android.net.Uri
+import android.widget.ImageView
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
 import com.google.firebase.auth.AuthResult
+import com.squareup.picasso.Picasso
+import java.io.File
 
 object AppManager : DbManager(){
     private var userMoods: HashMap<String, Mood> = HashMap()
@@ -225,7 +229,35 @@ object AppManager : DbManager(){
         return feed
     }
 
-    suspend fun storeImage(image: Bitmap): String? {
-        return this.user?.username?.let { super.storeImage(it, image) }
+    fun storeImage(thumbnail: File?, full: File?): Pair<String?, String?> {
+        // TODO Convert image to the smaller version
+        val fullFilename = this.user?.username?.let {
+            if (full == null) {
+                null
+            }
+            else {
+                super.storeImage(it, full, false)
+            }
+        }
+        val thumbnailFilename = this.user?.username?.let {
+            if (thumbnail == null) {
+                null
+            }
+            else{
+                super.storeImage(it, thumbnail, true)
+            }
+        }
+        return Pair(thumbnailFilename, fullFilename)
+    }
+
+    suspend fun getImageUri(filename: String?): Uri? {
+        return this.user?.username?.let {
+            if (filename == null) {
+                null
+            }
+            else {
+                super.getImageUri(it, filename)
+            }
+        }
     }
 }

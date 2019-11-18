@@ -7,8 +7,8 @@ data class MoodWrapper (
         var location_lon: Double? = null,
         var date_string: String? = null,
         var reason_text: String? = null,
-        var reason_image_thumbnail: Bitmap? = null,
-        var reason_image_url: String? = null,
+        var reason_image_thumbnail: String? = null,
+        var reason_image_full: String? = null,
         var social: Int? = null,
         var emotion: Int? = null,
         var showLocation: Boolean? = null

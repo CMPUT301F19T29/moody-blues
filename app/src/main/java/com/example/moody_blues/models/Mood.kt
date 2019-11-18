@@ -1,19 +1,14 @@
 package com.example.moody_blues.models
 
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Base64
 import com.google.android.gms.maps.model.LatLng
-import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import android.graphics.BitmapFactory
-import android.util.Log
-import com.example.moody_blues.AppManager
 
 
 /**
@@ -26,8 +21,8 @@ class Mood(
         var location: LatLng? = null,
         var date: LocalDateTime = LocalDateTime.now(),
         var reason_text: String? = null,
-        var reason_image_thumbnail: Bitmap? = null,
-        var reason_image_url: String? = null,
+        var reason_image_thumbnail: String? = null,
+        var reason_image_full: String? =null,
         var social: Int = 0,
         var emotion: Int = 0,
         var showLocation: Boolean = true
@@ -43,7 +38,9 @@ class Mood(
             parcel.readParcelable(LatLng::class.java.classLoader),
             parcel.readSerializable() as LocalDateTime,
             parcel.readString(),
-            parcel.readParcelable(Bitmap::class.java.classLoader),
+//            parcel.readParcelable(Uri::class.java.classLoader),
+//            parcel.readParcelable(Uri::class.java.classLoader),
+            parcel.readString(),
             parcel.readString(),
             parcel.readInt(),
             parcel.readInt(),
@@ -56,8 +53,10 @@ class Mood(
             null,
             LocalDateTime.parse(wrapper.date_string, DATE_FORMAT),
             wrapper.reason_text,
+//            Uri.parse(wrapper.reason_image_thumbnail),
+//            Uri.parse(wrapper.reason_image_full),
             wrapper.reason_image_thumbnail,
-            wrapper.reason_image_url,
+            wrapper.reason_image_full,
             wrapper.social?: 0,
             wrapper.emotion?: 0,
             wrapper.showLocation?: true
@@ -71,8 +70,8 @@ class Mood(
                 this.location?.longitude,
                 this.getDateString(),
                 this.reason_text,
-                this.reason_image_thumbnail,
-                this.reason_image_url,
+                this.reason_image_thumbnail.toString(),
+                this.reason_image_full.toString(),
                 this.social,
                 this.emotion,
                 this.showLocation
@@ -113,11 +112,14 @@ class Mood(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
+        parcel.writeString(username)
         parcel.writeParcelable(location, flags)
         parcel.writeSerializable(date)
         parcel.writeString(reason_text)
-        parcel.writeParcelable(reason_image_thumbnail, flags)
-        parcel.writeString(reason_image_url)
+        parcel.writeString(reason_image_thumbnail)
+        parcel.writeString(reason_image_full)
+//        parcel.writeParcelable(reason_image_thumbnail, flags)
+//        parcel.writeParcelable(reason_image_full, flags)
         parcel.writeInt(social)
         parcel.writeInt(emotion)
         parcel.writeByte(if (showLocation) 1 else 0)

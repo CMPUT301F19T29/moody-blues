@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 /**
  * An adapter class for a mood row
@@ -22,16 +25,22 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.date.text = moods[position].getDateString()
-        holder.emotion.text = moods[position].getEmotionString()
-        holder.social.text = moods[position].getSocialString()
-        holder.reason.text = moods[position].reason_text
+        var mood = moods[position]
+        holder.date.text = mood.getDateString()
+        holder.emotion.text = mood.getEmotionString()
+        holder.social.text = mood.getSocialString()
+        holder.reason.text = mood.reason_text
         holder.username.text = AppManager.getUsername()
         holder.image.setImageResource(R.drawable.moody_blues_icon_background)
-        holder.itemView.setBackgroundColor(moods[position].getColor())
-        val item: Mood = moods[position]
+        holder.itemView.setBackgroundColor(mood.getColor())
+        val item: Mood = mood
         holder.itemView.setOnClickListener { clickListener(item, position) }
         holder.itemView.setOnLongClickListener { longListener(item, position) }
+
+        MainScope().launch {
+            var uri = AppManager.getImageUri(mood.reason_image_thumbnail)
+            Picasso.get().load(uri).into(holder.image)
+        }
     }
 
     override fun getItemCount() = moods.size

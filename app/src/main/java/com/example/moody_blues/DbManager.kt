@@ -1,6 +1,8 @@
 package com.example.moody_blues
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.MoodWrapper
@@ -10,12 +12,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.lang.Exception
-import java.net.URL
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import android.graphics.Bitmap.CompressFormat
+import androidx.core.net.toUri
+import java.io.BufferedOutputStream
+import java.io.FileOutputStream
 import java.nio.ByteBuffer
 
 
@@ -303,20 +311,62 @@ open class DbManager {
         return requests
     }
 
-    protected suspend fun storeImage(username: String, image: Bitmap): String?{
+    /**
+     * Store the image as a byte array in firebase storage, and return the url
+     * from which the image can be retrieved
+     * @param username The username of the user to which this image belongs
+     * @param image The bitmap of the image to store in firebase
+     * @return The url pointing to the image in cloud storage
+     */
+    protected fun storeImage(username: String, image: Bitmap): String? {
         var filename = UUID.randomUUID().toString()
         var storageRef = getFS().reference?.child(username)?.child(filename)
 
-        // convert image to byte array
-        val byteCount = image.byteCount
-        val bytes = ByteArray(byteCount)
-        val buffer = ByteBuffer.allocate(byteCount)
-        image.copyPixelsToBuffer(buffer)
-        buffer.rewind()
-        buffer.get(bytes)
+        MainScope().launch {
+            // convert image to byte array
+            val byteCount = image.byteCount
+            val bytes = ByteArray(byteCount)
+            val buffer = ByteBuffer.allocate(byteCount)
+            image.copyPixelsToBuffer(buffer)
+            buffer.rewind()
+            buffer.get(bytes)
 
-        storageRef.putBytes(bytes).await()
+            storageRef.putBytes(bytes).await()
+        }
+
         return filename
+    }
+
+    /**
+     * Store the image as in firebase storage, and return the url from which
+     * the image can be retrieved
+     * @param username The username of the user to which this image belongs
+     * @param image The uri pointing to the image file in local storage
+     * @return The url pointing to the image in cloud storage
+     */
+    protected fun storeImage(username: String, image: File, temp: Boolean): String? {
+        var filename = UUID.randomUUID().toString()
+        var storageRef = getFS().reference?.child(username)?.child(filename)
+
+        MainScope().launch {
+            storageRef.putFile(image.toUri()).await()
+            if (temp){
+                image.delete()
+            }
+        }
+
+        return filename
+    }
+
+    protected suspend fun getImageUri(username: String, filename: String): Uri? {
+        var storageRef = getFS().reference?.child(username)?.child(filename)
+
+        var activeUploads = storageRef.activeUploadTasks
+        for (activeUpload in activeUploads) {
+            activeUpload.await()
+        }
+
+        return storageRef.downloadUrl.await()
     }
 
     companion object {

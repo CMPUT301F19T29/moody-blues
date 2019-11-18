@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">moody-blues</string>
     <string name="title_activity_login">Moody Blues</string>
+    <string name="google_maps_key">AIzaSyCW9D-JJ0eY4MS_4qHM-fKfeXmzeqLkjI0</string>
 </resources>
