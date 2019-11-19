@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">moody-blues</string>
     <string name="title_activity_login">Moody Blues</string>
+    <string name="tab_text_1">Incoming</string>
+    <string name="tab_text_2">Outgoing</string>
+    <string name="request_reject">Reject</string>
+    <string name="request_cancel">Cancel</string>
+    <string name="request_accept">Accept</string>
+    <string name="request_username">$USERNAME</string>
+    <string name="tab_outgoing">Outgoing</string>
+    <string name="tab_incoming">Incoming</string>
 </resources>
