@@ -2,9 +2,9 @@ package com.example.moody_blues.models
 
 import android.graphics.Color
 import android.location.Location
-import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.moody_blues.AppManager
 import com.google.android.gms.maps.model.LatLng
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -20,13 +20,40 @@ class Mood(
         var username: String = "",
         var location: LatLng? = null,
         var date: LocalDateTime = LocalDateTime.now(),
-        var reason_text: String? = null,
-        var reason_image_thumbnail: String? = null,
-        var reason_image_full: String? =null,
+        var reasonText: String? = null,
+        private var _reasonImageThumbnail: String? = null,
+        private var _reasonImageFull: String? = null,
         var social: Int = 0,
         var emotion: Int = 0,
         var showLocation: Boolean = true
 ): Parcelable {
+    /**
+     * The filename for the full reason image. When this is changed,
+     * the old image is deleted from the database
+     */
+    var reasonImageFull: String?
+        get() = _reasonImageFull
+        set(value) {
+            if (_reasonImageFull != null){
+                AppManager.deleteImage(_reasonImageFull)
+            }
+            _reasonImageFull = value
+        }
+
+    /**
+     * The filename for the thumbnail of the reason image. When this is changed,
+     * the old image is deleted from the database
+     */
+    var reasonImageThumbnail: String?
+        get() = _reasonImageThumbnail
+        set(value) {
+            if(_reasonImageThumbnail != null){
+                AppManager.deleteImage(_reasonImageThumbnail)
+            }
+            _reasonImageThumbnail = value
+        }
+
+
 
     constructor(location: Location?): this() {
         this.location = if (location == null) null else LatLng(location.latitude, location.longitude)
@@ -52,16 +79,16 @@ class Mood(
             username,
             null,
             LocalDateTime.parse(wrapper.date_string, DATE_FORMAT),
-            wrapper.reason_text,
-//            Uri.parse(wrapper.reason_image_thumbnail),
-//            Uri.parse(wrapper.reason_image_full),
-            wrapper.reason_image_thumbnail,
-            wrapper.reason_image_full,
+            wrapper.reasonText,
+//            Uri.parse(wrapper.reasonImageThumbnail),
+//            Uri.parse(wrapper.reasonImageFull),
+            wrapper.reasonImageThumbnail,
+            wrapper.reasonImageFull,
             wrapper.social?: 0,
             wrapper.emotion?: 0,
             wrapper.showLocation?: true
     ) {
-        this.location = if (wrapper.location_lat == null) null else LatLng(wrapper.location_lat!!, wrapper.location_lon!!)
+        this.location = if (wrapper.locationLat == null) null else LatLng(wrapper.locationLat!!, wrapper.locationLon!!)
     }
 
     fun wrap(): MoodWrapper {
@@ -69,9 +96,9 @@ class Mood(
                 this.location?.latitude,
                 this.location?.longitude,
                 this.getDateString(),
-                this.reason_text,
-                this.reason_image_thumbnail.toString(),
-                this.reason_image_full.toString(),
+                this.reasonText,
+                this.reasonImageThumbnail.toString(),
+                this.reasonImageFull.toString(),
                 this.social,
                 this.emotion,
                 this.showLocation
@@ -115,11 +142,11 @@ class Mood(
         parcel.writeString(username)
         parcel.writeParcelable(location, flags)
         parcel.writeSerializable(date)
-        parcel.writeString(reason_text)
-        parcel.writeString(reason_image_thumbnail)
-        parcel.writeString(reason_image_full)
-//        parcel.writeParcelable(reason_image_thumbnail, flags)
-//        parcel.writeParcelable(reason_image_full, flags)
+        parcel.writeString(reasonText)
+        parcel.writeString(reasonImageThumbnail)
+        parcel.writeString(reasonImageFull)
+//        parcel.writeParcelable(reasonImageThumbnail, flags)
+//        parcel.writeParcelable(reasonImageFull, flags)
         parcel.writeInt(social)
         parcel.writeInt(emotion)
         parcel.writeByte(if (showLocation) 1 else 0)

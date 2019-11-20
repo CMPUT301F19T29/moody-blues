@@ -4,6 +4,7 @@ import android.net.Uri
 import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
 import com.example.moody_blues.models.Mood
+import java.io.File
 
 /**
  * The contract between the mood view and the presenter
@@ -24,7 +25,7 @@ interface MoodContract {
 
         fun showVerifyError()
 
-        fun changePhoto(bitmap: Bitmap?)
+        fun changePhoto(bitmap: Bitmap?, photo: File?)
     }
 
     /**
@@ -45,6 +46,6 @@ interface MoodContract {
 
         fun editMood(mood: Mood)
 
-        fun setPhoto(bitmap: Bitmap?)
+        fun setPhoto(bitmap: Bitmap?, photo: File?)
     }
 }

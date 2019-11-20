@@ -22,9 +22,12 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import android.graphics.Bitmap.CompressFormat
 import androidx.core.net.toUri
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.BufferedOutputStream
 import java.io.FileOutputStream
+import java.io.InputStream
 import java.nio.ByteBuffer
+import java.util.stream.Stream
 
 
 // TODO: Put in everything but dashboard
@@ -133,6 +136,7 @@ open class DbManager {
             getFF().collection(PATH_USERS).document(username)
                     .delete()
                     .await()
+            getFS().reference.child(username).delete()
         }
 
         // delete user account
@@ -149,6 +153,9 @@ open class DbManager {
         getFF().collection(PATH_EMAILS).document(email)
             .delete()
             .await()
+
+        // Delete images from firebase storage
+        getFS().reference.child(username).delete()
     }
 
     /**
@@ -318,9 +325,10 @@ open class DbManager {
      * @param image The bitmap of the image to store in firebase
      * @return The url pointing to the image in cloud storage
      */
-    protected fun storeImage(username: String, image: Bitmap): String? {
-        var filename = UUID.randomUUID().toString()
-        var storageRef = getFS().reference?.child(username)?.child(filename)
+    @ExperimentalCoroutinesApi
+    protected fun storeFile(username: String, image: Bitmap): String? {
+        val filename = UUID.randomUUID().toString()
+        val storageRef = getFS().reference.child(username).child(filename)
 
         MainScope().launch {
             // convert image to byte array
@@ -344,24 +352,35 @@ open class DbManager {
      * @param image The uri pointing to the image file in local storage
      * @return The url pointing to the image in cloud storage
      */
-    protected fun storeImage(username: String, image: File, temp: Boolean): String? {
-        var filename = UUID.randomUUID().toString()
-        var storageRef = getFS().reference?.child(username)?.child(filename)
+    @ExperimentalCoroutinesApi
+    protected fun storeFile(username: String, image: File): String? {
+        val filename = UUID.randomUUID().toString()
+        val storageRef = getFS().reference.child(username).child(filename)
 
         MainScope().launch {
             storageRef.putFile(image.toUri()).await()
-            if (temp){
-                image.delete()
-            }
         }
 
         return filename
     }
 
-    protected suspend fun getImageUri(username: String, filename: String): Uri? {
-        var storageRef = getFS().reference?.child(username)?.child(filename)
+    @ExperimentalCoroutinesApi
+    protected fun deleteFile(username: String, filename: String){
+        val storageRef = getFS().reference.child(username).child(filename)
 
-        var activeUploads = storageRef.activeUploadTasks
+        MainScope().launch {
+            val activeUploads = storageRef.activeUploadTasks
+            for (activeUpload in activeUploads) {
+                activeUpload.await()
+            }
+            storageRef.delete().await()
+        }
+    }
+
+    protected suspend fun getImageUri(username: String, filename: String): Uri? {
+        val storageRef = getFS().reference.child(username).child(filename)
+
+        val activeUploads = storageRef.activeUploadTasks
         for (activeUpload in activeUploads) {
             activeUpload.await()
         }

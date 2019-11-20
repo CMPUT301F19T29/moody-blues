@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
@@ -29,7 +28,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.date.text = mood.getDateString()
         holder.emotion.text = mood.getEmotionString()
         holder.social.text = mood.getSocialString()
-        holder.reason.text = mood.reason_text
+        holder.reason.text = mood.reasonText
         holder.username.text = AppManager.getUsername()
         holder.image.setImageResource(R.drawable.moody_blues_icon_background)
         holder.itemView.setBackgroundColor(mood.getColor())
@@ -38,9 +37,14 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.itemView.setOnLongClickListener { longListener(item, position) }
 
         MainScope().launch {
-            var uri = AppManager.getImageUri(mood.reason_image_thumbnail)
+            var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
             Picasso.get().load(uri).into(holder.image)
         }
+    }
+
+    override fun onViewRecycled(holder: ViewHolder) {
+        Picasso.get().cancelRequest(holder.image)
+        super.onViewRecycled(holder)
     }
 
     override fun getItemCount() = moods.size

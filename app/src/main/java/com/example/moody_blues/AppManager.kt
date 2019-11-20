@@ -1,13 +1,9 @@
 package com.example.moody_blues
 
-import android.graphics.Bitmap
 import android.net.Uri
-import android.widget.ImageView
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
-import com.google.firebase.auth.AuthResult
-import com.squareup.picasso.Picasso
 import java.io.File
 
 object AppManager : DbManager(){
@@ -103,8 +99,7 @@ object AppManager : DbManager(){
      * @param id The id of the mood to return
      * @return The mood with the specified id, belonging to the signed in user
      */
-    @Deprecated("use username getters instead")
-    fun getMood(id: String) : Mood? {
+    fun getUserMood(id: String) : Mood? {
         return this.userMoods[id]
     }
 
@@ -148,6 +143,11 @@ object AppManager : DbManager(){
      * @param id The id of the mood to delete
      */
     suspend fun deleteMood(id: String) {
+        val mood = getUserMood(id)
+        if (mood != null) {
+            mood.reasonImageThumbnail?.let { super.deleteFile(this.user!!.username, it) }
+            mood.reasonImageFull?.let { super.deleteFile(this.user!!.username, it) }
+        }
         super.deleteMood(id, this.user!!.username)
         this.userMoods.remove(id)
     }
@@ -229,25 +229,28 @@ object AppManager : DbManager(){
         return feed
     }
 
-    fun storeImage(thumbnail: File?, full: File?): Pair<String?, String?> {
-        // TODO Convert image to the smaller version
-        val fullFilename = this.user?.username?.let {
-            if (full == null) {
-                null
-            }
-            else {
-                super.storeImage(it, full, false)
-            }
-        }
-        val thumbnailFilename = this.user?.username?.let {
-            if (thumbnail == null) {
+    /**
+     * Store the given file in firebase storage and return the filename
+     * to use to retrive or delete the file
+     * @param file The file to store
+     * @return The filename identifying this file in the database
+     */
+    fun storeFile(file: File?): String?{
+        val filename = this.user?.username?.let {
+            if (file == null) {
                 null
             }
             else{
-                super.storeImage(it, thumbnail, true)
+                super.storeFile(it, file)
             }
         }
-        return Pair(thumbnailFilename, fullFilename)
+        return filename
+    }
+
+    fun deleteImage(filename: String?){
+        if (filename != null) {
+            this.user?.username?.let { super.deleteFile(it, filename) }
+        }
     }
 
     suspend fun getImageUri(filename: String?): Uri? {
