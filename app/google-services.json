@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "527480737332",
+    "firebase_url": "https://moodyblues-dd65c.firebaseio.com",
+    "project_id": "moodyblues-dd65c",
+    "storage_bucket": "moodyblues-dd65c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527480737332:android:bdeef3f84974fd447e8461",
+        "android_client_info": {
+          "package_name": "com.example.moody_blues"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "527480737332-7dfq9tg4vqgvnd4jhpv5g651d7bjq73j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUDKn3BeF2dj1yZyc3L8aZfm4xOOmjSk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "527480737332-7dfq9tg4vqgvnd4jhpv5g651d7bjq73j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
