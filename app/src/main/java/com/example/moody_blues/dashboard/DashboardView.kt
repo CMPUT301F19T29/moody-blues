@@ -1,6 +1,7 @@
 package com.example.moody_blues.dashboard
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
@@ -51,6 +52,14 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
 
         // Find drawer view
         mDrawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        drawerToggle = setupDrawerToggle()
+
+        // Setup toggle to display hamburger icon with nice animation
+        drawerToggle.setDrawerIndicatorEnabled(true);
+        drawerToggle.syncState();
+
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawer.addDrawerListener(drawerToggle);
 
         // Initialize nvDrawer
         nvDrawer = findViewById(R.id.nvView) as NavigationView
@@ -70,6 +79,30 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         requests.setOnClickListener {
             presenter.gotoRequests()
         }
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig)
+    }
+
+    private fun setupDrawerToggle(): ActionBarDrawerToggle {
+        // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
+        // and will not render the hamburger icon without it.
+        return ActionBarDrawerToggle(
+            this,
+            mDrawer,
+            toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        )
     }
 
     private fun setupDrawerContent(navigationView:NavigationView) {
@@ -102,11 +135,8 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // The action bar home/up action should open or close the drawer.
-        when (item.getItemId()) {
-            android.R.id.home -> {
-                mDrawer.openDrawer(GravityCompat.START)
-                return true
-            }
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true
         }
         return super.onOptionsItemSelected(item)
     }

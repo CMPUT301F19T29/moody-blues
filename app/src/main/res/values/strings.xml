@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">moody-blues</string>
     <string name="title_activity_login">Moody Blues</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">AIzaSyDtyUdRtbkQ3GqpXaT_......</string>
 </resources>
