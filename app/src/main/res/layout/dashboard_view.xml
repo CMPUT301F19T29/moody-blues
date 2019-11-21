@@ -71,9 +71,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- The main content view where fragments are loaded -->
-        <FrameLayout
+        <!-- The main content view where activities are loaded -->
+        <LinearLayout
             android:id="@+id/flContent"
+            android:orientation="horizontal"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -88,6 +89,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/white"
-        app:menu="@menu/drawer_view" />
+        app:menu="@menu/drawer_view"
+        app:headerLayout="@layout/header" />
 </androidx.drawerlayout.widget.DrawerLayout>
 
