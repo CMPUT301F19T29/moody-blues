@@ -30,15 +30,19 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.social.text = mood.getSocialString()
         holder.reason.text = mood.reasonText
         holder.username.text = AppManager.getUsername()
-        holder.image.setImageResource(R.drawable.moody_blues_icon_background)
         holder.itemView.setBackgroundColor(mood.getColor())
         val item: Mood = mood
         holder.itemView.setOnClickListener { clickListener(item, position) }
         holder.itemView.setOnLongClickListener { longListener(item, position) }
 
-        MainScope().launch {
-            var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
-            Picasso.get().load(uri).into(holder.image)
+        if (mood.reasonImageThumbnail != null) {
+            MainScope().launch {
+                var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
+                Picasso.get().load(uri).rotate(90F).into(holder.image)
+            }
+        }
+        else{
+            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
         }
     }
 

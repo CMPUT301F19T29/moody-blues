@@ -86,7 +86,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         if (mood.reasonImageThumbnail != null){
             MainScope().launch {
                 var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
-                Picasso.get().load(uri).into(photoField)
+                Picasso.get().load(uri).rotate(90F).into(photoField)
             }
         }
 
