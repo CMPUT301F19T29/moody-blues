@@ -86,7 +86,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         if (mood.reasonImageThumbnail != null){
             MainScope().launch {
                 var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
-                Picasso.get().load(uri).into(photoField)
+                Picasso.get().load(uri).fit().centerInside(). rotate(90F).into(photoField)
             }
         }
 
@@ -204,16 +204,21 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         Toast.makeText(applicationContext, "Invalid input", Toast.LENGTH_SHORT).show()
     }
 
-    override fun changePhoto(thumbnail: Bitmap?, photo: File?) {
+    override fun changePhoto(thumbnail: Bitmap?, full: File?) {
         // cancel any existing requests
         Picasso.get().cancelRequest(photoField)
         photoField.setImageBitmap(thumbnail)
 
-        // Replace with new Uris when they are available
+        //Delete old images
+        if (mood.reasonImageThumbnail != null){
+            AppManager.deleteImage(mood.reasonImageThumbnail)
+        }
+        if (mood.reasonImageFull != null){
+            AppManager.deleteImage(mood.reasonImageFull)
+        }
+
         if (thumbnail == null){
-            val previousThumbnail = mood.reasonImageThumbnail
             mood.reasonImageThumbnail = null
-            mood.reasonImageFull = null
         }
         else {
             var thumbnailFile = File(applicationContext.getDir("IMAGES", Context.MODE_PRIVATE), UUID.randomUUID().toString() + ".jpg")
@@ -222,8 +227,14 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             outStream.flush()
             outStream.close()
 
-            mood.reasonImageFull = AppManager.storeFile(photo)
             mood.reasonImageThumbnail =  AppManager.storeFile(thumbnailFile)
+        }
+
+        if (full == null){
+            mood.reasonImageFull = null
+        }
+        else{
+            mood.reasonImageFull = AppManager.storeFile(full)
         }
     }
 

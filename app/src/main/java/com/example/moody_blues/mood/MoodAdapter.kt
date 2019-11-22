@@ -36,9 +36,11 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.itemView.setOnClickListener { clickListener(item, position) }
         holder.itemView.setOnLongClickListener { longListener(item, position) }
 
-        MainScope().launch {
-            var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
-            Picasso.get().load(uri).into(holder.image)
+        if (mood.reasonImageThumbnail != null){
+            MainScope().launch {
+                var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
+                Picasso.get().load(uri).fit().centerInside(). rotate(90F).into(holder.image)
+            }
         }
     }
 

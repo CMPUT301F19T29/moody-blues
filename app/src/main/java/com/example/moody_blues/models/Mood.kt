@@ -21,40 +21,12 @@ class Mood(
         var location: LatLng? = null,
         var date: LocalDateTime = LocalDateTime.now(),
         var reasonText: String? = null,
-        private var _reasonImageThumbnail: String? = null,
-        private var _reasonImageFull: String? = null,
+        var reasonImageThumbnail: String? = null,
+        var reasonImageFull: String? = null,
         var social: Int = 0,
         var emotion: Int = 0,
         var showLocation: Boolean = true
 ): Parcelable {
-    /**
-     * The filename for the full reason image. When this is changed,
-     * the old image is deleted from the database
-     */
-    var reasonImageFull: String?
-        get() = _reasonImageFull
-        set(value) {
-            if (_reasonImageFull != null){
-                AppManager.deleteImage(_reasonImageFull)
-            }
-            _reasonImageFull = value
-        }
-
-    /**
-     * The filename for the thumbnail of the reason image. When this is changed,
-     * the old image is deleted from the database
-     */
-    var reasonImageThumbnail: String?
-        get() = _reasonImageThumbnail
-        set(value) {
-            if(_reasonImageThumbnail != null){
-                AppManager.deleteImage(_reasonImageThumbnail)
-            }
-            _reasonImageThumbnail = value
-        }
-
-
-
     constructor(location: Location?): this() {
         this.location = if (location == null) null else LatLng(location.latitude, location.longitude)
     }
