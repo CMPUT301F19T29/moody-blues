@@ -21,10 +21,12 @@ class RequestAdapter(private var requests: ArrayList<User>, private val pageNumb
         holder.username.text = requests[position].username
         if (pageNumber == 1) {
             holder.accept.setOnClickListener {
+                // TODO replace snackbar with actual onclick logic
                 Snackbar.make(it, "accepting this request!", Snackbar.LENGTH_LONG).show()
 //                acceptRequest()
             }
             holder.reject.setOnClickListener {
+                // TODO replace snackbar with actual onclick logic
                 Snackbar.make(it, "rejecting this request!", Snackbar.LENGTH_LONG).show()
 //                rejectRequest()
             }
@@ -35,6 +37,7 @@ class RequestAdapter(private var requests: ArrayList<User>, private val pageNumb
             holder.cancel.isVisible = true
 
             holder.cancel.setOnClickListener {
+                // TODO replace snackbar with actual onclick logic
                 Snackbar.make(it, "cancelling this request!", Snackbar.LENGTH_LONG).show()
 //                cancelRequest()
             }
