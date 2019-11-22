@@ -13,7 +13,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/request_username"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,9 +21,9 @@
     <Button
         android:id="@+id/row_request_accept_button"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="32dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/request_accept"
         android:textSize="12sp"
@@ -35,9 +35,9 @@
     <Button
         android:id="@+id/row_request_cancel_button"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="32dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/request_cancel"
         android:textSize="12sp"
@@ -49,7 +49,7 @@
     <Button
         android:id="@+id/row_request_reject_button"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"

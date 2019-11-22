@@ -19,16 +19,16 @@ class RequestFragment : Fragment() {
         val pageNumber: Int  = arguments?.getInt(ARG_SECTION_NUMBER) ?: 1
         val root = inflater.inflate(R.layout.request_fragment, container, false)
         val testrequestslist: ArrayList<User> = ArrayList()
-        if (pageNumber == 1) {
-            testrequestslist.add(User(id = "fakeID", username = "fakeUsername"))
+        if (pageNumber == 1) {  // incoming
+            testrequestslist.add(User(username = "fakeUsername"))
 
             val requestList: RecyclerView = root.findViewById(R.id.request_list)
             requestList.adapter = RequestAdapter(testrequestslist, pageNumber)
 //            requestList.adapter = RequestAdapter(AppManager.getIncomingFollowRequests, pageNumber)
             requestList.layoutManager = LinearLayoutManager(context)
         }
-        else if (pageNumber == 2) {
-            testrequestslist.add(User(id = "fakeID2", username = "fakeUsername2"))
+        else if (pageNumber == 2) {  // outgoing
+            testrequestslist.add(User(username = "fakeUsername2"))
 
             val requestList: RecyclerView = root.findViewById(R.id.request_list)
             requestList.adapter = RequestAdapter(testrequestslist, pageNumber)

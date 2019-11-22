@@ -1,12 +1,14 @@
 package com.example.moody_blues.models
 
+import android.graphics.Bitmap
+
 data class MoodWrapper (
-        var id: String? = null,
-        var location_lat: Double? = null,
-        var location_lon: Double? = null,
+        var locationLat: Double? = null,
+        var locationLon: Double? = null,
         var date_string: String? = null,
-        var reason_text: String? = null,
-        var reason_image: String? = null,
+        var reasonText: String? = null,
+        var reasonImageThumbnail: String? = null,
+        var reasonImageFull: String? = null,
         var social: Int? = null,
         var emotion: Int? = null,
         var showLocation: Boolean? = null

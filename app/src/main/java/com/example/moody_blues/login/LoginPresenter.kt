@@ -1,6 +1,7 @@
 package com.example.moody_blues.login
 
 import com.example.moody_blues.AppManager
+import com.example.moody_blues.DbManager
 import com.example.moody_blues.models.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -29,11 +30,10 @@ class LoginPresenter(private val view: LoginContract.View) : LoginContract.Prese
         // TODO: show waiting animation
 
         MainScope().launch {
-            if (AppManager.signIn(user, pass))
+            if (AppManager.signIn(user, pass) != null)
                 view.gotoDashboard()
             else
                 view.clear() // TODO: Show error to the user
-
         }
     }
 
