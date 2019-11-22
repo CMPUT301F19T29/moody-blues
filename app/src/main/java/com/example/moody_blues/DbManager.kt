@@ -1,16 +1,34 @@
 package com.example.moody_blues
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.MoodWrapper
 import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import android.graphics.Bitmap.CompressFormat
+import androidx.core.net.toUri
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.io.BufferedOutputStream
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.nio.ByteBuffer
+import java.util.stream.Stream
+
 
 // TODO: Put in everything but dashboard
 open class DbManager {
@@ -31,6 +49,10 @@ open class DbManager {
     private fun getFFRequests(username:String): CollectionReference {
         return getFF().collection(PATH_USERS)
             .document(username).collection(PATH_REQUESTS)
+    }
+
+    private fun getFS(): FirebaseStorage {
+        return FirebaseStorage.getInstance()
     }
 
     // This is based on the following source:
@@ -98,12 +120,26 @@ open class DbManager {
      */
     @Deprecated("use username key instead")
     open suspend fun deleteCurrentUser(): Boolean {
+        // get email and username
         val email = getUserEmail()
         email?: return false
+        val username = getFF().collection(PATH_EMAILS).document(email)
+                .get()
+                .await()
+                .toObject(User::class.java)?.username
 
-        getFF().collection(PATH_USERS).document(email)
+        // delete database data
+        getFF().collection(PATH_EMAILS).document(email)
                 .delete()
                 .await()
+        if (username != null) {
+            getFF().collection(PATH_USERS).document(username)
+                    .delete()
+                    .await()
+            getFS().reference.child(username).delete()
+        }
+
+        // delete user account
         auth.currentUser
                 ?.delete()
                 ?.await()
@@ -117,6 +153,9 @@ open class DbManager {
         getFF().collection(PATH_EMAILS).document(email)
             .delete()
             .await()
+
+        // Delete images from firebase storage
+        getFS().reference.child(username).delete()
     }
 
     /**
@@ -137,7 +176,7 @@ open class DbManager {
     /**
      * Get the User object representing the user with the given email
      * from the database
-     * @param email The email identifying the user to retrieve
+     * @param username The username identifying the user to retrieve
      * @return The user with the given email, if they existed in
      *  the database, else null
      */
@@ -167,7 +206,7 @@ open class DbManager {
         val snapshot = getFFMoods(username).document(id)
                 .get()
                 .await()
-        return Mood(snapshot.toObject(MoodWrapper::class.java)!!)
+        return Mood(snapshot.toObject(MoodWrapper::class.java)!!, id, username)
     }
 
     /**
@@ -187,7 +226,7 @@ open class DbManager {
                 .await()
 
             for (doc in moodSnapshot)
-                moodMap[doc.id] = Mood(doc.toObject(MoodWrapper::class.java))
+                moodMap[doc.id] = Mood(doc.toObject(MoodWrapper::class.java), doc.id, username)
         } catch (e: Exception) {
             Log.e("fetchMoods", e.toString())
         }
@@ -277,7 +316,76 @@ open class DbManager {
         }
 
         return requests
+    }
 
+    /**
+     * Store the image as a byte array in firebase storage, and return the url
+     * from which the image can be retrieved
+     * @param username The username of the user to which this image belongs
+     * @param image The bitmap of the image to store in firebase
+     * @return The url pointing to the image in cloud storage
+     */
+    @ExperimentalCoroutinesApi
+    protected fun storeFile(username: String, image: Bitmap): String? {
+        val filename = UUID.randomUUID().toString()
+        val storageRef = getFS().reference.child(username).child(filename)
+
+        MainScope().launch {
+            // convert image to byte array
+            val byteCount = image.byteCount
+            val bytes = ByteArray(byteCount)
+            val buffer = ByteBuffer.allocate(byteCount)
+            image.copyPixelsToBuffer(buffer)
+            buffer.rewind()
+            buffer.get(bytes)
+
+            storageRef.putBytes(bytes).await()
+        }
+
+        return filename
+    }
+
+    /**
+     * Store the image as in firebase storage, and return the url from which
+     * the image can be retrieved
+     * @param username The username of the user to which this image belongs
+     * @param image The uri pointing to the image file in local storage
+     * @return The url pointing to the image in cloud storage
+     */
+    @ExperimentalCoroutinesApi
+    protected fun storeFile(username: String, image: File): String? {
+        val filename = UUID.randomUUID().toString()
+        val storageRef = getFS().reference.child(username).child(filename)
+
+        MainScope().launch {
+            storageRef.putFile(image.toUri()).await()
+        }
+
+        return filename
+    }
+
+    @ExperimentalCoroutinesApi
+    protected fun deleteFile(username: String, filename: String){
+        val storageRef = getFS().reference.child(username).child(filename)
+
+        MainScope().launch {
+            val activeUploads = storageRef.activeUploadTasks
+            for (activeUpload in activeUploads) {
+                activeUpload.await()
+            }
+            storageRef.delete().await()
+        }
+    }
+
+    protected suspend fun getImageUri(username: String, filename: String): Uri? {
+        val storageRef = getFS().reference.child(username).child(filename)
+
+        val activeUploads = storageRef.activeUploadTasks
+        for (activeUpload in activeUploads) {
+            activeUpload.await()
+        }
+
+        return storageRef.downloadUrl.await()
     }
 
     companion object {
