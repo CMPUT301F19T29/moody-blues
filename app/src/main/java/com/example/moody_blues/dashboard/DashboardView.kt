@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.moody_blues.R
 import com.example.moody_blues.feed.FeedView
 import com.example.moody_blues.history.HistoryView
+import com.example.moody_blues.login.LoginView
 import com.example.moody_blues.requests.RequestView
 import com.google.android.material.navigation.NavigationView
 
@@ -39,30 +40,33 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         // Pass the view to the presenter
         presenter = DashboardPresenter(this)
 
+        // Define buttons for history, feed and requests
         history = findViewById(R.id.dashboard_history_button)
         feed = findViewById(R.id.dashboard_feed_button)
         requests = findViewById(R.id.dashboard_requests_button)
 
-        // Set a Toolbar to replace the ActionBar
+        // Setup a toolbar
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar);
 
-        // Display an Up icon (<-)
+        // Initialize an icon in the toolbar (To be replaced with hamburger icon after)
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
-        // Find drawer view
+        // Initialize DrawerLayout and define the toggle for the drawer
         mDrawer = findViewById(R.id.drawer_layout) as DrawerLayout
         drawerToggle = setupDrawerToggle()
 
-        // Setup toggle to display hamburger icon with nice animation
+        // Setup toggle to display hamburger icon
+        // Hamburger icon is animated
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
 
         // Tie DrawerLayout events to the ActionBarToggle
         mDrawer.addDrawerListener(drawerToggle);
 
-        // Initialize nvDrawer
+        // Initialize NavigationView
         nvDrawer = findViewById(R.id.nvView) as NavigationView
+        nvDrawer.setItemIconTintList(null)
 
         // Setup drawer view
         setupDrawerContent(nvDrawer)
@@ -81,6 +85,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         }
     }
 
+    // Toggle on post create
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         // Sync the toggle state after onRestoreInstanceState has occurred.
@@ -94,8 +99,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     }
 
     private fun setupDrawerToggle(): ActionBarDrawerToggle {
-        // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
-        // and will not render the hamburger icon without it.
+        // For setting up the drawer toggle
         return ActionBarDrawerToggle(
             this,
             mDrawer,
@@ -118,6 +122,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
             R.id.nav_history -> startActivity(Intent(this, HistoryView::class.java))
             R.id.nav_feed -> startActivity(Intent(this, FeedView::class.java))
             R.id.nav_requests -> startActivity(Intent(this, RequestView::class.java))
+            R.id.nav_login -> startActivity(Intent(this, LoginView::class.java))
 //            else -> fragmentClass = HistoryView::class.java
         }
 
@@ -139,6 +144,14 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        if(mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawers()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     /**
