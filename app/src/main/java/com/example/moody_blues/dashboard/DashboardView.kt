@@ -45,11 +45,11 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         feed = findViewById(R.id.dashboard_feed_button)
         requests = findViewById(R.id.dashboard_requests_button)
 
-        // Setup a toolbar
+        // Setup a toolbar as a replacement for the action bar
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar);
 
-        // Initialize an icon in the toolbar (To be replaced with hamburger icon after)
+        // Initialize an icon in the toolbar (to be replaced with hamburger icon after)
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
         // Initialize DrawerLayout and define the toggle for the drawer
