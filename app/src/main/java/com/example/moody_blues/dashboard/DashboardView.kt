@@ -145,6 +145,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         return super.onOptionsItemSelected(item)
     }
 
+    // Overrides the back button to close the drawer when it is open
     override fun onBackPressed() {
         if(mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawers()
