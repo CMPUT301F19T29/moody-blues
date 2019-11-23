@@ -57,7 +57,6 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         drawerToggle = setupDrawerToggle()
 
         // Setup toggle to display hamburger icon
-        // Hamburger icon is animated
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
 
