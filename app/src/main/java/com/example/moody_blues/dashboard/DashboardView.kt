@@ -116,7 +116,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     }
 
     private fun selectDrawerItem(menuItem: MenuItem) {
-        // Go to activity when item is clicked
+        // Go to the activity when item is clicked
         when (menuItem.itemId) {
             R.id.nav_history -> startActivity(Intent(this, HistoryView::class.java))
             R.id.nav_feed -> startActivity(Intent(this, FeedView::class.java))
