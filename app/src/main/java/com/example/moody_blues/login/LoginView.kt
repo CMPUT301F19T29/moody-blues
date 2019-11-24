@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
 import com.example.moody_blues.dashboard.DashboardView
@@ -16,6 +17,7 @@ class LoginView : AppCompatActivity(), LoginContract.View {
     private lateinit var signup: Button
     private lateinit var user: EditText
     private lateinit var pass: EditText
+    private lateinit var logo: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,7 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         signup = findViewById(R.id.login_signup_button)
         user = findViewById(R.id.login_user_field)
         pass = findViewById(R.id.login_pass_field)
+        logo = findViewById(R.id.login_logo)
 
         // Do stuff with the presenter
         submit.setOnClickListener {
