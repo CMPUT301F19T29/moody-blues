@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
+import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
 
 /**
@@ -18,28 +20,18 @@ class RequestFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val pageNumber: Int  = arguments?.getInt(ARG_SECTION_NUMBER) ?: 1
         val root = inflater.inflate(R.layout.request_fragment, container, false)
-        val testrequestslist: ArrayList<User> = ArrayList()
-        if (pageNumber == 1) {  // incoming
-            testrequestslist.add(User(username = "fakeUsername"))
+        val requestList: RecyclerView = root.findViewById(R.id.request_list)
+        requestList.layoutManager = LinearLayoutManager(context)
 
-            val requestList: RecyclerView = root.findViewById(R.id.request_list)
-            requestList.adapter = RequestAdapter(testrequestslist, pageNumber)
-//            requestList.adapter = RequestAdapter(AppManager.getIncomingFollowRequests, pageNumber)
-            requestList.layoutManager = LinearLayoutManager(context)
+        if (pageNumber == 1) {  // incoming
+            requestList.adapter = RequestAdapter(AppManager.getRequestsFromOthers(true), pageNumber)
         }
         else if (pageNumber == 2) {  // outgoing
-            testrequestslist.add(User(username = "fakeUsername2"))
-
-            val requestList: RecyclerView = root.findViewById(R.id.request_list)
-            requestList.adapter = RequestAdapter(testrequestslist, pageNumber)
-//            requestList.adapter = RequestAdapter(AppManager.getOutgoingFollowRequests, pageNumber)
-            requestList.layoutManager = LinearLayoutManager(context)
+            requestList.adapter = RequestAdapter(AppManager.getRequestsFromSelf(true), pageNumber)
         }
 
         return root
     }
-
-
 
     companion object {
         /**

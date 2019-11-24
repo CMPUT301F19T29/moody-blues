@@ -1,6 +1,7 @@
 package com.example.moody_blues.requests
 
 import com.example.moody_blues.AppManager
+import com.example.moody_blues.models.Request
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -22,6 +23,8 @@ class RequestPresenter(private val view: RequestContract.View) : RequestContract
     override fun requestFollow(user: String) {
         MainScope().launch {
             AppManager.addRequest(user)
+            AppManager.fetchRequests()
+            view.restartActivity()
         }
     }
 }

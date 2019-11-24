@@ -165,16 +165,24 @@ object AppManager : DbManager(){
         super.setRequest(Request(user!!.username, to))
     }
 
-    suspend fun cancelRequest(to: String) {
-        super.deleteRequest(Request(user!!.username, to))
+    suspend fun cancelRequest(request: Request) : ArrayList<Request> {
+        super.deleteRequest(request)
+        this.userRequests.remove(request)
+        return this.getRequestsFromSelf(true)
     }
 
-    suspend fun rejectRequest(from: String) {
-        super.deleteRequest(Request(from, user!!.username))
+    suspend fun rejectRequest(request: Request) : ArrayList<Request> {
+        super.deleteRequest(request)
+        this.userRequests.remove(request)
+        return this.getRequestsFromOthers(true)
     }
 
-    suspend fun acceptRequest(from: String) {
-        super.setRequest(Request(from, user!!.username, true))
+    suspend fun acceptRequest(request: Request) : ArrayList<Request> {
+        val newRequest = Request(request.from, request.to, true)
+        super.setRequest(newRequest)
+        this.userRequests.remove(request)
+        this.userRequests.add(newRequest)
+        return this.getRequestsFromOthers(true)
     }
 
     suspend fun fetchRequests(): ArrayList<Request> {
@@ -186,22 +194,28 @@ object AppManager : DbManager(){
         return this.userRequests
     }
 
-    fun getRequestsFromOthers(): ArrayList<Request> {
+    fun getRequestsFromOthers(getPending: Boolean): ArrayList<Request> {
         val requests = ArrayList<Request>()
 
-        for (r in userRequests)
+        for (r in userRequests) {
+            if (getPending && r.accepted)
+                continue
             if (r.to == user!!.username)
                 requests.add(r)
+        }
 
         return requests
     }
 
-    fun getRequestsFromSelf(): ArrayList<Request> {
+    fun getRequestsFromSelf(getPending: Boolean): ArrayList<Request> {
         val requests = ArrayList<Request>()
 
-        for (r in userRequests)
+        for (r in userRequests) {
+            if (getPending && r.accepted)
+                continue
             if (r.from == user!!.username)
                 requests.add(r)
+        }
 
         return requests
     }
@@ -216,11 +230,11 @@ object AppManager : DbManager(){
         // MUST FETCH REQUESTS FIRST
 
         val feed = ArrayList<Mood>()
-        val requests = getRequestsFromSelf()
+        val requests = getRequestsFromSelf(false)
 
         for (r in requests) {
-//            if (!r.accepted)
-//                continue
+            if (!r.accepted)
+                continue
             val m = fetchMostRecentMood(r.to)
             if (m != null) feed.add(m)
         }
