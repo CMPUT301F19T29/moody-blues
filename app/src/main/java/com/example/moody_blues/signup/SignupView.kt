@@ -28,6 +28,7 @@ class SignupView : AppCompatActivity(), SignupContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.signup_view)
+        title = "Signup"
 
         // Pass the view to the presenter
         presenter = SignupPresenter(this)
