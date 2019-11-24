@@ -22,7 +22,7 @@ class RequestView : AppCompatActivity(), RequestContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.request_view)
-        title = "requests"
+        title = "Requests"
 
         requestsPageAdapter =
             RequestsPageAdapter(this, supportFragmentManager)
@@ -54,12 +54,9 @@ class RequestView : AppCompatActivity(), RequestContract.View {
 
     }
 
-    /**
-     * Open a popup to select a user to follow
-     */
-    override fun gotoFollowUser() {
-        // opens a popup to enter a user to follow
-
+    override fun restartActivity() {
+        finish()
+        startActivity(this.intent)
     }
 }
 

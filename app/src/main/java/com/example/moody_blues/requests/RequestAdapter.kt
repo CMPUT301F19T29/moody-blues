@@ -7,28 +7,31 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
+import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
-class RequestAdapter(private var requests: ArrayList<User>, private val pageNumber: Int) : RecyclerView.Adapter<RequestAdapter.ViewHolder>() {
+class RequestAdapter(private var requests: ArrayList<Request>, private val pageNumber: Int) : RecyclerView.Adapter<RequestAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_request, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.username.text = requests[position].username
+        val request = requests[position]
+
         if (pageNumber == 1) {
+            holder.username.text = request.from
+
             holder.accept.setOnClickListener {
-                // TODO replace snackbar with actual onclick logic
-                Snackbar.make(it, "accepting this request!", Snackbar.LENGTH_LONG).show()
-//                acceptRequest()
+                acceptRequest(request)
             }
             holder.reject.setOnClickListener {
-                // TODO replace snackbar with actual onclick logic
-                Snackbar.make(it, "rejecting this request!", Snackbar.LENGTH_LONG).show()
-//                rejectRequest()
+                rejectRequest(request)
             }
         }
         if (pageNumber == 2) {
@@ -36,15 +39,36 @@ class RequestAdapter(private var requests: ArrayList<User>, private val pageNumb
             holder.reject.isVisible = false
             holder.cancel.isVisible = true
 
+            holder.username.text = requests[position].to
+
             holder.cancel.setOnClickListener {
-                // TODO replace snackbar with actual onclick logic
-                Snackbar.make(it, "cancelling this request!", Snackbar.LENGTH_LONG).show()
-//                cancelRequest()
+                cancelRequest(request)
             }
         }
     }
 
     override fun getItemCount() = requests.size
+
+    fun acceptRequest(request: Request) {
+        MainScope().launch {
+            requests = AppManager.acceptRequest(request)
+            notifyDataSetChanged()
+        }
+    }
+
+    fun rejectRequest(request: Request) {
+        MainScope().launch {
+            requests = AppManager.rejectRequest(request)
+            notifyDataSetChanged()
+        }
+    }
+
+    fun cancelRequest(request: Request) {
+        MainScope().launch {
+            requests = AppManager.cancelRequest(request)
+            notifyDataSetChanged()
+        }
+    }
 
     /**
      * A class representing a view holder for the Request adapter
