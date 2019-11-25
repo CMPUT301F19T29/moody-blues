@@ -1,7 +1,5 @@
 package com.example.moody_blues.models
 
-import android.graphics.Bitmap
-
 data class MoodWrapper (
         var locationLat: Double? = null,
         var locationLon: Double? = null,
