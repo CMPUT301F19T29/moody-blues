@@ -21,7 +21,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import android.graphics.Bitmap.CompressFormat
+import android.media.ExifInterface
 import androidx.core.net.toUri
+import com.google.firebase.storage.StorageMetadata
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.BufferedOutputStream
 import java.io.FileOutputStream
@@ -358,7 +360,16 @@ open class DbManager {
         val storageRef = getFS().reference.child(username).child(filename)
 
         MainScope().launch {
-            storageRef.putFile(image.toUri()).await()
+            var ei = ExifInterface(image.path)
+            var orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+            var rotation = 0F
+            when(orientation){
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotation = 90F
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotation = 180F
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotation = 270F
+            }
+            var metadata = StorageMetadata.Builder().setCustomMetadata("rotation", rotation.toString()).build()
+            storageRef.putFile(image.toUri(), metadata).await()
         }
 
         return filename
@@ -377,7 +388,7 @@ open class DbManager {
         }
     }
 
-    protected suspend fun getImageUri(username: String, filename: String): Uri? {
+    protected suspend fun getImageUri(username: String, filename: String): Pair<Uri?, Float> {
         val storageRef = getFS().reference.child(username).child(filename)
 
         val activeUploads = storageRef.activeUploadTasks
@@ -385,7 +396,12 @@ open class DbManager {
             activeUpload.await()
         }
 
-        return storageRef.downloadUrl.await()
+        var rotation = storageRef.metadata.await().getCustomMetadata("rotation")?.toFloat()
+        if (rotation == null){
+            rotation = 0F
+        }
+
+        return Pair(storageRef.downloadUrl.await(), rotation)
     }
 
     companion object {
