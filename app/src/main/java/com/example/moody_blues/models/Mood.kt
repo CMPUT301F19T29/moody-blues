@@ -71,8 +71,8 @@ class Mood(
                 this.location?.longitude,
                 this.getDateString(),
                 this.reasonText,
-                this.reasonImageThumbnail.toString(),
-                this.reasonImageFull.toString(),
+                this.reasonImageThumbnail,
+                this.reasonImageFull,
                 this.social,
                 this.emotion,
                 this.showLocation
