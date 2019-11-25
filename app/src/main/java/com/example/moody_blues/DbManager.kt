@@ -354,7 +354,7 @@ open class DbManager {
      */
     @ExperimentalCoroutinesApi
     protected fun storeFile(username: String, image: File): String? {
-        val filename = UUID.randomUUID().toString()
+        val filename = UUID.randomUUID().toString() + ".jpg"
         val storageRef = getFS().reference.child(username).child(filename)
 
         MainScope().launch {
