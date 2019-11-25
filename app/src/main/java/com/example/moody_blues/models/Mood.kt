@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.location.Location
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.core.graphics.ColorUtils
 import com.example.moody_blues.AppManager
 import com.google.android.gms.maps.model.LatLng
 import java.time.LocalDateTime
@@ -28,6 +29,7 @@ class Mood(
         var showLocation: Boolean = true
 ): Parcelable {
     constructor(location: Location?): this() {
+        this.username = AppManager.getUsername()?: ""
         this.location = if (location == null) null else LatLng(location.latitude, location.longitude)
     }
 
@@ -107,6 +109,12 @@ class Mood(
      */
     fun getColor(): Int {
         return EMOTION_COLORS[this.emotion]
+    }
+
+    fun getColorWheel() : Float {
+        val out = FloatArray(3)
+        ColorUtils.colorToHSL(getColor(), out)
+        return out[0]
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

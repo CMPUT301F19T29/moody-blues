@@ -27,6 +27,7 @@ object AppManager : DbManager(){
         this.fetchMoods()
         this.fetchRequests()
         this.fetchFeed()
+
         return username
     }
 

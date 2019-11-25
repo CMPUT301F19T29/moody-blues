@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -12,9 +14,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback {
+import com.google.android.gms.maps.model.*
+
+class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     override lateinit var presenter: MapContract.Presenter
     private lateinit var mMap: GoogleMap
     private lateinit var here: LatLng
@@ -88,19 +90,19 @@ class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback {
             if (mood.location == null) {
                 continue
             }
-            mMap.addMarker(MarkerOptions().position(mood.location!!))
+
+            mMap.addMarker(MarkerOptions()
+                .position(mood.location!!)
+                .icon(BitmapDescriptorFactory.defaultMarker(mood.getColorWheel()))
+                .title(mood.username)
+                .snippet(mood.getEmotionString())
+                .visible(mood.showLocation))
         }
+    }
 
-//        // for each mood in following users' moods add marker
-//        for ((_, mood) in presenter.fetchFollowingMoods()) {  TODO: fetch following users' moods
-//            if (mood.location == null) {
-//                continue
-//            }
-//            mMap.addMarker(MarkerOptions().position(mood.location!!).title(user.name))  TODO: fetch usernames of moods
-//        }
-
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(53.5461, -113.4938), 8.toFloat()))
-//        mMap.uiSettings.isMyLocationButtonEnabled = false
+    override fun onMarkerClick(p0: Marker?): Boolean {
+        p0?.showInfoWindow()
+        return true
     }
 
     /**
