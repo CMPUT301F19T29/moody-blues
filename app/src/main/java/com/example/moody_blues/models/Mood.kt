@@ -18,7 +18,7 @@ import java.time.format.FormatStyle
  */
 class Mood(
         var id: String = "",
-        var username: String = AppManager.getUsername()?: "",
+        var username: String = "",
         var location: LatLng? = null,
         var date: LocalDateTime = LocalDateTime.now(),
         var reasonText: String? = null,
@@ -29,6 +29,7 @@ class Mood(
         var showLocation: Boolean = true
 ): Parcelable {
     constructor(location: Location?): this() {
+        this.username = AppManager.getUsername()?: ""
         this.location = if (location == null) null else LatLng(location.latitude, location.longitude)
     }
 
