@@ -267,8 +267,8 @@ object AppManager : DbManager(){
         }
     }
 
-    suspend fun getImageUri(filename: String?): Uri? {
-        return this.user?.username?.let {
+    suspend fun getImageUri(filename: String?): Pair<Uri?, Float> {
+        var result = this.user?.username?.let {
             if (filename == null) {
                 null
             }
@@ -276,5 +276,9 @@ object AppManager : DbManager(){
                 super.getImageUri(it, filename)
             }
         }
+        if (result == null){
+            result = Pair(null, 0F)
+        }
+        return result
     }
 }
