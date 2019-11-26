@@ -11,11 +11,15 @@ interface FeedContract {
      * The feed view
      */
     interface View : BaseView<Presenter> {
-        fun getFollowedMoods(): ArrayList<Mood>
+        fun gotoMap()
     }
 
     /**
-     * The feed prsenter
+     * The feed presenter
      */
-    interface Presenter : BasePresenter {}
+    interface Presenter : BasePresenter {
+        fun fetchFeed()
+        fun getFeed() : ArrayList<Mood>
+        fun gotoMap()
+    }
 }
