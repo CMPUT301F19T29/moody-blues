@@ -8,15 +8,20 @@ import com.example.moody_blues.R
 import com.example.moody_blues.map.MapView
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.mood.MoodAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.feed_view.*
 
 class FeedView : AppCompatActivity(), FeedContract.View {
     override lateinit var presenter: FeedContract.Presenter
 
+    private lateinit var mapButton: FloatingActionButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.feed_view)
         title = "Feed"
+
+        mapButton = findViewById(R.id.feed_goto_map_button)
 
         // Pass the view to the presenter
         presenter = FeedPresenter(this)
@@ -25,11 +30,17 @@ class FeedView : AppCompatActivity(), FeedContract.View {
         feed_list_mood.adapter = MoodAdapter(presenter.getFeed(),
             {_: Mood, _: Int ->  },
             { _: Mood, _: Int -> true })
+
         feed_list_mood.layoutManager = LinearLayoutManager(this)
+
+        mapButton.setOnClickListener {
+            presenter.gotoMap()
+        }
     }
 
     override fun gotoMap() {
         val intent = Intent(this, MapView::class.java)
+        intent.putExtra("mode", 2)
         startActivity(intent)
     }
 }

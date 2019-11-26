@@ -146,6 +146,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
 
     override fun gotoMap() {
         val intent = Intent(this, MapView::class.java)
+        intent.putExtra("mode", 1)
         startActivity(intent)
     }
 

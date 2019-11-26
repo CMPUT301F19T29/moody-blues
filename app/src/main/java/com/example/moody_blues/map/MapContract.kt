@@ -31,7 +31,7 @@ interface MapContract {
          */
         fun selectLocation()
 
-        fun fetchMoods(): HashMap<String, Mood>
+        fun fetchMoods(mapMode: Int): ArrayList<Mood>
         fun getLocation()
     }
 }
