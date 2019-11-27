@@ -119,6 +119,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     private fun selectDrawerItem(menuItem: MenuItem) {
         // Go to the activity when item is clicked
         when (menuItem.itemId) {
+
             R.id.nav_history -> startActivity(Intent(this, HistoryView::class.java))
             R.id.nav_feed -> startActivity(Intent(this, FeedView::class.java))
             R.id.nav_requests -> startActivity(Intent(this, RequestView::class.java))
@@ -146,8 +147,8 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    // Overrides the back button to close the drawer when it is open
     override fun onBackPressed() {
+        // Overrides the back button to close the drawer when it is open
         if(mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawers()
         } else {
