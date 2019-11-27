@@ -244,6 +244,10 @@ object AppManager : DbManager(){
         return feed
     }
 
+    fun getFeed(): ArrayList<Mood> {
+        return this.userFeed
+    }
+
     /**
      * Store the given file in firebase storage and return the filename
      * to use to retrive or delete the file
