@@ -5,12 +5,19 @@
         <item
             android:id="@+id/nav_history"
             android:title="History"
-            android:checked="true"/>
+            android:checked="true"
+            android:icon="@drawable/ic_history_black_24dp" />
         <item
             android:id="@+id/nav_feed"
-            android:title="Feed" />
+            android:title="Feed"
+            android:icon="@drawable/ic_format_list_bulleted_black_24dp" />
         <item
             android:id="@+id/nav_requests"
-            android:title="Requests" />
+            android:title="Requests"
+            android:icon="@drawable/ic_featured_play_list_black_24dp" />
+        <item
+            android:id="@+id/nav_login"
+            android:title="Logout"
+            android:icon="@drawable/ic_exit_to_app_black_24dp" />
     </group>
 </menu>
