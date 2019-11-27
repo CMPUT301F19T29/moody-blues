@@ -1,18 +1,15 @@
 package com.example.moody_blues.models
 
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Base64
+import androidx.core.graphics.ColorUtils
+import com.example.moody_blues.AppManager
 import com.google.android.gms.maps.model.LatLng
-import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import android.graphics.BitmapFactory
-import android.util.Log
 
 
 /**
@@ -21,51 +18,61 @@ import android.util.Log
  */
 class Mood(
         var id: String = "",
+        var username: String = "",
         var location: LatLng? = null,
         var date: LocalDateTime = LocalDateTime.now(),
-        var reason_text: String? = null,
-        var reason_image: Bitmap? = null,
+        var reasonText: String? = null,
+        var reasonImageThumbnail: String? = null,
+        var reasonImageFull: String? = null,
         var social: Int = 0,
         var emotion: Int = 0,
         var showLocation: Boolean = true
 ): Parcelable {
-
     constructor(location: Location?): this() {
+        this.username = AppManager.getUsername()?: ""
         this.location = if (location == null) null else LatLng(location.latitude, location.longitude)
     }
 
     constructor(parcel: Parcel): this(
             parcel.readString()?: "",
+            parcel.readString()?: "",
             parcel.readParcelable(LatLng::class.java.classLoader),
             parcel.readSerializable() as LocalDateTime,
             parcel.readString(),
-            parcel.readParcelable(Bitmap::class.java.classLoader),
+//            parcel.readParcelable(Uri::class.java.classLoader),
+//            parcel.readParcelable(Uri::class.java.classLoader),
+            parcel.readString(),
+            parcel.readString(),
             parcel.readInt(),
             parcel.readInt(),
             parcel.readByte() != 0.toByte()
     )
 
-    constructor(wrapper: MoodWrapper): this(
-            wrapper.id?: "",
+    constructor(wrapper: MoodWrapper, id: String, username: String): this(
+            id,
+            username,
             null,
             LocalDateTime.parse(wrapper.date_string, DATE_FORMAT),
-            wrapper.reason_text,
-            null, //wrapper.reason_image, // TODO: set to cloud firebase image url
+            wrapper.reasonText,
+//            Uri.parse(wrapper.reasonImageThumbnail),
+//            Uri.parse(wrapper.reasonImageFull),
+            wrapper.reasonImageThumbnail,
+            wrapper.reasonImageFull,
             wrapper.social?: 0,
             wrapper.emotion?: 0,
             wrapper.showLocation?: true
     ) {
-        this.location = if (wrapper.location_lat == null) null else LatLng(wrapper.location_lat!!, wrapper.location_lon!!)
+        this.location = if (wrapper.locationLat == null) null else LatLng(wrapper.locationLat!!, wrapper.locationLon!!)
     }
 
     fun wrap(): MoodWrapper {
         return MoodWrapper(
-                this.id,
                 this.location?.latitude,
                 this.location?.longitude,
                 this.getDateString(),
-                this.reason_text,
-                null, //this.reason_image, // TODO: set to cloud firebase image url
+                this.reasonText,
+                this.reasonImageThumbnail,
+                this.reasonImageFull,
                 this.social,
                 this.emotion,
                 this.showLocation
@@ -104,12 +111,22 @@ class Mood(
         return EMOTION_COLORS[this.emotion]
     }
 
+    fun getColorWheel() : Float {
+        val out = FloatArray(3)
+        ColorUtils.colorToHSL(getColor(), out)
+        return out[0]
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
+        parcel.writeString(username)
         parcel.writeParcelable(location, flags)
         parcel.writeSerializable(date)
-        parcel.writeString(reason_text)
-        parcel.writeParcelable(reason_image, flags)
+        parcel.writeString(reasonText)
+        parcel.writeString(reasonImageThumbnail)
+        parcel.writeString(reasonImageFull)
+//        parcel.writeParcelable(reasonImageThumbnail, flags)
+//        parcel.writeParcelable(reasonImageFull, flags)
         parcel.writeInt(social)
         parcel.writeInt(emotion)
         parcel.writeByte(if (showLocation) 1 else 0)

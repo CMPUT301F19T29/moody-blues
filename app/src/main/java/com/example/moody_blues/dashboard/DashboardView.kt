@@ -35,6 +35,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard_view)
+        title = "Dashboard"
 
         // Pass the view to the presenter
         presenter = DashboardPresenter(this)
@@ -47,7 +48,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar);
 
-        // Display an Up icon (<-)
+        // Create an up icon
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
         // Find drawer view

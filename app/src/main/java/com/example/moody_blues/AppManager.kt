@@ -1,9 +1,10 @@
 package com.example.moody_blues
 
+import android.net.Uri
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
-import com.google.firebase.auth.AuthResult
+import java.io.File
 
 object AppManager : DbManager(){
     private var userMoods: HashMap<String, Mood> = HashMap()
@@ -26,6 +27,7 @@ object AppManager : DbManager(){
         this.fetchMoods()
         this.fetchRequests()
         this.fetchFeed()
+
         return username
     }
 
@@ -98,8 +100,7 @@ object AppManager : DbManager(){
      * @param id The id of the mood to return
      * @return The mood with the specified id, belonging to the signed in user
      */
-    @Deprecated("use username getters instead")
-    fun getMood(id: String) : Mood? {
+    fun getUserMood(id: String) : Mood? {
         return this.userMoods[id]
     }
 
@@ -143,6 +144,11 @@ object AppManager : DbManager(){
      * @param id The id of the mood to delete
      */
     suspend fun deleteMood(id: String) {
+        val mood = getUserMood(id)
+        if (mood != null) {
+            mood.reasonImageThumbnail?.let { super.deleteFile(this.user!!.username, it) }
+            mood.reasonImageFull?.let { super.deleteFile(this.user!!.username, it) }
+        }
         super.deleteMood(id, this.user!!.username)
         this.userMoods.remove(id)
     }
@@ -160,16 +166,24 @@ object AppManager : DbManager(){
         super.setRequest(Request(user!!.username, to))
     }
 
-    suspend fun cancelRequest(to: String) {
-        super.deleteRequest(Request(user!!.username, to))
+    suspend fun cancelRequest(request: Request) : ArrayList<Request> {
+        super.deleteRequest(request)
+        this.userRequests.remove(request)
+        return this.getRequestsFromSelf(true)
     }
 
-    suspend fun rejectRequest(from: String) {
-        super.deleteRequest(Request(from, user!!.username))
+    suspend fun rejectRequest(request: Request) : ArrayList<Request> {
+        super.deleteRequest(request)
+        this.userRequests.remove(request)
+        return this.getRequestsFromOthers(true)
     }
 
-    suspend fun acceptRequest(from: String) {
-        super.setRequest(Request(from, user!!.username, true))
+    suspend fun acceptRequest(request: Request) : ArrayList<Request> {
+        val newRequest = Request(request.from, request.to, true)
+        super.setRequest(newRequest)
+        this.userRequests.remove(request)
+        this.userRequests.add(newRequest)
+        return this.getRequestsFromOthers(true)
     }
 
     suspend fun fetchRequests(): ArrayList<Request> {
@@ -181,22 +195,28 @@ object AppManager : DbManager(){
         return this.userRequests
     }
 
-    fun getRequestsFromOthers(): ArrayList<Request> {
+    fun getRequestsFromOthers(getPending: Boolean): ArrayList<Request> {
         val requests = ArrayList<Request>()
 
-        for (r in userRequests)
+        for (r in userRequests) {
+            if (getPending && r.accepted)
+                continue
             if (r.to == user!!.username)
                 requests.add(r)
+        }
 
         return requests
     }
 
-    fun getRequestsFromSelf(): ArrayList<Request> {
+    fun getRequestsFromSelf(getPending: Boolean): ArrayList<Request> {
         val requests = ArrayList<Request>()
 
-        for (r in userRequests)
+        for (r in userRequests) {
+            if (getPending && r.accepted)
+                continue
             if (r.from == user!!.username)
                 requests.add(r)
+        }
 
         return requests
     }
@@ -211,16 +231,55 @@ object AppManager : DbManager(){
         // MUST FETCH REQUESTS FIRST
 
         val feed = ArrayList<Mood>()
-        val requests = getRequestsFromSelf()
+        val requests = getRequestsFromSelf(false)
 
         for (r in requests) {
-//            if (!r.accepted)
-//                continue
+            if (!r.accepted)
+                continue
             val m = fetchMostRecentMood(r.to)
             if (m != null) feed.add(m)
         }
 
         this.userFeed = feed
         return feed
+    }
+
+    /**
+     * Store the given file in firebase storage and return the filename
+     * to use to retrive or delete the file
+     * @param file The file to store
+     * @return The filename identifying this file in the database
+     */
+    fun storeFile(file: File?): String?{
+        val filename = this.user?.username?.let {
+            if (file == null) {
+                null
+            }
+            else{
+                super.storeFile(it, file)
+            }
+        }
+        return filename
+    }
+
+    fun deleteImage(filename: String?){
+        if (filename != null) {
+            this.user?.username?.let { super.deleteFile(it, filename) }
+        }
+    }
+
+    suspend fun getImageUri(filename: String?): Pair<Uri?, Float> {
+        var result = this.user?.username?.let {
+            if (filename == null) {
+                null
+            }
+            else {
+                super.getImageUri(it, filename)
+            }
+        }
+        if (result == null){
+            result = Pair(null, 0F)
+        }
+        return result
     }
 }
