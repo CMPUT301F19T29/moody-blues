@@ -21,7 +21,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import android.graphics.Bitmap.CompressFormat
+import android.media.ExifInterface
 import androidx.core.net.toUri
+import com.google.firebase.storage.StorageMetadata
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.BufferedOutputStream
 import java.io.FileOutputStream
@@ -46,10 +48,16 @@ open class DbManager {
                 .document(username).collection(PATH_MOODS)
     }
 
-    private fun getFFRequests(username:String): CollectionReference {
+    private fun getFFRequestsTo(username:String): CollectionReference {
         return getFF().collection(PATH_USERS)
-            .document(username).collection(PATH_REQUESTS)
+            .document(username).collection(PATH_TO)
     }
+
+    private fun getFFRequestsFrom(username:String): CollectionReference {
+        return getFF().collection(PATH_USERS)
+            .document(username).collection(PATH_FROM)
+    }
+
 
     private fun getFS(): FirebaseStorage {
         return FirebaseStorage.getInstance()
@@ -281,21 +289,21 @@ open class DbManager {
     }
 
     open suspend fun setRequest(request: Request) {
-        getFFRequests(request.from).document(request.to)
+        getFFRequestsTo(request.from).document(request.to)
             .set(request)
             .await()
 
-        getFFRequests(request.to).document(request.from)
+        getFFRequestsFrom(request.to).document(request.from)
             .set(request)
             .await()
     }
 
     protected suspend fun deleteRequest(request: Request) {
-        getFFRequests(request.from).document(request.to)
+        getFFRequestsTo(request.from).document(request.to)
             .delete()
             .await()
 
-        getFFRequests(request.to).document(request.from)
+        getFFRequestsFrom(request.to).document(request.from)
             .delete()
             .await()
     }
@@ -305,12 +313,20 @@ open class DbManager {
         try {
             username?: return requests
 
-            val requestSnapshot = getFFRequests(username)
+            val requestToSnapshot = getFFRequestsTo(username)
                 .get()
                 .await()
 
-            for (doc in requestSnapshot)
+            for (doc in requestToSnapshot)
                 requests.add(doc.toObject(Request::class.java))
+
+            val requestFromSnapshot = getFFRequestsFrom(username)
+                .get()
+                .await()
+
+            for (doc in requestFromSnapshot)
+                requests.add(doc.toObject(Request::class.java))
+
         } catch (e: Exception) {
             Log.e("fetchRequests", e.toString())
         }
@@ -354,11 +370,20 @@ open class DbManager {
      */
     @ExperimentalCoroutinesApi
     protected fun storeFile(username: String, image: File): String? {
-        val filename = UUID.randomUUID().toString()
+        val filename = UUID.randomUUID().toString() + ".jpg"
         val storageRef = getFS().reference.child(username).child(filename)
 
         MainScope().launch {
-            storageRef.putFile(image.toUri()).await()
+            var ei = ExifInterface(image.path)
+            var orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+            var rotation = 0F
+            when(orientation){
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotation = 90F
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotation = 180F
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotation = 270F
+            }
+            var metadata = StorageMetadata.Builder().setCustomMetadata("rotation", rotation.toString()).build()
+            storageRef.putFile(image.toUri(), metadata).await()
         }
 
         return filename
@@ -377,7 +402,7 @@ open class DbManager {
         }
     }
 
-    protected suspend fun getImageUri(username: String, filename: String): Uri? {
+    protected suspend fun getImageUri(username: String, filename: String): Pair<Uri?, Float> {
         val storageRef = getFS().reference.child(username).child(filename)
 
         val activeUploads = storageRef.activeUploadTasks
@@ -385,13 +410,20 @@ open class DbManager {
             activeUpload.await()
         }
 
-        return storageRef.downloadUrl.await()
+        var rotation = storageRef.metadata.await().getCustomMetadata("rotation")?.toFloat()
+        if (rotation == null){
+            rotation = 0F
+        }
+
+        return Pair(storageRef.downloadUrl.await(), rotation)
     }
 
     companion object {
         private const val PATH_USERS: String = "users"
         private const val PATH_MOODS: String = "moods"
-        private const val PATH_REQUESTS: String = "requests"
+//        private const val PATH_REQUESTS: String = "requests"
         private const val PATH_EMAILS: String = "emails"
+        private const val PATH_FROM: String = "from"
+        private const val PATH_TO: String = "to"
     }
 }

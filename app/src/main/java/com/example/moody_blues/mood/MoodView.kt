@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.media.ThumbnailUtils
 import android.os.Bundle
 import android.os.Environment
@@ -83,11 +85,20 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         photoUploadButton = findViewById(R.id.mood_photo_upload_button)
         photoDeleteButton = findViewById(R.id.mood_photo_delete_button)
 
-        if (mood.reasonImageThumbnail != null){
+
+        if (mood.reasonImageThumbnail != null) {
             MainScope().launch {
-                var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
-                Picasso.get().load(uri).fit().centerInside(). rotate(90F).into(photoField)
+                var (uri, rotation) = AppManager.getImageUri(mood.reasonImageThumbnail)
+                if (uri != null){
+                    Picasso.get().load(uri).rotate(rotation).into(photoField)
+                }
+                else{
+                    photoField.setImageResource(R.drawable.moody_blues_icon_background)
+                }
             }
+        }
+        else{
+            photoField.setImageResource(R.drawable.moody_blues_icon_background)
         }
 
         // Emotional state spinner stuff
@@ -245,6 +256,20 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         if (requestCode == REQUEST_PHOTO_ADD) {
             var thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(photoLocalPath), THUMBSIZE, THUMBSIZE)
+
+            // Rotate thumbnail
+            var ei = ExifInterface(photoLocalPath)
+            var orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+            var rotation = 0F
+            when(orientation){
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotation = 90F
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotation = 180F
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotation = 270F
+            }
+            var matrix = Matrix()
+            matrix.postRotate(rotation)
+            thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.width, thumbnail.height, matrix, true);
+
             presenter.setPhoto(thumbnail, File(photoLocalPath))
         }
         else if (requestCode == REQUEST_PHOTO_UPLOAD) {
@@ -277,7 +302,6 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         const val REQUEST_PHOTO_ADD = 1
         const val REQUEST_PHOTO_UPLOAD = 2
     }
-
 //    override fun gotoMap() {
 //        val intent = Intent(this, MapView::class.java)
 //        startActivity(intent)

@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.location.Location
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.core.graphics.ColorUtils
 import com.example.moody_blues.AppManager
 import com.google.android.gms.maps.model.LatLng
 import java.time.LocalDateTime
@@ -28,6 +29,7 @@ class Mood(
         var showLocation: Boolean = true
 ): Parcelable {
     constructor(location: Location?): this() {
+        this.username = AppManager.getUsername()?: ""
         this.location = if (location == null) null else LatLng(location.latitude, location.longitude)
     }
 
@@ -69,8 +71,8 @@ class Mood(
                 this.location?.longitude,
                 this.getDateString(),
                 this.reasonText,
-                this.reasonImageThumbnail.toString(),
-                this.reasonImageFull.toString(),
+                this.reasonImageThumbnail,
+                this.reasonImageFull,
                 this.social,
                 this.emotion,
                 this.showLocation
@@ -109,6 +111,12 @@ class Mood(
         return EMOTION_COLORS[this.emotion]
     }
 
+    fun getColorWheel() : Float {
+        val out = FloatArray(3)
+        ColorUtils.colorToHSL(getColor(), out)
+        return out[0]
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
         parcel.writeString(username)
@@ -131,8 +139,8 @@ class Mood(
     companion object CREATOR : Parcelable.Creator<Mood> {
         val EMOTION_STATES: Array<String> = arrayOf("\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
         val EMOTION_FILTERS: Array<String> = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE20 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE24 Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
-        val EMOTION_COLORS: Array<Int> = arrayOf(Color.GREEN, Color.parseColor("#33FFF4"), Color.YELLOW, Color.parseColor("#FF6D66"), Color.LTGRAY, Color.parseColor("#FE9DFF"))
-        val SOCIAL_REASONS: Array<String> = arrayOf("None", "Alone", "With one other person", "With two to several people", "With a group")
+        val EMOTION_COLORS: Array<Int> = arrayOf(Color.parseColor("#22FF33"), Color.parseColor("#4466FF"), Color.parseColor("#CCCC33"), Color.parseColor("#EE6688"), Color.parseColor("#CC9944"), Color.parseColor("#FF99FF"))
+        val SOCIAL_REASONS: Array<String> = arrayOf("   ", "Alone", "With one other", "With two to several", "With a group")
         private val DATE_FORMAT = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
 
         override fun createFromParcel(parcel: Parcel): Mood {

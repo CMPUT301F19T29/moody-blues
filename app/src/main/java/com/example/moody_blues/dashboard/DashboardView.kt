@@ -36,6 +36,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard_view)
+        title = "Dashboard"
 
         // Pass the view to the presenter
         presenter = DashboardPresenter(this)

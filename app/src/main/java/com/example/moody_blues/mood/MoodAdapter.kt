@@ -24,23 +24,30 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var mood = moods[position]
+        val mood = moods[position]
         holder.date.text = mood.getDateString()
         holder.emotion.text = mood.getEmotionString()
         holder.social.text = mood.getSocialString()
         holder.reason.text = mood.reasonText
-        holder.username.text = AppManager.getUsername()
-        holder.image.setImageResource(R.drawable.moody_blues_icon_background)
+        holder.username.text = mood.username
         holder.itemView.setBackgroundColor(mood.getColor())
         val item: Mood = mood
         holder.itemView.setOnClickListener { clickListener(item, position) }
         holder.itemView.setOnLongClickListener { longListener(item, position) }
 
-        if (mood.reasonImageThumbnail != null){
+        if (mood.reasonImageThumbnail != null) {
             MainScope().launch {
-                var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
-                Picasso.get().load(uri).fit().centerInside(). rotate(90F).into(holder.image)
+                val (uri, rotation) = AppManager.getImageUri(mood.reasonImageThumbnail)
+                if (uri != null){
+                    Picasso.get().load(uri).rotate(rotation).into(holder.image)
+                }
+                else{
+                    holder.image.setImageResource(R.drawable.moody_blues_icon_background)
+                }
             }
+        }
+        else{
+            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
         }
     }
 
