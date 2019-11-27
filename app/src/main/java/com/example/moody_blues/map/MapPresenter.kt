@@ -2,6 +2,7 @@ package com.example.moody_blues.map
 
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.models.Mood
+import java.nio.channels.FileChannel
 
 class MapPresenter(private val view: MapContract.View) : MapContract.Presenter {
 
@@ -14,8 +15,11 @@ class MapPresenter(private val view: MapContract.View) : MapContract.Presenter {
         view.presenter = this
     }
 
-    override fun fetchMoods(): HashMap<String, Mood> {
-        return AppManager.getUserMoods(null)
+    override fun fetchMoods(mapMode: Int): ArrayList<Mood> {
+        return if (mapMode == 1)
+            ArrayList(AppManager.getUserMoods(null).values)
+        else
+            AppManager.getFeed()
     }
 
     override fun getLocation() {

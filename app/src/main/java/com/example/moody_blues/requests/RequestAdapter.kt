@@ -49,21 +49,21 @@ class RequestAdapter(private var requests: ArrayList<Request>, private val pageN
 
     override fun getItemCount() = requests.size
 
-    fun acceptRequest(request: Request) {
+    private fun acceptRequest(request: Request) {
         MainScope().launch {
             requests = AppManager.acceptRequest(request)
             notifyDataSetChanged()
         }
     }
 
-    fun rejectRequest(request: Request) {
+    private fun rejectRequest(request: Request) {
         MainScope().launch {
             requests = AppManager.rejectRequest(request)
             notifyDataSetChanged()
         }
     }
 
-    fun cancelRequest(request: Request) {
+    private fun cancelRequest(request: Request) {
         MainScope().launch {
             requests = AppManager.cancelRequest(request)
             notifyDataSetChanged()

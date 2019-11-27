@@ -29,12 +29,12 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var mood = moods[position]
+        val mood = moods[position]
         holder.date.text = mood.getDateString()
         holder.emotion.text = mood.getEmotionString()
         holder.social.text = mood.getSocialString()
         holder.reason.text = mood.reasonText
-        holder.username.text = AppManager.getUsername()
+        holder.username.text = mood.username
         holder.itemView.setBackgroundColor(mood.getColor())
         val item: Mood = mood
         holder.itemView.setOnClickListener { clickListener(item, position) }
@@ -42,7 +42,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
 
         if (mood.reasonImageThumbnail != null) {
             MainScope().launch {
-                var (uri, rotation) = AppManager.getImageUri(mood.reasonImageThumbnail)
+                val (uri, rotation) = AppManager.getImageUri(mood.reasonImageThumbnail)
                 if (uri != null){
                     Picasso.get().load(uri).rotate(rotation).into(holder.image)
                 }

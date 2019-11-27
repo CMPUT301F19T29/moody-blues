@@ -27,6 +27,7 @@ object AppManager : DbManager(){
         this.fetchMoods()
         this.fetchRequests()
         this.fetchFeed()
+
         return username
     }
 
@@ -241,6 +242,10 @@ object AppManager : DbManager(){
 
         this.userFeed = feed
         return feed
+    }
+
+    fun getFeed(): ArrayList<Mood> {
+        return this.userFeed
     }
 
     /**
