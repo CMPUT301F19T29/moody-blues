@@ -15,6 +15,9 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * The adapter for a request row
+ */
 class RequestAdapter(private var requests: ArrayList<Request>, private val pageNumber: Int) : RecyclerView.Adapter<RequestAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_request, parent, false)
@@ -49,6 +52,10 @@ class RequestAdapter(private var requests: ArrayList<Request>, private val pageN
 
     override fun getItemCount() = requests.size
 
+    /**
+     * Accept a request
+     * @param request The request to accept
+     */
     private fun acceptRequest(request: Request) {
         MainScope().launch {
             requests = AppManager.acceptRequest(request)
@@ -56,6 +63,10 @@ class RequestAdapter(private var requests: ArrayList<Request>, private val pageN
         }
     }
 
+    /**
+     * Reject a request
+     * @param request The request to reject
+     */
     private fun rejectRequest(request: Request) {
         MainScope().launch {
             requests = AppManager.rejectRequest(request)
@@ -63,11 +74,20 @@ class RequestAdapter(private var requests: ArrayList<Request>, private val pageN
         }
     }
 
+    /**
+     * Cancel a request
+     * @param request The request to cancel
+     */
     private fun cancelRequest(request: Request) {
         MainScope().launch {
             requests = AppManager.cancelRequest(request)
             notifyDataSetChanged()
         }
+    }
+
+    fun refresh() {
+        requests = AppManager.getRequestsFromSelf(true)
+        notifyDataSetChanged()
     }
 
     /**

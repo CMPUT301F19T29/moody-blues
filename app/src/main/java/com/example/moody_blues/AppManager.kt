@@ -6,6 +6,9 @@ import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
 import java.io.File
 
+/**
+ * Manages local data and database
+ */
 object AppManager : DbManager(){
     private var userMoods: HashMap<String, Mood> = HashMap()
     private var userRequests: ArrayList<Request> = ArrayList()
@@ -31,6 +34,11 @@ object AppManager : DbManager(){
         return username
     }
 
+    /**
+     * Delete a user
+     * @param username The username of the user
+     * @param email the email of the user
+     */
     override suspend fun deleteUser(username: String, email: String) {
         super.deleteUser(username, email)
     }
@@ -46,6 +54,10 @@ object AppManager : DbManager(){
         return super.createUser(email, password, username) // probably not needed
     }
 
+    /**
+     * Fetches the user's moods from the database
+     * @return A hashmap of the moods. ID is the key
+     */
     suspend fun fetchMoods(): HashMap<String, Mood> {
         val moods = super.fetchMoods(user!!.username)
         this.userMoods = moods
@@ -75,8 +87,7 @@ object AppManager : DbManager(){
     }
 
     /**
-     * Sign out the currently signed in user, and clear their locally cached
-     * data
+     * Sign out the currently signed in user, and clear their locally cached data
      */
     override fun signOut() {
         this.user = null
@@ -116,7 +127,7 @@ object AppManager : DbManager(){
     /**
      * Get the user moods for the signed in user, possibly filtered by emotion
      * @param emotion The emotion the filter for, or NULL for no filter
-     * @return The hashmap of requested moods
+     * @return The hashmap of requested moods. ID is the key
      */
     fun getUserMoods(emotion: Int?): HashMap<String, Mood> {
         return if (emotion == null)
@@ -125,6 +136,10 @@ object AppManager : DbManager(){
             this.userMoods.filter { entry -> entry.value.emotion == emotion } as HashMap
     }
 
+    /**
+     * Get the user's moods, ordered from most recent
+     * @param emotion An optional emotion ID to filter for
+     */
     fun getOrderedUserMoods(emotion: Int?): ArrayList<Mood> {
         return ArrayList(this.getUserMoods(emotion).values.sortedByDescending { mood -> mood.date })
     }
@@ -162,22 +177,41 @@ object AppManager : DbManager(){
         this.userMoods[mood.id] = mood
     }
 
+    /**
+     * Add a request to another user
+     * @param to The username of the other user
+     */
     suspend fun addRequest(to: String) {
         super.setRequest(Request(user!!.username, to))
     }
 
+    /**
+     * Cancel a sent request to another user
+     * @param request The request to cancel
+     * @return The new requests for the current user (from self)
+     */
     suspend fun cancelRequest(request: Request) : ArrayList<Request> {
         super.deleteRequest(request)
         this.userRequests.remove(request)
         return this.getRequestsFromSelf(true)
     }
 
+    /**
+     * Reject another user's request
+     * @param request The request to reject
+     * @return The new requests for the current user (from others)
+     */
     suspend fun rejectRequest(request: Request) : ArrayList<Request> {
         super.deleteRequest(request)
         this.userRequests.remove(request)
         return this.getRequestsFromOthers(true)
     }
 
+    /**
+     * Accept another user's request
+     * @param request the request to accept
+     * @return The new requests for the current user (from others)
+     */
     suspend fun acceptRequest(request: Request) : ArrayList<Request> {
         val newRequest = Request(request.from, request.to, true)
         super.setRequest(newRequest)
@@ -186,15 +220,28 @@ object AppManager : DbManager(){
         return this.getRequestsFromOthers(true)
     }
 
+    /**
+     * Fetch the requests from the database
+     * @return All requests for the current user
+     */
     suspend fun fetchRequests(): ArrayList<Request> {
         this.userRequests = super.fetchRequests(user!!.username)
         return this.userRequests
     }
 
+    /**
+     * Get all requests for the current user
+     * @return The list of requests for the current user
+     */
     fun getRequests(): ArrayList<Request> {
         return this.userRequests
     }
 
+    /**
+     * Get a list of requests from others
+     * @param getPending Whether or not to only get pending requests
+     * @return The list of requests from others
+     */
     fun getRequestsFromOthers(getPending: Boolean): ArrayList<Request> {
         val requests = ArrayList<Request>()
 
@@ -208,6 +255,11 @@ object AppManager : DbManager(){
         return requests
     }
 
+    /**
+     * Get a list of requests from self
+     * @param getPending Whether or not to only get pending requests
+     * @return The list of requests from self
+     */
     fun getRequestsFromSelf(getPending: Boolean): ArrayList<Request> {
         val requests = ArrayList<Request>()
 
@@ -221,12 +273,21 @@ object AppManager : DbManager(){
         return requests
     }
 
+    /**
+     * Get the most recent mood from the database
+     * @param username The username of the mood owner
+     * @return The most recent mood, if possible
+     */
     private suspend fun fetchMostRecentMood(username: String): Mood? {
         val moodMap = super.fetchMoods(username)
         val moodArray = ArrayList(moodMap.values.sortedByDescending { mood -> mood.date })
         return if (moodArray.size == 0) null else moodArray[0]
     }
 
+    /**
+     * Fetch the feed for the current user
+     * @return The list of moods for the feed
+     */
     suspend fun fetchFeed(): ArrayList<Mood> {
         // MUST FETCH REQUESTS FIRST
 
@@ -244,13 +305,17 @@ object AppManager : DbManager(){
         return feed
     }
 
+    /**
+     * Get the feed from memory
+     * @return The list of moods for the feed
+     */
     fun getFeed(): ArrayList<Mood> {
         return this.userFeed
     }
 
     /**
      * Store the given file in firebase storage and return the filename
-     * to use to retrive or delete the file
+     * to use to retrieve or delete the file
      * @param file The file to store
      * @return The filename identifying this file in the database
      */
@@ -266,12 +331,22 @@ object AppManager : DbManager(){
         return filename
     }
 
+    /**
+     * Delete an image from the storage
+     * @param filename The image name
+     */
     fun deleteImage(filename: String?){
         if (filename != null) {
             this.user?.username?.let { super.deleteFile(it, filename) }
         }
     }
 
+    /**
+     * Get rotation and the uri to the image with the given file name
+     * @param filename The name of the file in firestore
+     * @return A pair where the first element is the Uri to the file, and
+     *  the second is the rotation of the image in degrees
+     */
     suspend fun getImageUri(filename: String?): Pair<Uri?, Float> {
         var result = this.user?.username?.let {
             if (filename == null) {

@@ -4,18 +4,18 @@ import com.example.moody_blues.BaseView
 import com.example.moody_blues.models.Request
 
 /**
- * The contract between the request view and the presenter
+ * Declares public functions of the request view and the presenter
  */
 interface RequestContract {
     /**
      * The request view
      */
     interface View : BaseView<Presenter> {
-        fun restartActivity()
+        fun updateList()
     }
 
     /**
-     * The request prsenter
+     * The request presenter
      */
     interface Presenter : BasePresenter {
         /**

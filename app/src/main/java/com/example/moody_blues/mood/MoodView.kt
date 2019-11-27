@@ -41,7 +41,7 @@ import java.io.FileOutputStream
 
 
 /**
- * The view for the mood activity
+ * Toolkit-specific logic for the mood activity
  */
 class MoodView : AppCompatActivity(), MoodContract.View {
     private val THUMBSIZE: Int = 150
@@ -109,8 +109,6 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // Emotional state spinner stuff
 
-        // TODO: For some reason some colors crash the app lol maybe find out why later (currently none of these do though)
-
         emotionField.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.EMOTION_STATES)
 
         emotionField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -143,13 +141,13 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         }
 
         photoAddButton.setOnClickListener {
-            var pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (pictureIntent.resolveActivity(getPackageManager()) != null) {
                 val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
                 val photoFile = File.createTempFile(UUID.randomUUID().toString(), ".jpg", storageDir)
                 photoLocalPath = photoFile.absolutePath
 
-                var photoURI = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
+                val photoURI = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
                 pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                 startActivityForResult(pictureIntent, REQUEST_PHOTO_ADD)
             }
@@ -217,11 +215,17 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         super.onSaveInstanceState(outState)
     }
 
-
+    /**
+     * Change the background color of the view
+     * @param color The color to change to
+     */
     override fun changeBgColor(color: Int) {
         findViewById<View>(android.R.id.content).setBackgroundColor(color)
     }
 
+    /**
+     * Saves the data for the mood
+     */
     override fun preBacktoHistory() {
         presenter.setMoodFields(
                 mood,
@@ -253,6 +257,11 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         Toast.makeText(applicationContext, "Invalid input", Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Change the photo of the mood
+     * @param thumbnail The bitmap of the thumbnail
+     * @param full The path to the full image
+     */
     override fun changePhoto(thumbnail: Bitmap?, full: File?) {
         // cancel any existing requests
         Picasso.get().cancelRequest(photoField)
@@ -272,8 +281,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             mood.reasonImageThumbnail = null
         }
         else {
-            var thumbnailFile = File(applicationContext.getDir("IMAGES", Context.MODE_PRIVATE), UUID.randomUUID().toString() + ".jpg")
-            var outStream = FileOutputStream(thumbnailFile)
+            val thumbnailFile = File(applicationContext.getDir("IMAGES", Context.MODE_PRIVATE), UUID.randomUUID().toString() + ".jpg")
+            val outStream = FileOutputStream(thumbnailFile)
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
             outStream.flush()
             outStream.close()
@@ -298,15 +307,15 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             var thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(photoLocalPath), THUMBSIZE, THUMBSIZE)
 
             // Rotate thumbnail
-            var ei = ExifInterface(photoLocalPath)
-            var orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+            val ei = ExifInterface(photoLocalPath)
+            val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
             var rotation = 0F
             when(orientation){
                 ExifInterface.ORIENTATION_ROTATE_90 -> rotation = 90F
                 ExifInterface.ORIENTATION_ROTATE_180 -> rotation = 180F
                 ExifInterface.ORIENTATION_ROTATE_270 -> rotation = 270F
             }
-            var matrix = Matrix()
+            val matrix = Matrix()
             matrix.postRotate(rotation)
             thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.width, thumbnail.height, matrix, true);
 
@@ -320,10 +329,10 @@ class MoodView : AppCompatActivity(), MoodContract.View {
                 if (uri != null) {
                     val stream = contentResolver.openInputStream(uri!!)
                     val bitmap = BitmapFactory.decodeStream(stream)
-                    var thumbnail = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE)
+                    val thumbnail = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE)
 
-                    var fullFile = File(applicationContext.getDir("IMAGES", Context.MODE_PRIVATE), UUID.randomUUID().toString() + ".jpg")
-                    var outStream = FileOutputStream(fullFile)
+                    val fullFile = File(applicationContext.getDir("IMAGES", Context.MODE_PRIVATE), UUID.randomUUID().toString() + ".jpg")
+                    val outStream = FileOutputStream(fullFile)
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
                     outStream.flush()
                     outStream.close()

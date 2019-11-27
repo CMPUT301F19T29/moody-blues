@@ -5,7 +5,7 @@ import com.example.moody_blues.BaseView
 import com.example.moody_blues.models.Mood
 
 /**
- * The contract between the history view and the presenter
+ * Declares public functions of the history view and the presenter
  */
 interface HistoryContract {
     /**
@@ -19,7 +19,7 @@ interface HistoryContract {
         fun gotoMood(mood: Mood)
         /**
          * Open the mood activity for a mood
-         * @param id The id of the mood the edit or view
+         * @param mood The id of the mood the edit or view
          */
         fun gotoEditMood(mood: Mood)
         /**
@@ -28,7 +28,14 @@ interface HistoryContract {
          */
         fun refreshMoods(moods: ArrayList<Mood>)
 
+        /**
+         *
+         */
         fun getLocation()
+
+        /**
+         * Transition to the map activity
+         */
         fun gotoMap()
     }
 
@@ -43,9 +50,10 @@ interface HistoryContract {
          */
         @Deprecated("use refreshMoods() instead")
         fun fetchMoods(emotion: String): ArrayList<Mood>
+
         /**
          * Get the full list of moods
-         * @return the full list of moods
+         * @return the full list of moods for the history
          */
         fun fetchMoods(filter: Int): ArrayList<Mood>
 
@@ -61,6 +69,9 @@ interface HistoryContract {
          */
         fun createMood(location: Location?)
 
+        /**
+         * Initiate steps to create a new mood
+         */
         fun onAddMood()
 
         /**
@@ -75,6 +86,9 @@ interface HistoryContract {
          */
         fun deleteMood(mood: Mood)
 
+        /**
+         * Tell the view to transition to the map activity
+         */
         fun gotoMap()
     }
 }

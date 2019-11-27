@@ -7,12 +7,17 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.ViewPager
 import com.example.moody_blues.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 
+/**
+ * Toolkit-specific logic for the request activity
+ */
 class RequestView : AppCompatActivity(), RequestContract.View {
     override lateinit var presenter: RequestContract.Presenter
     private lateinit var viewPager: ViewPager
@@ -54,9 +59,11 @@ class RequestView : AppCompatActivity(), RequestContract.View {
 
     }
 
-    override fun restartActivity() {
-        finish()
-        startActivity(this.intent)
+    override fun updateList() {
+        for (fragment in supportFragmentManager.fragments) {
+            val rf: RequestFragment = fragment as RequestFragment
+            rf.update()
+        }
     }
 }
 

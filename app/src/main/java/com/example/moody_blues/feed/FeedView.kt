@@ -22,6 +22,9 @@ import kotlinx.android.synthetic.main.feed_view.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * Toolkit-specific logic for the feed activity
+ */
 class FeedView : AppCompatActivity(), FeedContract.View {
     override lateinit var presenter: FeedContract.Presenter
 
@@ -78,6 +81,9 @@ class FeedView : AppCompatActivity(), FeedContract.View {
         }
     }
 
+    /**
+     * Transition to the map activity
+     */
     override fun gotoMap() {
         val intent = Intent(this, MapView::class.java)
         intent.putExtra("mode", 2)

@@ -10,7 +10,7 @@ import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.requests.RequestView
 
 /**
- * This is the view for the dashboard activity
+ * Toolkit-specific logic for the dashboard activity
  */
 class DashboardView : AppCompatActivity(), DashboardContract.View {
     override lateinit var presenter: DashboardContract.Presenter
@@ -18,7 +18,6 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     private lateinit var history: Button
     private lateinit var feed: Button
     private lateinit var requests: Button
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
