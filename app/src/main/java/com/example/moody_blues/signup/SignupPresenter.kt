@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 /**
- * The presenter for the sign up activity
+ * TThe non-toolkit logic for the sign up activity
  */
 class SignupPresenter(private val view: SignupContract.View) : SignupContract.Presenter {
 

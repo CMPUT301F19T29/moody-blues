@@ -4,7 +4,7 @@ import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
 
 /**
- * The contract between the login view and the presenter
+ * Declares public functions of the login view and the presenter
  */
 interface LoginContract {
     /**

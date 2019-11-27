@@ -3,7 +3,7 @@ import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
 
 /**
- * The contract between the dashboard view and the presenter
+ * Declares public functions of the dashboard view and the presenter
  */
 interface DashboardContract {
     /**

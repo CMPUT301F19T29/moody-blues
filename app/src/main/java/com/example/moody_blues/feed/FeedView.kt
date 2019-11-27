@@ -11,6 +11,9 @@ import com.example.moody_blues.mood.MoodAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.feed_view.*
 
+/**
+ * Toolkit-specific logic for the feed activity
+ */
 class FeedView : AppCompatActivity(), FeedContract.View {
     override lateinit var presenter: FeedContract.Presenter
 
@@ -38,6 +41,9 @@ class FeedView : AppCompatActivity(), FeedContract.View {
         }
     }
 
+    /**
+     * Transition to the map activity
+     */
     override fun gotoMap() {
         val intent = Intent(this, MapView::class.java)
         intent.putExtra("mode", 2)

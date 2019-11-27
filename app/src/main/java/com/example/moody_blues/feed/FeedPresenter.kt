@@ -5,6 +5,9 @@ import com.example.moody_blues.models.Mood
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * The non-toolkit logic for the feed activity
+ */
 class FeedPresenter(private val view: FeedContract.View) : FeedContract.Presenter {
 
     // Constructor cannot contain any code
@@ -16,10 +19,16 @@ class FeedPresenter(private val view: FeedContract.View) : FeedContract.Presente
         view.presenter = this
     }
 
+    /**
+     * Tell the view to transition to the map activity
+     */
     override fun gotoMap() {
         view.gotoMap()
     }
 
+    /**
+     * Fetches the feed from the database
+     */
     override fun fetchFeed() {
         MainScope().launch {
             AppManager.fetchRequests()
@@ -27,9 +36,12 @@ class FeedPresenter(private val view: FeedContract.View) : FeedContract.Presente
         }
     }
 
+    /**
+     * Get the local feed from memory
+     * @return list of moods for the feed
+     */
     override fun getFeed(): ArrayList<Mood> {
         fetchFeed()
-        val moods = AppManager.getFeed()
-        return moods
+        return AppManager.getFeed()
     }
 }
