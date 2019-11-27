@@ -256,7 +256,9 @@ class MoodView : AppCompatActivity(), MoodContract.View {
     override fun changePhoto(thumbnail: Bitmap?, full: File?) {
         // cancel any existing requests
         Picasso.get().cancelRequest(photoField)
-        photoField.setImageBitmap(thumbnail)
+        if (full != null) {
+            Picasso.get().load(full).into(photoField)
+        }
 
         //Delete old images
         if (mood.reasonImageThumbnail != null){

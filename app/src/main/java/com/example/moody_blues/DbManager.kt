@@ -406,7 +406,7 @@ open class DbManager {
         }
     }
 
-    protected suspend fun getImageUri(username: String, filename: String): Pair<Uri?, Float> {
+    suspend fun getImageUri(username: String, filename: String): Pair<Uri?, Float> {
         val storageRef = getFS().reference.child(username).child(filename)
 
         val activeUploads = storageRef.activeUploadTasks

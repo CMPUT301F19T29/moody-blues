@@ -35,8 +35,7 @@ class SignupPresenter(private val view: SignupContract.View) : SignupContract.Pr
             if (error == null)
                 view.backtoLogin()
             else
-                view.clear()
-                view.showError(error.toString())
+                view.showError(error)
         }
     }
 }
