@@ -18,6 +18,10 @@ interface SignupContract {
          * Clear the fields for email, password, and username
          */
         fun clear()
+        /**
+         * Show toast message with given error string
+         */
+        fun showError(error: String)
     }
 
     /**

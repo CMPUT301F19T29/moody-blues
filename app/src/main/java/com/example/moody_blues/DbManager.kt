@@ -93,25 +93,29 @@ open class DbManager {
      * @param username The username to display to other users
      * @return The result of creating the user's account
      */
-    open suspend fun createUser(email: String, password: String, username: String): Boolean {
+    open suspend fun createUser(email: String, password: String, username: String): String? {
         val user = User(email, username)
 
         return try{
+            var userDocument = getFF().collection(PATH_USERS).document(username)
+            if (userDocument.get().await().exists()){
+                Log.e("createUser", "Username already exists")
+                return "Username Already Exists"
+            }
+
             val authResult = auth.createUserWithEmailAndPassword(email, password)
                     .await()
             if (authResult == null || authResult.user == null)
-                return false
+                return "Failed to create user account"
 //            sendEmailVerification()
-            getFF().collection(PATH_USERS).document(username)
-                    .set(user)
-                    .await()
+            userDocument.set(user).await()
             getFF().collection(PATH_EMAILS).document(email)
                 .set(user)
                 .await()
-            true
+            null
         } catch (e: Exception) {
             Log.e("createUser", e.toString())
-            false
+            e.toString()
         }
     }
 
