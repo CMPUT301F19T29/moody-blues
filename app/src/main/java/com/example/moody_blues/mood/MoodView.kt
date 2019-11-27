@@ -1,17 +1,23 @@
 package com.example.moody_blues.mood
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.drawable.ColorDrawable
 import android.media.ExifInterface
 import android.media.ThumbnailUtils
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.*
 import android.widget.Button
 import android.widget.TextView
@@ -88,7 +94,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         if (mood.reasonImageThumbnail != null) {
             MainScope().launch {
-                val (uri, rotation) = AppManager.getImageUri(mood.reasonImageThumbnail)
+                var (uri, rotation) = AppManager.getImageUri(mood.reasonImageFull)
                 if (uri != null){
                     Picasso.get().load(uri).rotate(rotation).into(photoField)
                 }
@@ -155,6 +161,38 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         photoDeleteButton.setOnClickListener {
             presenter.setPhoto(null, null)
+        }
+
+        photoField.setOnClickListener {
+            var imageView = ImageView(this)
+            imageView.setImageDrawable(photoField.drawable)
+//            MainScope().launch {
+//                var (uri, rotation) = AppManager.getImageUri(mood.reasonImageFull)
+//                if (uri != null){
+//                    Picasso.get().load(uri).rotate(rotation).into(imageView)
+//                }
+//                else{
+//                    imageView.setImageResource(android.R.color.transparent)
+//                }
+//            }
+
+            var builder = Dialog(this)
+            builder.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            builder.window?.setBackgroundDrawable(
+                    ColorDrawable(Color.TRANSPARENT))
+
+            builder.setOnDismissListener{
+                Picasso.get().cancelRequest(imageView)
+                imageView.setImageResource(android.R.color.transparent)
+            }
+
+            imageView.setOnClickListener{
+                builder.dismiss()
+            }
+            builder.addContentView(imageView, RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT))
+            builder.show()
         }
 
         emotionField.setSelection(mood.emotion)
@@ -227,7 +265,9 @@ class MoodView : AppCompatActivity(), MoodContract.View {
     override fun changePhoto(thumbnail: Bitmap?, full: File?) {
         // cancel any existing requests
         Picasso.get().cancelRequest(photoField)
-        photoField.setImageBitmap(thumbnail)
+        if (full != null) {
+            Picasso.get().load(full).into(photoField)
+        }
 
         //Delete old images
         if (mood.reasonImageThumbnail != null){

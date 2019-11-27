@@ -50,7 +50,7 @@ object AppManager : DbManager(){
      * @param username The username to display to other users
      * @return The result of creating the user's account
      */
-    override suspend fun createUser(email: String, password: String, username: String): Boolean {
+    override suspend fun createUser(email: String, password: String, username: String): String? {
         return super.createUser(email, password, username) // probably not needed
     }
 

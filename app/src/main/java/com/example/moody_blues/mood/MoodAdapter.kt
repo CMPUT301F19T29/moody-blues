@@ -1,9 +1,14 @@
 package com.example.moody_blues.mood
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.AppManager
@@ -24,7 +29,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val mood = moods[position]
+        var mood = moods[position]
         holder.date.text = mood.getDateString()
         holder.emotion.text = mood.getEmotionString()
         holder.social.text = mood.getSocialString()
@@ -37,7 +42,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
 
         if (mood.reasonImageThumbnail != null) {
             MainScope().launch {
-                val (uri, rotation) = AppManager.getImageUri(mood.reasonImageThumbnail)
+                val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageThumbnail!!)
                 if (uri != null){
                     Picasso.get().load(uri).rotate(rotation).into(holder.image)
                 }

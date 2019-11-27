@@ -1,6 +1,5 @@
 package com.example.moody_blues
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -20,16 +19,11 @@ import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import android.graphics.Bitmap.CompressFormat
 import android.media.ExifInterface
 import androidx.core.net.toUri
 import com.google.firebase.storage.StorageMetadata
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.io.BufferedOutputStream
-import java.io.FileOutputStream
-import java.io.InputStream
 import java.nio.ByteBuffer
-import java.util.stream.Stream
 
 
 /**
@@ -100,25 +94,29 @@ open class DbManager {
      * @param username The username to display to other users
      * @return The result of creating the user's account
      */
-    open suspend fun createUser(email: String, password: String, username: String): Boolean {
+    open suspend fun createUser(email: String, password: String, username: String): String? {
         val user = User(email, username)
 
         return try{
+            var userDocument = getFF().collection(PATH_USERS).document(username)
+            if (userDocument.get().await().exists()){
+                Log.e("createUser", "Username already exists")
+                return "Username Already Exists"
+            }
+
             val authResult = auth.createUserWithEmailAndPassword(email, password)
                     .await()
             if (authResult == null || authResult.user == null)
-                return false
+                return "Failed to create user account"
 //            sendEmailVerification()
-            getFF().collection(PATH_USERS).document(username)
-                    .set(user)
-                    .await()
+            userDocument.set(user).await()
             getFF().collection(PATH_EMAILS).document(email)
                 .set(user)
                 .await()
-            true
+            null
         } catch (e: Exception) {
             Log.e("createUser", e.toString())
-            false
+            e.toString()
         }
     }
 
@@ -424,7 +422,6 @@ open class DbManager {
             storageRef.delete().await()
         }
     }
-
     /**
      * Get rotation and the uri to the image with the given file name
      * @param filename The name of the file in firestore
