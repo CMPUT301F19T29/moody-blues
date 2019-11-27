@@ -24,6 +24,8 @@ class RequestPresenter(private val view: RequestContract.View) : RequestContract
      * @param user The user to follow
      */
     override fun requestFollow(user: String) {
+        if (user == "") return
+
         MainScope().launch {
             AppManager.addRequest(user)
             AppManager.fetchRequests()

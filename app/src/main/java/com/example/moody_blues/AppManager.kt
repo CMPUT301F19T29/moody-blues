@@ -315,7 +315,7 @@ object AppManager : DbManager(){
 
     /**
      * Store the given file in firebase storage and return the filename
-     * to use to retrive or delete the file
+     * to use to retrieve or delete the file
      * @param file The file to store
      * @return The filename identifying this file in the database
      */
