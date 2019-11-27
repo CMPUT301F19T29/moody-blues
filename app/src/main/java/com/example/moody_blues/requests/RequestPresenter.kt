@@ -4,6 +4,9 @@ import com.example.moody_blues.AppManager
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * The non-toolkit logic for the request activity
+ */
 class RequestPresenter(private val view: RequestContract.View) : RequestContract.Presenter {
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -19,6 +22,8 @@ class RequestPresenter(private val view: RequestContract.View) : RequestContract
      * @param user The user to follow
      */
     override fun requestFollow(user: String) {
+        if (user == "") return
+
         MainScope().launch {
             AppManager.addRequest(user)
             AppManager.fetchRequests()

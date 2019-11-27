@@ -4,7 +4,7 @@ import com.example.moody_blues.BaseView
 import com.example.moody_blues.models.Request
 
 /**
- * The contract between the request view and the presenter
+ * Declares public functions of the request view and the presenter
  */
 interface RequestContract {
     /**
@@ -15,7 +15,7 @@ interface RequestContract {
     }
 
     /**
-     * The request prsenter
+     * The request presenter
      */
     interface Presenter : BasePresenter {
         /**

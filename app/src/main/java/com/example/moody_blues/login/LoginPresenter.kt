@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 /**
- * The presenter for the login activity
+ * The non-toolkit logic for the login activity
  */
 class LoginPresenter(private val view: LoginContract.View) : LoginContract.Presenter {
     // Constructor cannot contain any code

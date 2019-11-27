@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 /**
- * The view for the sign up activity
+ * Toolkit-specific logic for the sign up activity
  */
 class SignupView : AppCompatActivity(), SignupContract.View {
     override lateinit var presenter: SignupContract.Presenter
