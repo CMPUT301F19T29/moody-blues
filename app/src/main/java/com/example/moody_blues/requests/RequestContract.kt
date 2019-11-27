@@ -11,7 +11,7 @@ interface RequestContract {
      * The request view
      */
     interface View : BaseView<Presenter> {
-        fun restartActivity()
+        fun updateList()
     }
 
     /**

@@ -70,6 +70,11 @@ class RequestAdapter(private var requests: ArrayList<Request>, private val pageN
         }
     }
 
+    fun refresh() {
+        requests = AppManager.getRequestsFromSelf(true)
+        notifyDataSetChanged()
+    }
+
     /**
      * A class representing a view holder for the Request adapter
      */
