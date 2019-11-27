@@ -65,6 +65,10 @@ class Mood(
         this.location = if (wrapper.locationLat == null) null else LatLng(wrapper.locationLat!!, wrapper.locationLon!!)
     }
 
+    /**
+     * Converts the mood into a database-safe model
+     * @return The model to store in the database
+     */
     fun wrap(): MoodWrapper {
         return MoodWrapper(
                 this.location?.latitude,
@@ -80,7 +84,7 @@ class Mood(
     }
 
     /**
-     * Get the date
+     * Get the date description
      * @return The date as a string
      */
     fun getDateString(): String {
@@ -111,6 +115,10 @@ class Mood(
         return EMOTION_COLORS[this.emotion]
     }
 
+    /**
+     * Get the emotion color as a value between 0 and 1
+     * @return the emotion color float
+     */
     fun getColorWheel() : Float {
         val out = FloatArray(3)
         ColorUtils.colorToHSL(getColor(), out)

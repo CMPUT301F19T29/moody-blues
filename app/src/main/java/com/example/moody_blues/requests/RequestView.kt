@@ -13,6 +13,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 
+/**
+ * Toolkit-specific logic for the request activity
+ */
 class RequestView : AppCompatActivity(), RequestContract.View {
     override lateinit var presenter: RequestContract.Presenter
     private lateinit var viewPager: ViewPager
@@ -54,6 +57,9 @@ class RequestView : AppCompatActivity(), RequestContract.View {
 
     }
 
+    /**
+     * Restart the activity
+     */
     override fun restartActivity() {
         finish()
         startActivity(this.intent)

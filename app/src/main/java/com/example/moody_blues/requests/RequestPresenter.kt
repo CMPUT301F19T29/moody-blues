@@ -5,6 +5,9 @@ import com.example.moody_blues.models.Request
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * The non-toolkit logic for the request activity
+ */
 class RequestPresenter(private val view: RequestContract.View) : RequestContract.Presenter {
 
     // Constructor cannot contain any code

@@ -10,6 +10,9 @@ import com.example.moody_blues.R
 import com.example.moody_blues.dashboard.DashboardView
 import com.example.moody_blues.signup.SignupView
 
+/**
+ * Toolkit-specific logic for the login activity
+ */
 class LoginView : AppCompatActivity(), LoginContract.View {
     override lateinit var presenter: LoginContract.Presenter
 
