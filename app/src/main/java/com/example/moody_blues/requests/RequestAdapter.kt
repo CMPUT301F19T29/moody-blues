@@ -37,7 +37,7 @@ class RequestAdapter(private var requests: ArrayList<Request>, private val pageN
                 rejectRequest(request)
             }
         }
-        if (pageNumber == 2) {
+        else if (pageNumber == 2) {
             holder.accept.isVisible = false
             holder.reject.isVisible = false
             holder.cancel.isVisible = true
@@ -86,7 +86,10 @@ class RequestAdapter(private var requests: ArrayList<Request>, private val pageN
     }
 
     fun refresh() {
-        requests = AppManager.getRequestsFromSelf(true)
+        if (pageNumber == 1)
+            requests = AppManager.getRequestsFromOthers(true)
+        else if (pageNumber == 2)
+            requests = AppManager.getRequestsFromSelf(true)
         notifyDataSetChanged()
     }
 

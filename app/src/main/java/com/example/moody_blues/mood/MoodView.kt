@@ -205,6 +205,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // confirm button
         confirmButton.setOnClickListener {
+            Toast.makeText(this, "Saving mood...", Toast.LENGTH_SHORT).show()
             presenter.verifyMoodFields(reasonField.text.toString())
         }
     }

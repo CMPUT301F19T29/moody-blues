@@ -19,6 +19,11 @@ interface RequestContract {
      */
     interface Presenter : BasePresenter {
         /**
+         * Refresh the feed
+         */
+        fun refresh()
+
+        /**
          * Request to follow the specified user
          * @param user The user to follow
          */

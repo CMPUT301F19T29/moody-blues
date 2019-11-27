@@ -15,6 +15,17 @@ class RequestPresenter(private val view: RequestContract.View) : RequestContract
     init {
         // Links the presenter to the view
         view.presenter = this
+        refresh()
+    }
+
+    /**
+     * Refresh the requests
+     */
+    override fun refresh() {
+        MainScope().launch {
+            AppManager.fetchRequests()
+            view.updateList()
+        }
     }
 
     /**

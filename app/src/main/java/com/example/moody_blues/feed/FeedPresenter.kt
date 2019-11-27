@@ -17,6 +17,18 @@ class FeedPresenter(private val view: FeedContract.View) : FeedContract.Presente
     init {
         // Links the presenter to the view
         view.presenter = this
+        refresh()
+    }
+
+    /**
+     * Refresh the feed
+     */
+    override fun refresh() {
+        MainScope().launch {
+            AppManager.fetchRequests()
+            AppManager.fetchFeed()
+            view.refreshFeed(AppManager.getFeed())
+        }
     }
 
     /**

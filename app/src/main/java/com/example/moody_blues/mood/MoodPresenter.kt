@@ -19,6 +19,9 @@ class MoodPresenter(private val view: MoodContract.View) : MoodContract.Presente
     init {
         // Links the presenter to the view
         view.presenter = this
+        MainScope().launch {
+            AppManager.fetchMoods()
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.R
 import com.example.moody_blues.dashboard.DashboardView
@@ -37,6 +38,7 @@ class LoginView : AppCompatActivity(), LoginContract.View {
 
         // Do stuff with the presenter
         submit.setOnClickListener {
+            Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show()
             presenter.login(user.text.toString(), pass.text.toString())
         }
 
@@ -48,7 +50,8 @@ class LoginView : AppCompatActivity(), LoginContract.View {
     /**
      * Clear the fields for username and password
      */
-    override fun clear(){
+    override fun onError(){
+        Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
         user.text.clear()
         pass.text.clear()
     }
