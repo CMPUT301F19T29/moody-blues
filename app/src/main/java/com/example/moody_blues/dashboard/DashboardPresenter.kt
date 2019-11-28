@@ -1,7 +1,7 @@
 package com.example.moody_blues.dashboard
 
 /**
- * This is the presenter for the dashboard activity
+ * The non-toolkit logic for the dashboard activity
  */
 class DashboardPresenter(private val view: DashboardContract.View) : DashboardContract.Presenter {
 

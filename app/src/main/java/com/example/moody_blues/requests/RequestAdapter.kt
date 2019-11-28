@@ -15,6 +15,9 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * The adapter for a request row
+ */
 class RequestAdapter(private var requests: ArrayList<Request>, private val pageNumber: Int) : RecyclerView.Adapter<RequestAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_request, parent, false)
@@ -34,7 +37,7 @@ class RequestAdapter(private var requests: ArrayList<Request>, private val pageN
                 rejectRequest(request)
             }
         }
-        if (pageNumber == 2) {
+        else if (pageNumber == 2) {
             holder.accept.isVisible = false
             holder.reject.isVisible = false
             holder.cancel.isVisible = true
@@ -49,25 +52,45 @@ class RequestAdapter(private var requests: ArrayList<Request>, private val pageN
 
     override fun getItemCount() = requests.size
 
-    fun acceptRequest(request: Request) {
+    /**
+     * Accept a request
+     * @param request The request to accept
+     */
+    private fun acceptRequest(request: Request) {
         MainScope().launch {
             requests = AppManager.acceptRequest(request)
             notifyDataSetChanged()
         }
     }
 
-    fun rejectRequest(request: Request) {
+    /**
+     * Reject a request
+     * @param request The request to reject
+     */
+    private fun rejectRequest(request: Request) {
         MainScope().launch {
             requests = AppManager.rejectRequest(request)
             notifyDataSetChanged()
         }
     }
 
-    fun cancelRequest(request: Request) {
+    /**
+     * Cancel a request
+     * @param request The request to cancel
+     */
+    private fun cancelRequest(request: Request) {
         MainScope().launch {
             requests = AppManager.cancelRequest(request)
             notifyDataSetChanged()
         }
+    }
+
+    fun refresh() {
+        if (pageNumber == 1)
+            requests = AppManager.getRequestsFromOthers(true)
+        else if (pageNumber == 2)
+            requests = AppManager.getRequestsFromSelf(true)
+        notifyDataSetChanged()
     }
 
     /**

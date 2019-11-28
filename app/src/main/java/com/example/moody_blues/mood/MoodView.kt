@@ -1,15 +1,23 @@
 package com.example.moody_blues.mood
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.Matrix
+import android.graphics.drawable.ColorDrawable
+import android.media.ExifInterface
 import android.media.ThumbnailUtils
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.*
 import android.widget.Button
 import android.widget.TextView
@@ -33,7 +41,7 @@ import java.io.FileOutputStream
 
 
 /**
- * The view for the mood activity
+ * Toolkit-specific logic for the mood activity
  */
 class MoodView : AppCompatActivity(), MoodContract.View {
     private val THUMBSIZE: Int = 150
@@ -83,16 +91,23 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         photoUploadButton = findViewById(R.id.mood_photo_upload_button)
         photoDeleteButton = findViewById(R.id.mood_photo_delete_button)
 
-        if (mood.reasonImageThumbnail != null){
+
+        if (mood.reasonImageThumbnail != null) {
             MainScope().launch {
-                var uri = AppManager.getImageUri(mood.reasonImageThumbnail)
-                Picasso.get().load(uri).rotate(90F).into(photoField)
+                var (uri, rotation) = AppManager.getImageUri(mood.reasonImageFull)
+                if (uri != null){
+                    Picasso.get().load(uri).rotate(rotation).into(photoField)
+                }
+                else{
+                    photoField.setImageResource(R.drawable.moody_blues_icon_background)
+                }
             }
+        }
+        else{
+            photoField.setImageResource(R.drawable.moody_blues_icon_background)
         }
 
         // Emotional state spinner stuff
-
-        // TODO: For some reason some colors crash the app lol maybe find out why later (currently none of these do though)
 
         emotionField.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Mood.EMOTION_STATES)
 
@@ -126,13 +141,13 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         }
 
         photoAddButton.setOnClickListener {
-            var pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (pictureIntent.resolveActivity(getPackageManager()) != null) {
                 val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
                 val photoFile = File.createTempFile(UUID.randomUUID().toString(), ".jpg", storageDir)
                 photoLocalPath = photoFile.absolutePath
 
-                var photoURI = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
+                val photoURI = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
                 pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                 startActivityForResult(pictureIntent, REQUEST_PHOTO_ADD)
             }
@@ -148,6 +163,38 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             presenter.setPhoto(null, null)
         }
 
+        photoField.setOnClickListener {
+            var imageView = ImageView(this)
+            imageView.setImageDrawable(photoField.drawable)
+//            MainScope().launch {
+//                var (uri, rotation) = AppManager.getImageUri(mood.reasonImageFull)
+//                if (uri != null){
+//                    Picasso.get().load(uri).rotate(rotation).into(imageView)
+//                }
+//                else{
+//                    imageView.setImageResource(android.R.color.transparent)
+//                }
+//            }
+
+            var builder = Dialog(this)
+            builder.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            builder.window?.setBackgroundDrawable(
+                    ColorDrawable(Color.TRANSPARENT))
+
+            builder.setOnDismissListener{
+                Picasso.get().cancelRequest(imageView)
+                imageView.setImageResource(android.R.color.transparent)
+            }
+
+            imageView.setOnClickListener{
+                builder.dismiss()
+            }
+            builder.addContentView(imageView, RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT))
+            builder.show()
+        }
+
         emotionField.setSelection(mood.emotion)
         socialField.setSelection(mood.social)
         dateField.text = mood.getDateString()
@@ -158,6 +205,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         // confirm button
         confirmButton.setOnClickListener {
+            Toast.makeText(this, "Saving mood...", Toast.LENGTH_SHORT).show()
             presenter.verifyMoodFields(reasonField.text.toString())
         }
     }
@@ -168,11 +216,17 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         super.onSaveInstanceState(outState)
     }
 
-
+    /**
+     * Change the background color of the view
+     * @param color The color to change to
+     */
     override fun changeBgColor(color: Int) {
         findViewById<View>(android.R.id.content).setBackgroundColor(color)
     }
 
+    /**
+     * Saves the data for the mood
+     */
     override fun preBacktoHistory() {
         presenter.setMoodFields(
                 mood,
@@ -204,10 +258,17 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         Toast.makeText(applicationContext, "Invalid input", Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Change the photo of the mood
+     * @param thumbnail The bitmap of the thumbnail
+     * @param full The path to the full image
+     */
     override fun changePhoto(thumbnail: Bitmap?, full: File?) {
         // cancel any existing requests
         Picasso.get().cancelRequest(photoField)
-        photoField.setImageBitmap(thumbnail)
+        if (full != null) {
+            Picasso.get().load(full).into(photoField)
+        }
 
         //Delete old images
         if (mood.reasonImageThumbnail != null){
@@ -221,8 +282,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             mood.reasonImageThumbnail = null
         }
         else {
-            var thumbnailFile = File(applicationContext.getDir("IMAGES", Context.MODE_PRIVATE), UUID.randomUUID().toString() + ".jpg")
-            var outStream = FileOutputStream(thumbnailFile)
+            val thumbnailFile = File(applicationContext.getDir("IMAGES", Context.MODE_PRIVATE), UUID.randomUUID().toString() + ".jpg")
+            val outStream = FileOutputStream(thumbnailFile)
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
             outStream.flush()
             outStream.close()
@@ -245,6 +306,20 @@ class MoodView : AppCompatActivity(), MoodContract.View {
 
         if (requestCode == REQUEST_PHOTO_ADD) {
             var thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(photoLocalPath), THUMBSIZE, THUMBSIZE)
+
+            // Rotate thumbnail
+            val ei = ExifInterface(photoLocalPath)
+            val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+            var rotation = 0F
+            when(orientation){
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotation = 90F
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotation = 180F
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotation = 270F
+            }
+            val matrix = Matrix()
+            matrix.postRotate(rotation)
+            thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.width, thumbnail.height, matrix, true);
+
             presenter.setPhoto(thumbnail, File(photoLocalPath))
         }
         else if (requestCode == REQUEST_PHOTO_UPLOAD) {
@@ -255,10 +330,10 @@ class MoodView : AppCompatActivity(), MoodContract.View {
                 if (uri != null) {
                     val stream = contentResolver.openInputStream(uri!!)
                     val bitmap = BitmapFactory.decodeStream(stream)
-                    var thumbnail = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE)
+                    val thumbnail = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE)
 
-                    var fullFile = File(applicationContext.getDir("IMAGES", Context.MODE_PRIVATE), UUID.randomUUID().toString() + ".jpg")
-                    var outStream = FileOutputStream(fullFile)
+                    val fullFile = File(applicationContext.getDir("IMAGES", Context.MODE_PRIVATE), UUID.randomUUID().toString() + ".jpg")
+                    val outStream = FileOutputStream(fullFile)
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
                     outStream.flush()
                     outStream.close()
@@ -277,7 +352,6 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         const val REQUEST_PHOTO_ADD = 1
         const val REQUEST_PHOTO_UPLOAD = 2
     }
-
 //    override fun gotoMap() {
 //        val intent = Intent(this, MapView::class.java)
 //        startActivity(intent)

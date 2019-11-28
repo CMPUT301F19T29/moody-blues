@@ -4,13 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.feed.FeedView
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.requests.RequestView
 
 /**
- * This is the view for the dashboard activity
+ * Toolkit-specific logic for the dashboard activity
  */
 class DashboardView : AppCompatActivity(), DashboardContract.View {
     override lateinit var presenter: DashboardContract.Presenter
@@ -19,11 +20,10 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     private lateinit var feed: Button
     private lateinit var requests: Button
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard_view)
-        title = "Dashboard"
+        title = "Hello, " + AppManager.getUsername()
 
         // Pass the view to the presenter
         presenter = DashboardPresenter(this)

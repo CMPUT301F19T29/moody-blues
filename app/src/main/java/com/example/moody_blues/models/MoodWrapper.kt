@@ -1,7 +1,8 @@
 package com.example.moody_blues.models
 
-import android.graphics.Bitmap
-
+/**
+ * A database-safe wrapper for the mood class
+ */
 data class MoodWrapper (
         var locationLat: Double? = null,
         var locationLon: Double? = null,

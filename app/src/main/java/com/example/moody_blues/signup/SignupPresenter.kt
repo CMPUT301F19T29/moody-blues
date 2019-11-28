@@ -1,5 +1,6 @@
 package com.example.moody_blues.map
 
+import android.widget.Toast
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.signup.SignupContract
 import kotlinx.coroutines.MainScope
@@ -7,7 +8,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 /**
- * The presenter for the sign up activity
+ * TThe non-toolkit logic for the sign up activity
  */
 class SignupPresenter(private val view: SignupContract.View) : SignupContract.Presenter {
 
@@ -30,10 +31,11 @@ class SignupPresenter(private val view: SignupContract.View) : SignupContract.Pr
         // TODO: show waiting animation
 
         MainScope().launch {
-            if (AppManager.createUser(email, password, username))
+            var error = AppManager.createUser(email, password, username)
+            if (error == null)
                 view.backtoLogin()
             else
-                view.clear() // TODO: show error to user
+                view.showError(error)
         }
     }
 }
