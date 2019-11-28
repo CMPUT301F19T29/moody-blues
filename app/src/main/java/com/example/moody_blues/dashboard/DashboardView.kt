@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.feed.FeedView
 import com.example.moody_blues.history.HistoryView
@@ -22,7 +23,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard_view)
-        title = "Dashboard"
+        title = "Hello, " + AppManager.getUsername()
 
         // Pass the view to the presenter
         presenter = DashboardPresenter(this)
