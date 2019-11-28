@@ -1,9 +1,14 @@
 package com.example.moody_blues.mood
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.AppManager
@@ -29,15 +34,17 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.emotion.text = mood.getEmotionString()
         holder.social.text = mood.getSocialString()
         holder.reason.text = mood.reasonText
-        holder.username.text = AppManager.getUsername()
+        holder.username.text = mood.username
         holder.itemView.setBackgroundColor(mood.getColor())
         val item: Mood = mood
         holder.itemView.setOnClickListener { clickListener(item, position) }
         holder.itemView.setOnLongClickListener { longListener(item, position) }
 
         if (mood.reasonImageThumbnail != null) {
+            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
+            
             MainScope().launch {
-                var (uri, rotation) = AppManager.getImageUri(mood.reasonImageThumbnail)
+                val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageThumbnail!!)
                 if (uri != null){
                     Picasso.get().load(uri).rotate(rotation).into(holder.image)
                 }

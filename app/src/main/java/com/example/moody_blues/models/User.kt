@@ -1,6 +1,6 @@
 package com.example.moody_blues.models
 
 /**
- * A data class representing a user
+ * The model for a user to be stored in the database
  */
 data class User(val email: String = "", val username: String = "")

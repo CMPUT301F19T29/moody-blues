@@ -16,8 +16,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 
+/**
+ * Toolkit-specific logic for the map activity
+ */
 class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     override lateinit var presenter: MapContract.Presenter
+
+    private var mapMode: Int = -1
     private lateinit var mMap: GoogleMap
     private lateinit var here: LatLng
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -27,6 +32,7 @@ class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback, Googl
         setContentView(R.layout.map_view)
         title = "Map"
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        mapMode = this.intent.getIntExtra("mode", -1)
 
         // Pass the view to the presenter
         presenter = MapPresenter(this)
@@ -41,6 +47,9 @@ class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback, Googl
         presenter.getLocation()
     }
 
+    /**
+     * Get the user's current location
+     */
     override fun getLocation() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_DENIED) {
@@ -68,6 +77,10 @@ class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback, Googl
             }
     }
 
+    /**
+     * Centers the map to a location
+     * @param location The location to center on
+     */
     override fun setDefaultLocation(location: Location?) {
         here = LatLng(location!!.latitude, location!!.longitude)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(here, 10f))
@@ -86,7 +99,7 @@ class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback, Googl
         mMap = googleMap
 
         // for each mood in user's moods add marker
-        for ((_, mood) in presenter.fetchMoods()) {
+        for (mood in presenter.fetchMoods(mapMode)) {
             if (mood.location == null) {
                 continue
             }
