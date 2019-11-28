@@ -44,6 +44,11 @@ interface HistoryContract {
      */
     interface Presenter : BasePresenter {
         /**
+         * Refresh the history
+         */
+        fun refresh()
+
+        /**
          * Get a filtered list of moods
          * @param emotion The emotion to filter for
          * @return the filtered list of moods

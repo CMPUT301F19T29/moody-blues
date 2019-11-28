@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -48,6 +49,7 @@ class RequestView : AppCompatActivity(), RequestContract.View {
                 ?.setView(R.layout.request_dialog)
                 ?.setTitle("Follow a user")
                 ?.setPositiveButton("Ok",  DialogInterface.OnClickListener { dialog, id ->
+                    Toast.makeText(this, "Making a request...", Toast.LENGTH_SHORT).show()
                     val field = (dialog as Dialog).findViewById<EditText>(R.id.request_dialog_field)
                     presenter.requestFollow(field.text.toString())
                 })

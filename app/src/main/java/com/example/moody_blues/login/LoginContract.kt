@@ -20,13 +20,13 @@ interface LoginContract {
          */
         fun gotoSignUp()
         /**
-         * Clear the fields for username and password
+         * Alerts the user of errors
          */
-        fun clear()
+        fun onError()
     }
 
     /**
-     * The login prsenter
+     * The login presenter
      */
     interface Presenter : BasePresenter {
         /**
