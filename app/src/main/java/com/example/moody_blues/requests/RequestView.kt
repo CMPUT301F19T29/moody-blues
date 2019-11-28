@@ -46,13 +46,6 @@ class RequestView : AppCompatActivity(), RequestContract.View {
         setContentView(R.layout.request_view)
         title = "Requests"
 
-        requestsPageAdapter =
-            RequestsPageAdapter(this, supportFragmentManager)
-        viewPager = findViewById(R.id.view_pager)
-        viewPager.adapter = requestsPageAdapter
-        val tabs: TabLayout = findViewById(R.id.request_tab_bar)
-        tabs.setupWithViewPager(viewPager)
-
         addRequestButton = findViewById(R.id.request_add_button)
 
         // Setup a toolbar as a replacement for the action bar
@@ -79,6 +72,13 @@ class RequestView : AppCompatActivity(), RequestContract.View {
 
         // Setup drawer view
         setupDrawerContent(nvDrawer)
+
+        requestsPageAdapter =
+            RequestsPageAdapter(this, supportFragmentManager)
+        viewPager = findViewById(R.id.view_pager)
+        viewPager.adapter = requestsPageAdapter
+        val tabs: TabLayout = findViewById(R.id.request_tab_bar)
+        tabs.setupWithViewPager(viewPager)
 
         // Pass the view to the presenter
         presenter = RequestPresenter(this)
