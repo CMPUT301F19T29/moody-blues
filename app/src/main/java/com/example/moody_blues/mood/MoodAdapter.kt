@@ -41,6 +41,8 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.itemView.setOnLongClickListener { longListener(item, position) }
 
         if (mood.reasonImageThumbnail != null) {
+            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
+            
             MainScope().launch {
                 val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageThumbnail!!)
                 if (uri != null){
