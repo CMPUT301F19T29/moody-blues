@@ -61,8 +61,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- The ActionBar displayed at the top -->
@@ -81,8 +79,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- The navigation drawer that comes from the left -->
-    <!-- Note that `android:layout_gravity` needs to be set to 'start' -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nvView"
         android:layout_width="wrap_content"

@@ -76,6 +76,8 @@
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
         android:text="Confirm"
+        android:textColor="@color/white"
+        android:background="@drawable/accent_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
