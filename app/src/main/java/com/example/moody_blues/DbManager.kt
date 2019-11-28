@@ -21,6 +21,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import android.media.ExifInterface
 import androidx.core.net.toUri
+import com.google.firebase.FirebaseApp
 import com.google.firebase.storage.StorageMetadata
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.nio.ByteBuffer
@@ -30,7 +31,18 @@ import java.nio.ByteBuffer
  * Manages database and login
  */
 open class DbManager {
-    private val auth : FirebaseAuth = FirebaseAuth.getInstance()
+
+    private lateinit var auth : FirebaseAuth
+    private var isInit : Boolean = false
+    fun init(app: FirebaseApp? = null){
+        auth = if (app == null){
+            FirebaseAuth.getInstance()
+        }
+        else{
+            FirebaseAuth.getInstance(app)
+        }
+        isInit = true
+    }
 
     /**
      * Shortcut methods
@@ -67,6 +79,9 @@ open class DbManager {
      * @return The result of attempting to sign the user in
      */
     open suspend fun signIn(email: String, password: String): String? {
+        if (!isInit){
+            init()
+        }
         return try {
             val authResult = auth.signInWithEmailAndPassword(email, password)
                     .await()
@@ -95,6 +110,10 @@ open class DbManager {
      * @return The result of creating the user's account
      */
     open suspend fun createUser(email: String, password: String, username: String): String? {
+        if (!isInit){
+            init()
+        }
+
         val user = User(email, username)
 
         return try{
@@ -127,30 +146,35 @@ open class DbManager {
      */
     @Deprecated("use username key instead")
     open suspend fun deleteCurrentUser(): Boolean {
-        // get email and username
-        val email = getUserEmail()
-        email?: return false
-        val username = getFF().collection(PATH_EMAILS).document(email)
-                .get()
-                .await()
-                .toObject(User::class.java)?.username
+        if (isInit){
+            // get email and username
+            val email = getUserEmail()
+            email?: return false
+            val username = getFF().collection(PATH_EMAILS).document(email)
+                    .get()
+                    .await()
+                    .toObject(User::class.java)?.username
 
-        // delete database data
-        getFF().collection(PATH_EMAILS).document(email)
-                .delete()
-                .await()
-        if (username != null) {
-            getFF().collection(PATH_USERS).document(username)
+            // delete database data
+            getFF().collection(PATH_EMAILS).document(email)
                     .delete()
                     .await()
-            getFS().reference.child(username).delete()
-        }
+            if (username != null) {
+                getFF().collection(PATH_USERS).document(username)
+                        .delete()
+                        .await()
+                getFS().reference.child(username).delete()
+            }
 
-        // delete user account
-        auth.currentUser
-                ?.delete()
-                ?.await()
-        return true
+            // delete user account
+            auth.currentUser
+                    ?.delete()
+                    ?.await()
+            return true
+        }
+        else{
+            return false
+        }
     }
 
     /**
