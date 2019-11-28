@@ -59,25 +59,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/ic_menu_add" />
 
-         The ActionBar displayed at the top
         <include
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-<!--        &lt;!&ndash; The main content view where activities are loaded &ndash;&gt;-->
-<!--        <LinearLayout-->
-<!--            android:id="@+id/flContent"-->
-<!--            android:orientation="horizontal"-->
-<!--            app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent" />-->
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <!-- The navigation drawer that comes from the left -->
-    <!-- Note that `android:layout_gravity` needs to be set to 'start' -->
+    
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nvView"
         android:layout_width="wrap_content"

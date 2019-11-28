@@ -162,14 +162,11 @@ class FeedView : AppCompatActivity(), FeedContract.View {
 //            else -> fragmentClass = HistoryView::class.java
         }
 
-//        // Insert the fragment by replacing any existing fragment
-//        val fragmentManager = supportFragmentManager
-//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
-
         // Highlight the selected item has been done by NavigationView
         menuItem.isChecked = true
 //        // Set action bar title
 //        title = menuItem.title
+
         // Close the navigation drawer
         mDrawer.closeDrawers()
     }
