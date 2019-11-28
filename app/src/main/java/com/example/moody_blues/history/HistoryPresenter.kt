@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.*
 
 /**
- * This is the presenter for the history activity
+ * The non-toolkit logic for the history activity
  */
 class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract.Presenter {
 
@@ -18,6 +18,17 @@ class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract
     init {
         // Links the presenter to the view
         view.presenter = this
+        refresh()
+    }
+
+    /**
+     * Refresh the history
+     */
+    override fun refresh() {
+        MainScope().launch {
+            AppManager.fetchMoods()
+            view.refreshMoods(AppManager.getOrderedUserMoods(null))
+        }
     }
 
     /**
@@ -48,6 +59,9 @@ class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract
         view.refreshMoods(this.fetchMoods(filter))
     }
 
+    /**
+     * Initiate steps to create a new mood
+     */
     override fun onAddMood() {
         view.getLocation()
     }
@@ -81,6 +95,9 @@ class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract
         }
     }
 
+    /**
+     * Tell the view to transition to the map activity
+     */
     override fun gotoMap() {
         view.gotoMap()
     }

@@ -10,10 +10,13 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.ActionBarDrawerToggle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.ViewPager
 import com.example.moody_blues.R
 import com.example.moody_blues.feed.FeedView
@@ -24,6 +27,9 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 
+/**
+ * Toolkit-specific logic for the request activity
+ */
 class RequestView : AppCompatActivity(), RequestContract.View {
     override lateinit var presenter: RequestContract.Presenter
     private lateinit var viewPager: ViewPager
@@ -84,6 +90,7 @@ class RequestView : AppCompatActivity(), RequestContract.View {
                 ?.setView(R.layout.request_dialog)
                 ?.setTitle("Follow a user")
                 ?.setPositiveButton("Ok",  DialogInterface.OnClickListener { dialog, id ->
+                    Toast.makeText(this, "Making a request...", Toast.LENGTH_SHORT).show()
                     val field = (dialog as Dialog).findViewById<EditText>(R.id.request_dialog_field)
                     presenter.requestFollow(field.text.toString())
                 })
@@ -166,9 +173,16 @@ class RequestView : AppCompatActivity(), RequestContract.View {
         }
     }
 
-    override fun restartActivity() {
-        finish()
-        startActivity(this.intent)
+//    override fun restartActivity() {
+//        finish()
+//        startActivity(this.intent)
+//    }
+
+    override fun updateList() {
+        for (fragment in supportFragmentManager.fragments) {
+            val rf: RequestFragment = fragment as RequestFragment
+            rf.update()
+        }
     }
 }
 

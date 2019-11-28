@@ -36,7 +36,7 @@ import kotlinx.android.synthetic.main.history_view.*
 import kotlinx.coroutines.GlobalScope
 
 /**
- * The view for the history activity
+ * Toolkit-specific logic for the history activity
  */
 class HistoryView : AppCompatActivity(), HistoryContract.View {
     override lateinit var presenter: HistoryContract.Presenter
@@ -186,6 +186,9 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         }
     }
 
+    /**
+     * Fetch the user's current location
+     */
     override fun getLocation() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_DENIED) {
@@ -255,6 +258,9 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         startActivityForResult(intent, GET_EDITED_MOOD_CODE)
     }
 
+    /**
+     * Transition to the map activity
+     */
     override fun gotoMap() {
         val intent = Intent(this, MapView::class.java)
         intent.putExtra("mode", 1)

@@ -3,7 +3,7 @@ import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
 
 /**
- * The contract between the signup view and the presenter
+ * Declares public functions of the signup view and the presenter
  */
 interface SignupContract {
     /**
@@ -18,6 +18,10 @@ interface SignupContract {
          * Clear the fields for email, password, and username
          */
         fun clear()
+        /**
+         * Show toast message with given error string
+         */
+        fun showError(error: String)
     }
 
     /**
