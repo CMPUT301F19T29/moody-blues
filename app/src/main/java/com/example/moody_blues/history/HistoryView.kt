@@ -77,7 +77,6 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar);
 
-        // Create an up icon
         // Initialize an icon in the toolbar (to be replaced with hamburger icon after)
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 

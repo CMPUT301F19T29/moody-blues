@@ -173,10 +173,10 @@ class RequestView : AppCompatActivity(), RequestContract.View {
         }
     }
 
-    override fun restartActivity() {
-        finish()
-        startActivity(this.intent)
-    }
+//    override fun restartActivity() {
+//        finish()
+//        startActivity(this.intent)
+//    }
 
     override fun updateList() {
         for (fragment in supportFragmentManager.fragments) {
