@@ -11,6 +11,7 @@ import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.map.SignupPresenter
 import com.example.moody_blues.signup.SignupContract
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -41,6 +42,7 @@ class SignupView : AppCompatActivity(), SignupContract.View {
 
         // Do stuff with the presenter
         confirm.setOnClickListener {
+            Toast.makeText(this, "Creating your account...", Toast.LENGTH_SHORT).show()
             presenter.confirmSignup(email.text.toString(), pass.text.toString(), username.text.toString())
         }
     }

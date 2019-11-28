@@ -116,7 +116,7 @@ open class DbManager {
             null
         } catch (e: Exception) {
             Log.e("createUser", e.toString())
-            e.toString()
+            "Cannot create user.\nTry again but do it better next time."
         }
     }
 

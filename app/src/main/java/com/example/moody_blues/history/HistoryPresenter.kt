@@ -18,6 +18,17 @@ class HistoryPresenter(private val view: HistoryContract.View) : HistoryContract
     init {
         // Links the presenter to the view
         view.presenter = this
+        refresh()
+    }
+
+    /**
+     * Refresh the history
+     */
+    override fun refresh() {
+        MainScope().launch {
+            AppManager.fetchMoods()
+            view.refreshMoods(AppManager.getOrderedUserMoods(null))
+        }
     }
 
     /**

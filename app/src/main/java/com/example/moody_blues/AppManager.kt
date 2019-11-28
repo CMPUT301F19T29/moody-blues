@@ -27,10 +27,6 @@ object AppManager : DbManager(){
         username?: return null
 
         this.user = getUser(username)
-        this.fetchMoods()
-        this.fetchRequests()
-        this.fetchFeed()
-
         return username
     }
 
@@ -182,7 +178,9 @@ object AppManager : DbManager(){
      * @param to The username of the other user
      */
     suspend fun addRequest(to: String) {
-        super.setRequest(Request(user!!.username, to))
+        val request = Request(user!!.username, to)
+        super.setRequest(request)
+        this.userRequests.add(request)
     }
 
     /**

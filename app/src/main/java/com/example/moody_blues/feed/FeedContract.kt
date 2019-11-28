@@ -15,12 +15,23 @@ interface FeedContract {
          * Transition the map activity
          */
         fun gotoMap()
+
+        /**
+         * Refresh the feed
+         * @param feed The new feed to display
+         */
+        fun refreshFeed(feed: ArrayList<Mood>)
     }
 
     /**
      * The feed presenter
      */
     interface Presenter : BasePresenter {
+        /**
+         * Refresh the feed
+         */
+        fun refresh()
+
         /**
          * Fetches the feed from the database
          */

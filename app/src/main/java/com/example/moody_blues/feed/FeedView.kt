@@ -82,6 +82,15 @@ class FeedView : AppCompatActivity(), FeedContract.View {
     }
 
     /**
+     * Refresh the feed
+     * @param feed The new feed to display
+     */
+    override fun refreshFeed(feed: ArrayList<Mood>) {
+        val feedAdapter = feed_list_mood.adapter as MoodAdapter
+        feedAdapter.refresh(feed)
+    }
+
+    /**
      * Transition to the map activity
      */
     override fun gotoMap() {
