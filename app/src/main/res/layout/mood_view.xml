@@ -221,6 +221,8 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:text="Save"
+        android:textColor="@color/white"
+        android:background="@drawable/accent_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -272,6 +274,8 @@
             android:layout_marginEnd="16dp"
             android:text="New..."
             android:textSize="10sp"
+            android:textColor="@color/white"
+            android:background="@drawable/accent_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -282,6 +286,8 @@
             android:layout_marginEnd="8dp"
             android:text="Upload"
             android:textSize="10sp"
+            android:textColor="@color/white"
+            android:background="@drawable/accent_button"
             app:layout_constraintBaseline_toBaselineOf="@+id/mood_photo_add_button"
             app:layout_constraintEnd_toStartOf="@+id/mood_photo_add_button" />
 
@@ -292,6 +298,8 @@
             android:layout_marginEnd="8dp"
             android:text="Delete"
             android:textSize="10sp"
+            android:textColor="@color/white"
+            android:background="@drawable/accent_button"
             app:layout_constraintBaseline_toBaselineOf="@+id/mood_photo_upload_button"
             app:layout_constraintEnd_toStartOf="@+id/mood_photo_upload_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
