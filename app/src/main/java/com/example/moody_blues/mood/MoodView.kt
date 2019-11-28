@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.media.ExifInterface
 import android.media.ThumbnailUtils
 import android.os.Bundle
@@ -85,7 +86,6 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         socialField = findViewById(R.id.mood_social_field)
         reasonField = findViewById(R.id.mood_reason_field)
         locationField = findViewById(R.id.mood_location_field)
-//        locationData = findViewById(R.id.mood_location_data)
         photoField = findViewById(R.id.mood_photo_field)
         photoAddButton = findViewById(R.id.mood_photo_add_button)
         photoUploadButton = findViewById(R.id.mood_photo_upload_button)
@@ -104,7 +104,7 @@ class MoodView : AppCompatActivity(), MoodContract.View {
             }
         }
         else{
-            photoField.setImageResource(R.drawable.moody_blues_icon_background)
+            photoField.setImageResource(android.R.color.transparent)
         }
 
         // Emotional state spinner stuff
@@ -166,15 +166,6 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         photoField.setOnClickListener {
             var imageView = ImageView(this)
             imageView.setImageDrawable(photoField.drawable)
-//            MainScope().launch {
-//                var (uri, rotation) = AppManager.getImageUri(mood.reasonImageFull)
-//                if (uri != null){
-//                    Picasso.get().load(uri).rotate(rotation).into(imageView)
-//                }
-//                else{
-//                    imageView.setImageResource(android.R.color.transparent)
-//                }
-//            }
 
             var builder = Dialog(this)
             builder.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -220,7 +211,8 @@ class MoodView : AppCompatActivity(), MoodContract.View {
      * @param color The color to change to
      */
     override fun changeBgColor(color: Int) {
-        findViewById<View>(android.R.id.content).setBackgroundColor(color)
+        var gradient = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(color, resources.getColor(R.color.white)))
+        findViewById<View>(android.R.id.content).background = gradient
     }
 
     /**

@@ -428,7 +428,7 @@ open class DbManager {
      * @return A pair where the first element is the Uri to the file, and
      *  the second is the rotation of the image in degrees
      */
-    protected suspend fun getImageUri(username: String, filename: String): Pair<Uri?, Float> {
+    suspend fun getImageUri(username: String, filename: String): Pair<Uri?, Float> {
         val storageRef = getFS().reference.child(username).child(filename)
 
         val activeUploads = storageRef.activeUploadTasks
