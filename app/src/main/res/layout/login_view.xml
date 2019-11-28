@@ -60,6 +60,8 @@
         android:layout_marginLeft="72dp"
         android:layout_marginBottom="32dp"
         android:text="Login"
+        android:textColor="@color/white"
+        android:background="@drawable/accent_button"
         app:layout_constraintBottom_toTopOf="@+id/login_forgot_label"
         app:layout_constraintEnd_toStartOf="@+id/login_signup_button"
         app:layout_constraintStart_toStartOf="parent" />
@@ -71,6 +73,8 @@
         android:layout_marginEnd="72dp"
         android:layout_marginRight="72dp"
         android:text="Signup"
+        android:textColor="@color/white"
+        android:background="@drawable/accent_button"
         app:layout_constraintBaseline_toBaselineOf="@+id/login_submit_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/login_submit_button" />

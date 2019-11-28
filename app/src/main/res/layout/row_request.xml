@@ -28,6 +28,8 @@
         android:text="@string/request_accept"
         android:textSize="10sp"
         android:visibility="visible"
+        android:textColor="@color/white"
+        android:background="@drawable/accent_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,6 +44,8 @@
         android:text="@string/request_cancel"
         android:textSize="10sp"
         android:visibility="invisible"
+        android:textColor="@color/white"
+        android:background="@drawable/accent_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -56,6 +60,8 @@
         android:text="@string/request_reject"
         android:textSize="10sp"
         android:visibility="visible"
+        android:textColor="@color/white"
+        android:background="@drawable/accent_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/row_request_accept_button"
         app:layout_constraintTop_toTopOf="parent" />
