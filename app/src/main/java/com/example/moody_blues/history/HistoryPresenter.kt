@@ -9,7 +9,7 @@ import kotlinx.coroutines.*
 /**
  * The non-toolkit logic for the history activity
  */
-class HistoryPresenter(private val view: HistoryContract.View, val mockAppManager: AppManager? = null) : HistoryContract.Presenter {
+class HistoryPresenter(private val view: HistoryContract.View, private val mockAppManager: AppManager? = null) : HistoryContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -50,10 +50,10 @@ class HistoryPresenter(private val view: HistoryContract.View, val mockAppManage
      */
     override fun fetchMoods(filter: Int): ArrayList<Mood> {
         val emotion = if (filter == 0) null else filter - 1
-        if (mockAppManager == null) {
-            return AppManager.getOrderedUserMoods(emotion)
+        return if (mockAppManager == null) {
+            AppManager.getOrderedUserMoods(emotion)
         } else {
-            return mockAppManager!!.getOrderedUserMoods(emotion)
+            mockAppManager!!.getOrderedUserMoods(emotion)
         }
     }
 
