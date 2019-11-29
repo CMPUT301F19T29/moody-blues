@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.ViewPager
 import com.example.moody_blues.R
+import com.example.moody_blues.dashboard.DashboardView
 import com.example.moody_blues.feed.FeedView
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.login.LoginView
@@ -136,11 +137,12 @@ class RequestView : AppCompatActivity(), RequestContract.View {
     private fun selectDrawerItem(menuItem: MenuItem) {
         // Go to the activity when item is clicked
         when (menuItem.itemId) {
-            
+
+            R.id.nav_dashboard -> startActivity(Intent(this, DashboardView::class.java))
             R.id.nav_history -> startActivity(Intent(this, HistoryView::class.java))
             R.id.nav_feed -> startActivity(Intent(this, FeedView::class.java))
             R.id.nav_login -> startActivity(Intent(this, LoginView::class.java))
-//            else -> fragmentClass = HistoryView::class.java
+            else -> return
         }
 
         // Highlight the selected item has been done by NavigationView

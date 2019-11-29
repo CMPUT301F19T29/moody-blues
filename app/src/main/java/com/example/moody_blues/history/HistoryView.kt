@@ -19,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
+import com.example.moody_blues.dashboard.DashboardView
 import com.example.moody_blues.feed.FeedView
 import com.example.moody_blues.login.LoginView
 import com.example.moody_blues.map.MapView
@@ -149,10 +150,12 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     private fun selectDrawerItem(menuItem: MenuItem) {
         // Go to the activity when item is clicked
         when (menuItem.itemId) {
+
+            R.id.nav_dashboard -> startActivity(Intent(this, DashboardView::class.java))
             R.id.nav_feed -> startActivity(Intent(this, FeedView::class.java))
             R.id.nav_requests -> startActivity(Intent(this, RequestView::class.java))
             R.id.nav_login -> startActivity(Intent(this, LoginView::class.java))
-//            else -> fragmentClass = HistoryView::class.java
+            else -> return
         }
 
         // Highlight the selected item has been done by NavigationView
