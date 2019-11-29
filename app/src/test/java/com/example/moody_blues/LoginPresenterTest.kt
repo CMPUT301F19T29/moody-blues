@@ -2,28 +2,36 @@ package com.example.moody_blues
 
 import com.example.moody_blues.login.LoginContract
 import com.example.moody_blues.login.LoginPresenter
+import com.example.moody_blues.login.LoginView
+import io.mockk.MockKAnnotations
+import io.mockk.spyk
+import io.mockk.verify
+import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 
 class LoginPresenterTest {
-    private val mockView: LoginContract.View = mock(LoginContract.View::class.java)
-    private val presenter = LoginPresenter(mockView)
+    lateinit var viewSpy : LoginView
+    lateinit var mockAppManager : AppManager
+    lateinit var presenter : LoginPresenter
+
+    @Before
+    fun setupMocks() {
+        viewSpy = spyk<LoginView>()
+        mockAppManager = spyk<AppManager>()
+        presenter = LoginPresenter(viewSpy)
+    }
+
+    @Before
+    fun setUp() = MockKAnnotations.init()
 
     @Ignore
     @Test
-    fun testLogin() {
-        // TODO: Issues with coroutines and tests
-        presenter.login("los@ualberta.ca", "password")
-        Mockito.verify(mockView).gotoDashboard()
+    fun testFetchMoods() {
+        presenter.login("username", "password")
+        verify { mockAppManager.getOrderedUserMoods(0) }
     }
-
-    @Test
-    fun testsSignup() {
-        presenter.signup()
-        Mockito.verify(mockView).gotoSignUp()
-    }
-
 }
 
