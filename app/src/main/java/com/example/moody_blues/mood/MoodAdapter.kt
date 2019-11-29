@@ -14,22 +14,34 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * An adapter class for a mood row
  */
 class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener: (Mood, Int) -> Unit, private val longListener: (Mood, Int) -> Boolean) : RecyclerView.Adapter<MoodAdapter.ViewHolder>() {
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_mood, parent, false)
         return ViewHolder(view)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return moods[position].id.toLong()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -44,10 +56,18 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.itemView.setOnClickListener { clickListener(item, position) }
         holder.itemView.setOnLongClickListener { longListener(item, position) }
 
-        var gradient = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(mood.getColor(), android.R.color.white))
+        val ratio = 0.5f
+        holder.date.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+        holder.emotion.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+        holder.social.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+        holder.reason.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+        holder.username.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+
+        var gradient = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, intArrayOf(mood.getColor(), android.R.color.white))
         holder.itemView.background = gradient
 
-        if (mood.reasonImageThumbnail != null) {
+
+        if (mood.reasonImageThumbnail != null && holder.image.drawable == null) {
             holder.image.setImageResource(R.drawable.moody_blues_icon_background)
             
             MainScope().launch {
@@ -60,13 +80,14 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
                 }
             }
         }
-        else{
-            holder.image.setImageResource(android.R.color.transparent)
-        }
     }
 
     override fun onViewRecycled(holder: ViewHolder) {
+        if (holder.job != null){
+            holder.job!!.cancel()
+        }
         Picasso.get().cancelRequest(holder.image)
+        holder.image.setImageDrawable(null)
         super.onViewRecycled(holder)
     }
 
@@ -91,5 +112,6 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         val reason: TextView = itemView.findViewById(R.id.row_mood_reason_text)
         val image: ImageView = itemView.findViewById(R.id.row_mood_image)
         val username: TextView = itemView.findViewById(R.id.row_mood_username)
+        var job: Job? = null
     }
 }
