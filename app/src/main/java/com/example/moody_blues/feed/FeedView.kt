@@ -115,7 +115,7 @@ class FeedView : AppCompatActivity(), FeedContract.View {
                     builder.show()
 
                     MainScope().launch {
-                        val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageFull!!)
+                        val (uri, rotation) = AppManager.db.getImageUri(mood.username, mood.reasonImageFull!!)
                         if (uri != null) {
                             Picasso.get().load(uri).rotate(rotation).into(imageView)
                         } else {

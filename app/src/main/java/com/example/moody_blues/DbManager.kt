@@ -265,7 +265,7 @@ open class DbManager(isMocked : Boolean = false) {
      * @param username The username of the user who will own the mood
      * @return The id of the mood in the database
      */
-    protected suspend fun addMood(mood: Mood, username: String): String {
+     suspend fun addMood(mood: Mood, username: String): String {
         mood.id = (UUID.randomUUID().mostSignificantBits and Long.MAX_VALUE).toString()
 
         getFFMoods(username).document(mood.id).set(mood.wrap()).await()
