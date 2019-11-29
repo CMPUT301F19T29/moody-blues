@@ -1,6 +1,7 @@
 package com.example.moody_blues
 
 import android.net.Uri
+import android.util.Log
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
