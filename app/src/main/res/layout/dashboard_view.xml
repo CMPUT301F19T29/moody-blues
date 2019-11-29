@@ -70,6 +70,71 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/dashboard_mood_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Moods: "
+                android:textSize="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/dashboard_followers_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Followers: "
+                android:textSize="20dp"
+                app:layout_constraintTop_toBottomOf="@id/dashboard_mood_text"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/dashboard_followees_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Following: "
+                android:textSize="20dp"
+                app:layout_constraintTop_toBottomOf="@id/dashboard_followers_text"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/dashboard_mood_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="_"
+                android:textSize="20dp"
+                app:layout_constraintStart_toEndOf="@id/dashboard_mood_text"
+                app:layout_constraintBaseline_toBaselineOf="@id/dashboard_mood_text"/>
+
+            <TextView
+                android:id="@+id/dashboard_followers_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="_"
+                android:textSize="20dp"
+                app:layout_constraintStart_toEndOf="@id/dashboard_followers_text"
+                app:layout_constraintBaseline_toBaselineOf="@id/dashboard_followers_text"/>
+
+            <TextView
+                android:id="@+id/dashboard_followees_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="_"
+                android:textSize="20dp"
+                app:layout_constraintStart_toEndOf="@id/dashboard_followees_text"
+                app:layout_constraintBaseline_toBaselineOf="@id/dashboard_followees_text"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <include
             layout="@layout/toolbar"
             android:layout_width="match_parent"

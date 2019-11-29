@@ -15,6 +15,8 @@ object AppManager : DbManager(){
     private var userRequests: ArrayList<Request> = ArrayList()
     private var userFeed: ArrayList<Mood> = ArrayList()
     private var user: User? = null
+    private var moodsFetched = false
+    private var requestsFetched = false
 
     /**
      * Signs the user in so they can access the database, and also
@@ -52,10 +54,56 @@ object AppManager : DbManager(){
     }
 
     /**
+     * Get the number of moods belonging to this user
+     * @return The number of moods
+     */
+    suspend fun getNumberOfMoods(): Int{
+        if (!moodsFetched){
+            fetchMoods()
+        }
+        return userMoods.size
+    }
+
+    /**
+    * Get the number of users following this user
+    * @return The number of followers
+    */
+    suspend fun getNumberOfFollowers(): Int{
+        if (!requestsFetched){
+            fetchRequests()
+        }
+
+        return if (this.user != null){
+            (userRequests.filter { request -> request.to == this.user!!.username && request.accepted}).size
+        }
+        else{
+            return 0
+        }
+    }
+
+    /**
+     * Get the number of users this user is following
+     * @return The number of followees
+     */
+    suspend fun getNumberOfFollowees(): Int{
+        if (!requestsFetched){
+            fetchRequests()
+        }
+
+        return if (this.user != null){
+            (userRequests.filter { request -> request.from == this.user!!.username && request.accepted }).size
+        }
+        else{
+            return 0
+        }
+    }
+
+    /**
      * Fetches the user's moods from the database
      * @return A hashmap of the moods. ID is the key
      */
     suspend fun fetchMoods(): HashMap<String, Mood> {
+        moodsFetched = true
         val moods = super.fetchMoods(user!!.username)
         this.userMoods = moods
         return moods
@@ -89,6 +137,10 @@ object AppManager : DbManager(){
     override fun signOut() {
         this.user = null
         this.userMoods.clear()
+        this.userRequests.clear()
+        this.userFeed.clear()
+        this.moodsFetched = false
+        this.requestsFetched = false
         super.signOut()
     }
 
@@ -224,6 +276,7 @@ object AppManager : DbManager(){
      * @return All requests for the current user
      */
     suspend fun fetchRequests(): ArrayList<Request> {
+        requestsFetched = true
         this.userRequests = super.fetchRequests(user!!.username)
         return this.userRequests
     }

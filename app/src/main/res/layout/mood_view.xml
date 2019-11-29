@@ -244,17 +244,6 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/mood_photo_delete_button"
             app:layout_constraintStart_toStartOf="parent" />
 
-<!--        <ImageView-->
-<!--            android:id="@+id/mood_photo_field"-->
-<!--            android:layout_width="64dp"-->
-<!--            android:layout_height="64dp"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:layout_marginBottom="16dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="@+id/mood_photo_label"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/mood_photo_label"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/mood_photo_label"-->
-<!--            tools:srcCompat="@tools:sample/avatars[2]" />-->
         <ImageView
             android:id="@+id/mood_photo_field"
             android:layout_width="match_parent"

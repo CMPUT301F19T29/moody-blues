@@ -1,11 +1,15 @@
 package com.example.moody_blues.history
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -35,6 +39,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.history_view.*
 import kotlinx.coroutines.GlobalScope
+import kotlin.math.log
 
 /**
  * Toolkit-specific logic for the history activity
@@ -48,6 +53,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     private lateinit var mDrawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var nvDrawer: NavigationView
+    private lateinit var logoutReciever: BroadcastReceiver
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
@@ -114,6 +120,21 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
                 history_list_mood.adapter!!.notifyDataSetChanged()
                 true })
         history_list_mood.layoutManager = LinearLayoutManager(this)
+
+        logoutReciever = object: BroadcastReceiver() {
+            override fun onReceive(contxt: Context?, intent: Intent?) {
+                finish()
+            }
+        }
+
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("com.package.ACTION_LOGOUT")
+        registerReceiver(logoutReciever, intentFilter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(logoutReciever)
     }
 
     // Toggle on post create

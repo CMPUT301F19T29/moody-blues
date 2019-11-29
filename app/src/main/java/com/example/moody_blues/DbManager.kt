@@ -284,14 +284,6 @@ open class DbManager {
         getFFMoods(username).document(mood.id).set(mood.wrap()).await()
 
         return mood.id
-
-//        val doc = getFFMoods(username)
-//                .add(mood.wrap())
-//                .await()
-//
-//        doc.update("id", doc.id).await()
-//        mood.id = doc.id
-//        return doc.id
     }
 
     /**
@@ -452,6 +444,7 @@ open class DbManager {
             storageRef.delete().await()
         }
     }
+
     /**
      * Get rotation and the uri to the image with the given file name
      * @param filename The name of the file in firestore

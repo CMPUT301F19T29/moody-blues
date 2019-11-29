@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moody_blues.AppManager
@@ -17,6 +18,8 @@ import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.login.LoginView
 import com.example.moody_blues.requests.RequestView
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 /**
  * Toolkit-specific logic for the dashboard activity
@@ -37,6 +40,12 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard_view)
         title = "Hello, " + AppManager.getUsername()
+
+        MainScope().launch {
+            findViewById<TextView>(R.id.dashboard_mood_value).text = AppManager.getNumberOfMoods().toString()
+            findViewById<TextView>(R.id.dashboard_followers_value).text = AppManager.getNumberOfFollowers().toString()
+            findViewById<TextView>(R.id.dashboard_followees_value).text = AppManager.getNumberOfFollowees().toString()
+        }
 
         // Pass the view to the presenter
         presenter = DashboardPresenter(this)
