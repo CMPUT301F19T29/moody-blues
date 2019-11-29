@@ -70,7 +70,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
             Picasso.get().cancelRequest(holder.image)
             holder.image.setImageDrawable(null)
         }
-        if (mood.reasonImageThumbnail != null && holder.image.drawable == null) {
+        if (mood.reasonImageThumbnail != null) {
             holder.image.setImageResource(R.drawable.moody_blues_icon_background)
             
             MainScope().launch {
