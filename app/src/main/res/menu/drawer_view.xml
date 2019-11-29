@@ -19,7 +19,7 @@
         <item
             android:id="@+id/nav_requests"
             android:title="Requests"
-            android:icon="@drawable/ic_featured_play_list_black_24dp" />
+            android:icon="@drawable/ic_compare_arrows_black_24dp" />
         <item
             android:id="@+id/nav_login"
             android:title="Logout"
