@@ -43,7 +43,6 @@ class RequestView : AppCompatActivity(), RequestContract.View {
     private lateinit var nvDrawer: NavigationView
     private lateinit var menu: Menu
     private lateinit var menuText: MenuItem
-
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,10 +74,10 @@ class RequestView : AppCompatActivity(), RequestContract.View {
         nvDrawer = findViewById(R.id.nvView) as NavigationView
         nvDrawer.setItemIconTintList(null)
 
-        // get menu
+        // Get menu
         menu = nvDrawer.getMenu()
 
-        // get menu item for text and set it
+        // Get menu item for text and set it
         menuText = menu.findItem(R.id.welcome_text)
         menuText.setTitle("Hello, " + AppManager.getUsername())
 
@@ -114,21 +113,22 @@ class RequestView : AppCompatActivity(), RequestContract.View {
 
     }
 
-    // Toggle on post create
     override fun onPostCreate(savedInstanceState: Bundle?) {
+        // Syncs the drawer toggle state
         super.onPostCreate(savedInstanceState)
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
+        // Pass configuration changes to the drawer toggle
         super.onConfigurationChanged(newConfig)
-        // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig)
     }
 
+    /**
+     * Setup for the drawer toggle
+     */
     private fun setupDrawerToggle(): ActionBarDrawerToggle {
-        // For setting up the drawer toggle
         return ActionBarDrawerToggle(
             this,
             mDrawer,
@@ -138,6 +138,10 @@ class RequestView : AppCompatActivity(), RequestContract.View {
         )
     }
 
+    /**
+     * Setup for the drawer content
+     * @param navigationView The navigation view for displaying the menu
+     */
     private fun setupDrawerContent(navigationView:NavigationView) {
         navigationView.setNavigationItemSelectedListener { menuItem ->
             selectDrawerItem(menuItem)
@@ -145,6 +149,10 @@ class RequestView : AppCompatActivity(), RequestContract.View {
         }
     }
 
+    /**
+     * Goes to the activity when the respective item has been clicked in the drawer
+     * @param menuItem The menu item from the drawer
+     */
     private fun selectDrawerItem(menuItem: MenuItem) {
         // Go to the activity when item is clicked
         when (menuItem.itemId) {
@@ -156,26 +164,29 @@ class RequestView : AppCompatActivity(), RequestContract.View {
             else -> return
         }
 
-        // Highlight the selected item has been done by NavigationView
+        // Highlight the selected item has been done
         menuItem.isChecked = true
-//        // Set action bar title
-//        title = menuItem.title
 
-        // Close the navigation drawer
+        // Close the drawer
         finish()
         mDrawer.closeDrawers()
     }
 
+    /**
+     * Hamburger icon will open the drawer
+     * @param item The hamburger icon
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // The action bar home/up action should open or close the drawer.
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true
         }
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Overrides back button to close drawer if it is open
+     */
     override fun onBackPressed() {
-        // Overrides the back button to close the drawer when it is open
         if(mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawers()
         } else {
