@@ -14,11 +14,13 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.models.Mood
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -44,13 +46,20 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.itemView.setOnClickListener { clickListener(item, position) }
         holder.itemView.setOnLongClickListener { longListener(item, position) }
 
-        var gradient = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(mood.getColor(), android.R.color.white))
+        val ratio = 0.5f
+        holder.date.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+        holder.emotion.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+        holder.social.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+        holder.reason.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+        holder.username.setTextColor(ColorUtils.blendARGB(mood.getColor(), Color.BLACK, ratio))
+
+        var gradient = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, intArrayOf(mood.getColor(), android.R.color.white))
         holder.itemView.background = gradient
 
         if (mood.reasonImageThumbnail != null) {
             holder.image.setImageResource(R.drawable.moody_blues_icon_background)
             
-            MainScope().launch {
+            holder.job = MainScope().launch {
                 val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageThumbnail!!)
                 if (uri != null){
                     Picasso.get().load(uri).rotate(rotation).into(holder.image)
@@ -66,6 +75,9 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
     }
 
     override fun onViewRecycled(holder: ViewHolder) {
+        if (holder.job != null){
+            holder.job!!.cancel()
+        }
         Picasso.get().cancelRequest(holder.image)
         super.onViewRecycled(holder)
     }
@@ -91,5 +103,6 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         val reason: TextView = itemView.findViewById(R.id.row_mood_reason_text)
         val image: ImageView = itemView.findViewById(R.id.row_mood_image)
         val username: TextView = itemView.findViewById(R.id.row_mood_username)
+        var job: Job? = null
     }
 }

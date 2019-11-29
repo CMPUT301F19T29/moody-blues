@@ -43,34 +43,35 @@ class FeedView : AppCompatActivity(), FeedContract.View {
         // Do stuff with the presenter
         feed_list_mood.adapter = MoodAdapter(presenter.getFeed(),
             {mood: Mood, _: Int ->
-                var imageView = ImageView(this)
-                if (mood.reasonImageFull != null){
+                if (mood.reasonImageFull != null) {
+                    var imageView = ImageView(this)
+                    
+                    var builder = Dialog(this)
+                    builder.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    builder.window?.setBackgroundDrawable(
+                            ColorDrawable(Color.TRANSPARENT))
+                    builder.setOnDismissListener{
+                        Picasso.get().cancelRequest(imageView)
+                        imageView.setImageResource(android.R.color.transparent)
+                    }
+
+                    imageView.setOnClickListener{
+                        builder.dismiss()
+                    }
+                    builder.addContentView(imageView, RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT))
+                    builder.show()
+
                     MainScope().launch {
                         var (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageFull!!)
-                        if (uri != null){
+                        if (uri != null) {
                             Picasso.get().load(uri).rotate(rotation).into(imageView)
-                        }
-                        else{
+                        } else {
                             imageView.setImageResource(android.R.color.transparent)
                         }
                     }
                 }
-                var builder = Dialog(this)
-                builder.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                builder.window?.setBackgroundDrawable(
-                        ColorDrawable(Color.TRANSPARENT))
-                builder.setOnDismissListener{
-                    Picasso.get().cancelRequest(imageView)
-                    imageView.setImageResource(android.R.color.transparent)
-                }
-
-                imageView.setOnClickListener{
-                    builder.dismiss()
-                }
-                builder.addContentView(imageView, RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT))
-                builder.show()
             },
             { _: Mood, _: Int -> true })
 
