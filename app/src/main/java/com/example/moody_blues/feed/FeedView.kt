@@ -86,7 +86,7 @@ class FeedView : AppCompatActivity(), FeedContract.View {
             {mood: Mood, _: Int ->
                 if (mood.reasonImageFull != null) {
                     var imageView = ImageView(this)
-                    
+
                     var builder = Dialog(this)
                     builder.requestWindowFeature(Window.FEATURE_NO_TITLE)
                     builder.window?.setBackgroundDrawable(
@@ -105,7 +105,7 @@ class FeedView : AppCompatActivity(), FeedContract.View {
                     builder.show()
 
                     MainScope().launch {
-                        var (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageFull!!)
+                        val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageFull!!)
                         if (uri != null) {
                             Picasso.get().load(uri).rotate(rotation).into(imageView)
                         } else {

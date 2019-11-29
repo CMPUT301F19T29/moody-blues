@@ -164,26 +164,41 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         }
 
         photoField.setOnClickListener {
-            var imageView = ImageView(this)
-            imageView.setImageDrawable(photoField.drawable)
+            if (mood.reasonImageFull != null){
+                var imageView = ImageView(this)
+                if (photoField.drawable != null){
+                    imageView.setImageDrawable(photoField.drawable)
+                }
+                else{
+                    MainScope().launch {
+                        var (uri, rotation) = AppManager.getImageUri(mood.reasonImageFull)
+                        if (uri != null){
+                            Picasso.get().load(uri).rotate(rotation).into(imageView)
+                        }
+                        else{
+                            imageView.setImageResource(R.drawable.moody_blues_icon_background)
+                        }
+                    }
+                }
 
-            var builder = Dialog(this)
-            builder.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            builder.window?.setBackgroundDrawable(
-                    ColorDrawable(Color.TRANSPARENT))
+                var builder = Dialog(this)
+                builder.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                builder.window?.setBackgroundDrawable(
+                        ColorDrawable(Color.TRANSPARENT))
 
-            builder.setOnDismissListener{
-                Picasso.get().cancelRequest(imageView)
-                imageView.setImageResource(android.R.color.transparent)
+                builder.setOnDismissListener{
+                    Picasso.get().cancelRequest(imageView)
+                    imageView.setImageResource(android.R.color.transparent)
+                }
+
+                imageView.setOnClickListener{
+                    builder.dismiss()
+                }
+                builder.addContentView(imageView, RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT))
+                builder.show()
             }
-
-            imageView.setOnClickListener{
-                builder.dismiss()
-            }
-            builder.addContentView(imageView, RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT))
-            builder.show()
         }
 
         emotionField.setSelection(mood.emotion)
