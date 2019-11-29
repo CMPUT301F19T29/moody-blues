@@ -29,10 +29,6 @@
             android:id="@+id/nav_requests"
             android:title="Requests"
             android:icon="@drawable/ic_compare_arrows_black_24dp" />
-        <item
-            android:enabled="false"/>
-        <item
-            android:enabled="false"/>
     </group>
 
     <group
