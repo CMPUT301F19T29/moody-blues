@@ -3,6 +3,7 @@ package com.example.moody_blues.dashboard
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -30,6 +31,8 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
     private lateinit var mDrawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var nvDrawer: NavigationView
+    private lateinit var menu: Menu
+    private lateinit var menuText: MenuItem
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
@@ -67,6 +70,13 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
         // Initialize NavigationView
         nvDrawer = findViewById(R.id.nvView) as NavigationView
         nvDrawer.setItemIconTintList(null)
+
+        // get menu
+        menu = nvDrawer.getMenu()
+
+        // get menu item for text and set it
+        menuText = menu.findItem(R.id.welcome_text)
+        menuText.setTitle(title)
 
         // Setup drawer view
         setupDrawerContent(nvDrawer)

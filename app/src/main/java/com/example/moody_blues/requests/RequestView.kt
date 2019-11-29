@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
@@ -18,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.ViewPager
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.dashboard.DashboardView
 import com.example.moody_blues.feed.FeedView
@@ -39,6 +41,8 @@ class RequestView : AppCompatActivity(), RequestContract.View {
     private lateinit var mDrawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var nvDrawer: NavigationView
+    private lateinit var menu: Menu
+    private lateinit var menuText: MenuItem
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
@@ -70,6 +74,13 @@ class RequestView : AppCompatActivity(), RequestContract.View {
         // Initialize NavigationView
         nvDrawer = findViewById(R.id.nvView) as NavigationView
         nvDrawer.setItemIconTintList(null)
+
+        // get menu
+        menu = nvDrawer.getMenu()
+
+        // get menu item for text and set it
+        menuText = menu.findItem(R.id.welcome_text)
+        menuText.setTitle("Hello, " + AppManager.getUsername())
 
         // Setup drawer view
         setupDrawerContent(nvDrawer)

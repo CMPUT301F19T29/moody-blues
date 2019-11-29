@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group
+        android:id="@+id/first"
+        android:checkableBehavior="single">
+        <item xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/welcome_text"
+            android:title="Hello"
+            app:showAsAction="always" />
+
+    </group>
+
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_dashboard"
@@ -10,7 +20,6 @@
         <item
             android:id="@+id/nav_history"
             android:title="History"
-            android:checked="true"
             android:icon="@drawable/ic_history_black_24dp" />
         <item
             android:id="@+id/nav_feed"
@@ -23,6 +32,7 @@
         <item
             android:id="@+id/nav_login"
             android:title="Logout"
-            android:icon="@drawable/ic_exit_to_app_black_24dp" />
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:gravity="bottom" />
     </group>
 </menu>

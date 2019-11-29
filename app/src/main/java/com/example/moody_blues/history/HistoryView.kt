@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.Location
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -48,6 +49,8 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     private lateinit var mDrawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var nvDrawer: NavigationView
+    private lateinit var menu: Menu
+    private lateinit var menuText: MenuItem
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
@@ -95,6 +98,13 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         // Initialize NavigationView
         nvDrawer = findViewById(R.id.nvView) as NavigationView
         nvDrawer.setItemIconTintList(null)
+
+        // get menu
+        menu = nvDrawer.getMenu()
+
+        // get menu item for text and set it
+        menuText = menu.findItem(R.id.welcome_text)
+        menuText.setTitle("Hello, " + AppManager.getUsername())
 
         // Setup drawer view
         setupDrawerContent(nvDrawer)
