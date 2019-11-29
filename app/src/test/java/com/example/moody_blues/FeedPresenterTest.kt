@@ -12,6 +12,7 @@ import io.mockk.every
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
@@ -39,6 +40,7 @@ class FeedPresenterTest {
         verify { mockAppManager.getFeed() }
     }
 
+    @Ignore
     @Test
     fun testGoToMap(){
         presenter.gotoMap()

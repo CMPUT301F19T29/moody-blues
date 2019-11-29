@@ -4,6 +4,7 @@ import com.example.moody_blues.BaseView
 
 /**
  * Declares public functions of the dashboard view and the presenter
+ * The dashboard redirects the user to other activities
  */
 interface DashboardContract {
     /**

@@ -5,6 +5,7 @@ import com.example.moody_blues.models.Request
 
 /**
  * Declares public functions of the request view and the presenter
+ * Allows the user to make requests to other users and accept/reject others' requests
  */
 interface RequestContract {
     /**

@@ -4,6 +4,7 @@ import com.example.moody_blues.BaseView
 
 /**
  * Declares public functions of the signup view and the presenter
+ * The signup allows the user to create a new account
  */
 interface SignupContract {
     /**

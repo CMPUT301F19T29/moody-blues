@@ -5,6 +5,7 @@ import com.example.moody_blues.BaseView
 
 /**
  * Declares public functions of the login view and the presenter
+ * The login verifies the user in the app
  */
 interface LoginContract {
     /**

@@ -8,6 +8,7 @@ import java.io.File
 
 /**
  * Declares public functions of the mood view and the presenter
+ * The mood allows the user to create or edit a mood
  */
 interface MoodContract {
     /**
