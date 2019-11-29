@@ -5,6 +5,7 @@ import com.example.moody_blues.models.Mood
 
 /**
  * Declares public functions of the feed view and the presenter
+ * The feed shows the most recent mood from followed users
  */
 interface FeedContract {
     /**

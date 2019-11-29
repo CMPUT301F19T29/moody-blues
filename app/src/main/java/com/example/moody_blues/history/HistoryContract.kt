@@ -6,6 +6,7 @@ import com.example.moody_blues.models.Mood
 
 /**
  * Declares public functions of the history view and the presenter
+ * The history shows a list of moods from the user
  */
 interface HistoryContract {
     /**

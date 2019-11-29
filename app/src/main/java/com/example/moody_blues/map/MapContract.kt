@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 
 /**
  * Declares public functions of the map view and the presenter
+ * The map displays the location of a list of moods
  */
 interface MapContract {
     /**
@@ -31,7 +32,7 @@ interface MapContract {
     }
 
     /**
-     * The login presenter
+     * The map presenter
      */
     interface Presenter : BasePresenter {
         /**
