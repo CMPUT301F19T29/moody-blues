@@ -16,9 +16,8 @@ object AppManager {
     private var userRequests: ArrayList<Request> = ArrayList()
     private var userFeed: ArrayList<Mood> = ArrayList()
     private var user: User? = null
-//    lateinit var db: DbManager
+    lateinit var db: DbManager
     private var dbUp = false
-    var db: DbManager = DbManager()
 
     fun init(newDb: DbManager = DbManager()) {
         db = newDb
@@ -33,9 +32,9 @@ object AppManager {
      * @return The result of attempting to sign the user in
      */
     suspend fun signIn(email: String, password: String): String? {
-//        if (!dbUp) {
-//            init()
-//        }
+        if (!dbUp) {
+            init()
+        }
         val username = db.signIn(email, password)
         username?: return null
 

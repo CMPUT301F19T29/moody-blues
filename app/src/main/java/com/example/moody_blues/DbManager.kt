@@ -30,9 +30,14 @@ import java.nio.ByteBuffer
 /**
  * Manages database and login
  */
-open class DbManager {
+open class DbManager(isMocked : Boolean = false) {
+    lateinit var auth : FirebaseAuth
 
-    private var auth : FirebaseAuth = FirebaseAuth.getInstance()
+    init {
+        if (!isMocked) {
+            auth = FirebaseAuth.getInstance()
+        }
+    }
 
     /**
      * Shortcut methods
@@ -70,17 +75,18 @@ open class DbManager {
      */
     open suspend fun signIn(email: String, password: String): String? {
         return try {
-            val authResult = auth.signInWithEmailAndPassword(email, password)
-                    .await()
+//            val authResult = auth.signInWithEmailAndPassword(email, password)
+//                    .await()
+//
+//            if (authResult == null || authResult.user == null){
+//                return null
+//            }
 
-            if (authResult == null || authResult.user == null){
-                return null
-            }
-
-            val user = getFF().collection(PATH_EMAILS).document(email)
-                .get()
-                .await()
-                .toObject(User::class.java)
+//            val user = getFF().collection(PATH_EMAILS).document(email)
+//                .get()
+//                .await()
+//                .toObject(User::class.java)
+            val user = FirebaseHelper.getUser(email)
 
             return user!!.username
 
@@ -89,6 +95,7 @@ open class DbManager {
             null // TODO: list exceptions
         }
     }
+
 
     /**
      * Create an account for the user in Firebase so they can access the database
