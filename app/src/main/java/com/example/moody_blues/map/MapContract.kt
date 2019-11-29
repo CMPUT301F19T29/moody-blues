@@ -6,7 +6,7 @@ import com.example.moody_blues.models.Mood
 import com.google.android.gms.maps.model.LatLng
 
 /**
- * The contract between the map view and the presenter
+ * Declares public functions of the map view and the presenter
  */
 interface MapContract {
     /**
@@ -18,20 +18,31 @@ interface MapContract {
          */
         fun gotoMood()
 
+        /**
+         * Get the user's current location
+         */
         fun getLocation()
+
+        /**
+         * Centers the map to a location
+         * @param location The location to center on
+         */
         fun setDefaultLocation(location: Location?)
     }
 
     /**
-     * The login prsenter
+     * The login presenter
      */
     interface Presenter : BasePresenter {
         /**
-         * Select the location to be used in the mood
+         * Gets the list of moods to show on the map
+         * @return The list of moods to display
          */
-        fun selectLocation()
-
         fun fetchMoods(mapMode: Int): ArrayList<Mood>
+
+        /**
+         * Tells the view to get the user's current location
+         */
         fun getLocation()
     }
 }

@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 /**
- * The presenter for the login activity
+ * The non-toolkit logic for the login activity
  */
 class LoginPresenter(private val view: LoginContract.View) : LoginContract.Presenter {
     // Constructor cannot contain any code
@@ -27,13 +27,11 @@ class LoginPresenter(private val view: LoginContract.View) : LoginContract.Prese
      * @param pass The attempted password
      */
     override fun login(user: String, pass: String) {
-        // TODO: show waiting animation
-
         MainScope().launch {
             if (AppManager.signIn(user, pass) != null)
                 view.gotoDashboard()
             else
-                view.clear() // TODO: Show error to the user
+                view.onError()
         }
     }
 

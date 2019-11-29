@@ -1,10 +1,19 @@
 package com.example.moody_blues.mood
 
+import android.app.Dialog
+import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
@@ -24,7 +33,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val mood = moods[position]
+        var mood = moods[position]
         holder.date.text = mood.getDateString()
         holder.emotion.text = mood.getEmotionString()
         holder.social.text = mood.getSocialString()
@@ -35,9 +44,14 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.itemView.setOnClickListener { clickListener(item, position) }
         holder.itemView.setOnLongClickListener { longListener(item, position) }
 
+        var gradient = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(mood.getColor(), android.R.color.white))
+        holder.itemView.background = gradient
+
         if (mood.reasonImageThumbnail != null) {
+            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
+            
             MainScope().launch {
-                val (uri, rotation) = AppManager.getImageUri(mood.reasonImageThumbnail)
+                val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageThumbnail!!)
                 if (uri != null){
                     Picasso.get().load(uri).rotate(rotation).into(holder.image)
                 }
@@ -47,7 +61,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
             }
         }
         else{
-            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
+            holder.image.setImageResource(android.R.color.transparent)
         }
     }
 

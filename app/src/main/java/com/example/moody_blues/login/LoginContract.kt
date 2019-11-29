@@ -4,7 +4,7 @@ import com.example.moody_blues.BasePresenter
 import com.example.moody_blues.BaseView
 
 /**
- * The contract between the login view and the presenter
+ * Declares public functions of the login view and the presenter
  */
 interface LoginContract {
     /**
@@ -20,13 +20,13 @@ interface LoginContract {
          */
         fun gotoSignUp()
         /**
-         * Clear the fields for username and password
+         * Alerts the user of errors
          */
-        fun clear()
+        fun onError()
     }
 
     /**
-     * The login prsenter
+     * The login presenter
      */
     interface Presenter : BasePresenter {
         /**

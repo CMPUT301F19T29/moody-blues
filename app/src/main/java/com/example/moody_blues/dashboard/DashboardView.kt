@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.moody_blues.AppManager
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,7 +19,7 @@ import com.example.moody_blues.requests.RequestView
 import com.google.android.material.navigation.NavigationView
 
 /**
- * This is the view for the dashboard activity
+ * Toolkit-specific logic for the dashboard activity
  */
 class DashboardView : AppCompatActivity(), DashboardContract.View {
     override lateinit var presenter: DashboardContract.Presenter
@@ -32,11 +33,10 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard_view)
-        title = "Dashboard"
+        title = "Hello, " + AppManager.getUsername()
 
         // Pass the view to the presenter
         presenter = DashboardPresenter(this)
@@ -126,14 +126,11 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
 //            else -> fragmentClass = HistoryView::class.java
         }
 
-//        // Insert the fragment by replacing any existing fragment
-//        val fragmentManager = supportFragmentManager
-//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment!!).commit()
-
         // Highlight the selected item has been done by NavigationView
         menuItem.isChecked = true
 //        // Set action bar title
 //        title = menuItem.title
+
         // Close the navigation drawer
         mDrawer.closeDrawers()
     }

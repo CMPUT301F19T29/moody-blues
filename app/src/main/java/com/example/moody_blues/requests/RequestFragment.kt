@@ -16,11 +16,12 @@ import com.example.moody_blues.models.User
  * A placeholder fragment containing a simple view.
  */
 class RequestFragment : Fragment() {
+    private lateinit var requestList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val pageNumber: Int  = arguments?.getInt(ARG_SECTION_NUMBER) ?: 1
         val root = inflater.inflate(R.layout.request_fragment, container, false)
-        val requestList: RecyclerView = root.findViewById(R.id.request_list)
+        requestList = root.findViewById(R.id.request_list)
         requestList.layoutManager = LinearLayoutManager(context)
 
         if (pageNumber == 1) {  // incoming
@@ -31,6 +32,11 @@ class RequestFragment : Fragment() {
         }
 
         return root
+    }
+
+    fun update() {
+        val rla = requestList.adapter as RequestAdapter
+        rla.refresh()
     }
 
     companion object {

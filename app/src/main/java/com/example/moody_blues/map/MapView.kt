@@ -16,6 +16,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 
+/**
+ * Toolkit-specific logic for the map activity
+ */
 class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     override lateinit var presenter: MapContract.Presenter
 
@@ -44,6 +47,9 @@ class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback, Googl
         presenter.getLocation()
     }
 
+    /**
+     * Get the user's current location
+     */
     override fun getLocation() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_DENIED) {
@@ -71,6 +77,10 @@ class MapView : AppCompatActivity(), MapContract.View, OnMapReadyCallback, Googl
             }
     }
 
+    /**
+     * Centers the map to a location
+     * @param location The location to center on
+     */
     override fun setDefaultLocation(location: Location?) {
         here = LatLng(location!!.latitude, location!!.longitude)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(here, 10f))

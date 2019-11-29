@@ -3,30 +3,40 @@ package com.example.moody_blues.history
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.location.Location
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
+import com.example.moody_blues.feed.FeedView
+import com.example.moody_blues.login.LoginView
 import com.example.moody_blues.map.MapView
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.mood.MoodAdapter
 import com.example.moody_blues.mood.MoodView
 import com.example.moody_blues.mood.MoodView.Companion.INTENT_MOOD_RESULT
 import com.example.moody_blues.mood.MoodView.Companion.INTENT_POS_RESULT
+import com.example.moody_blues.requests.RequestView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.history_view.*
 import kotlinx.coroutines.GlobalScope
 
 /**
- * The view for the history activity
+ * Toolkit-specific logic for the history activity
  */
 class HistoryView : AppCompatActivity(), HistoryContract.View {
     override lateinit var presenter: HistoryContract.Presenter
@@ -34,6 +44,11 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
     private lateinit var filterField: Spinner
     private lateinit var add: FloatingActionButton
     private lateinit var mapButton: FloatingActionButton
+    private lateinit var mDrawer: DrawerLayout
+    private lateinit var toolbar: Toolbar
+    private lateinit var nvDrawer: NavigationView
+
+    private lateinit var drawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +73,31 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         // Pass the view to the presenter
         presenter = HistoryPresenter(this)
 
+        // Setup a toolbar as a replacement for the action bar
+        toolbar = findViewById(R.id.toolbar) as Toolbar
+        setSupportActionBar(toolbar);
+
+        // Initialize an icon in the toolbar (to be replaced with hamburger icon after)
+        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
+
+        // Initialize DrawerLayout and define the toggle for the drawer
+        mDrawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        drawerToggle = setupDrawerToggle()
+
+        // Setup toggle to display hamburger icon
+        drawerToggle.setDrawerIndicatorEnabled(true);
+        drawerToggle.syncState();
+
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawer.addDrawerListener(drawerToggle);
+
+        // Initialize NavigationView
+        nvDrawer = findViewById(R.id.nvView) as NavigationView
+        nvDrawer.setItemIconTintList(null)
+
+        // Setup drawer view
+        setupDrawerContent(nvDrawer)
+
         // Do stuff with the presenter
         add.setOnClickListener {
             presenter.onAddMood()
@@ -75,6 +115,75 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         history_list_mood.layoutManager = LinearLayoutManager(this)
     }
 
+    // Toggle on post create
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig)
+    }
+
+    private fun setupDrawerToggle(): ActionBarDrawerToggle {
+        // For setting up the drawer toggle
+        return ActionBarDrawerToggle(
+            this,
+            mDrawer,
+            toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        )
+    }
+
+    private fun setupDrawerContent(navigationView:NavigationView) {
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            selectDrawerItem(menuItem)
+            true
+        }
+    }
+
+    private fun selectDrawerItem(menuItem: MenuItem) {
+        // Go to the activity when item is clicked
+        when (menuItem.itemId) {
+            R.id.nav_feed -> startActivity(Intent(this, FeedView::class.java))
+            R.id.nav_requests -> startActivity(Intent(this, RequestView::class.java))
+            R.id.nav_login -> startActivity(Intent(this, LoginView::class.java))
+//            else -> fragmentClass = HistoryView::class.java
+        }
+
+        // Highlight the selected item has been done by NavigationView
+        menuItem.isChecked = true
+//        // Set action bar title
+//        title = menuItem.title
+
+        // Close the navigation drawer
+        mDrawer.closeDrawers()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // The action bar home/up action should open or close the drawer.
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    // Overrides the back button to close the drawer when it is open
+    override fun onBackPressed() {
+        if(mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawers()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    /**
+     * Fetch the user's current location
+     */
     override fun getLocation() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_DENIED) {
@@ -144,6 +253,9 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         startActivityForResult(intent, GET_EDITED_MOOD_CODE)
     }
 
+    /**
+     * Transition to the map activity
+     */
     override fun gotoMap() {
         val intent = Intent(this, MapView::class.java)
         intent.putExtra("mode", 1)
@@ -160,4 +272,3 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
         const val GET_EDITED_MOOD_CODE = 2
     }
 }
-
