@@ -4,11 +4,12 @@ import com.example.moody_blues.AppManager
 import com.example.moody_blues.models.Mood
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * The non-toolkit logic for the feed activity
  */
-class FeedPresenter(private val view: FeedContract.View) : FeedContract.Presenter {
+class FeedPresenter(private val view: FeedContract.View, private val mockAppManager: AppManager? = null) : FeedContract.Presenter {
 
     // Constructor cannot contain any code
     // Init gets called after constructor
@@ -17,7 +18,9 @@ class FeedPresenter(private val view: FeedContract.View) : FeedContract.Presente
     init {
         // Links the presenter to the view
         view.presenter = this
-        refresh()
+        if (mockAppManager == null) {
+            refresh()
+        }
     }
 
     /**
@@ -42,9 +45,17 @@ class FeedPresenter(private val view: FeedContract.View) : FeedContract.Presente
      * Fetches the feed from the database
      */
     override fun fetchFeed() {
-        MainScope().launch {
-            AppManager.fetchRequests()
-            AppManager.fetchFeed()
+        if (mockAppManager == null){
+            MainScope().launch {
+                AppManager.fetchRequests()
+                AppManager.fetchFeed()
+            }
+        }
+        else{
+            runBlocking {
+                mockAppManager.fetchRequests()
+                mockAppManager.fetchFeed()
+            }
         }
     }
 
@@ -54,6 +65,11 @@ class FeedPresenter(private val view: FeedContract.View) : FeedContract.Presente
      */
     override fun getFeed(): ArrayList<Mood> {
         fetchFeed()
-        return AppManager.getFeed()
+        return if (mockAppManager == null){
+            AppManager.getFeed()
+        }
+        else{
+            mockAppManager!!.getFeed()
+        }
     }
 }

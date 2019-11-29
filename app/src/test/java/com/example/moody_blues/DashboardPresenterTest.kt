@@ -10,7 +10,6 @@ class DashboardPresenterTest {
     val viewSpy = spyk<DashboardView>()
     val presenter = DashboardPresenter(viewSpy)
 
-
     @Test
     fun testsHistory() {
         presenter.gotoHistory()

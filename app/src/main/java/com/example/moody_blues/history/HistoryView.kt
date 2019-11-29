@@ -229,11 +229,13 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
      * Create a new mood when location is obtained
      */
     private fun getLocationResult() {
-        fusedLocationClient
-                .lastLocation
-                .addOnSuccessListener { location : Location? ->
-                    presenter.createMood(location)
-                }
+        if (::fusedLocationClient.isInitialized){
+            fusedLocationClient
+                    .lastLocation
+                    .addOnSuccessListener { location : Location? ->
+                        presenter.createMood(location)
+                    }
+        }
     }
 
     /**

@@ -4,16 +4,20 @@ import android.location.Location
 import com.example.moody_blues.history.HistoryPresenter
 import com.example.moody_blues.history.HistoryView
 import com.example.moody_blues.models.Mood
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.spyk
+import io.mockk.verify
+import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
+import org.mockito.ArgumentCaptor
+
 
 class HistoryPresenterTest {
     lateinit var viewSpy : HistoryView
     lateinit var mockAppManager : AppManager
     lateinit var presenter : HistoryPresenter
-
 
     @Before
     fun setupMocks() {
@@ -31,7 +35,6 @@ class HistoryPresenterTest {
         verify { mockAppManager.getOrderedUserMoods(0) }
     }
 
-    @Ignore
     @Test
     fun testAddMood() {
         presenter.onAddMood()
@@ -41,8 +44,11 @@ class HistoryPresenterTest {
     @Ignore
     @Test
     fun testCreateMood() {
-        presenter.createMood(Location("Edmonton"))
-        verify { viewSpy.gotoMood(Mood(Location("Edmonton"))) }
+        val argument: ArgumentCaptor<Mood> = ArgumentCaptor.forClass<Mood>(Mood::class.java)
+        val location = Location("Edmonton")
+        presenter.createMood(location)
+        verify { viewSpy.gotoMood(argument.capture()) }
+        assertEquals(location, argument.value.location)
     }
 
     @Test
