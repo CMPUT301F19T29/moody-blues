@@ -123,7 +123,7 @@ class DashboardView : AppCompatActivity(), DashboardContract.View {
             R.id.nav_feed -> startActivity(Intent(this, FeedView::class.java))
             R.id.nav_requests -> startActivity(Intent(this, RequestView::class.java))
             R.id.nav_login -> startActivity(Intent(this, LoginView::class.java))
-
+            else -> return
         }
 
         // Highlight the selected item has been done by NavigationView
