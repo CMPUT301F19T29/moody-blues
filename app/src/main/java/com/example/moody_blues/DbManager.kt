@@ -75,12 +75,12 @@ open class DbManager(isMocked : Boolean = false) {
      */
     open suspend fun signIn(email: String, password: String): String? {
         return try {
-//            val authResult = auth.signInWithEmailAndPassword(email, password)
-//                    .await()
-//
-//            if (authResult == null || authResult.user == null){
-//                return null
-//            }
+            val authResult = auth.signInWithEmailAndPassword(email, password)
+                    .await()
+
+            if (authResult == null || authResult.user == null){
+                return null
+            }
 
 //            val user = getFF().collection(PATH_EMAILS).document(email)
 //                .get()
