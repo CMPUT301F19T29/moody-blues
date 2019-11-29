@@ -66,7 +66,10 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         var gradient = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, intArrayOf(mood.getColor(), android.R.color.white))
         holder.itemView.background = gradient
 
-
+        if (mood.reasonImageThumbnail == null && holder.image.drawable != null){
+            Picasso.get().cancelRequest(holder.image)
+            holder.image.setImageDrawable(null)
+        }
         if (mood.reasonImageThumbnail != null && holder.image.drawable == null) {
             holder.image.setImageResource(R.drawable.moody_blues_icon_background)
             

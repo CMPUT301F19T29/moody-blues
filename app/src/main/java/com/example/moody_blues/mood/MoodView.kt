@@ -276,6 +276,9 @@ class MoodView : AppCompatActivity(), MoodContract.View {
         if (full != null) {
             Picasso.get().load(full).into(photoField)
         }
+        else{
+            photoField.setImageDrawable(null)
+        }
 
         //Delete old images
         if (mood.reasonImageThumbnail != null){
