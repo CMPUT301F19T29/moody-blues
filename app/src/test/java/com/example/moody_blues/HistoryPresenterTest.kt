@@ -14,7 +14,7 @@ class HistoryPresenterTest {
     @Test
     fun testsSomething() {
         val mockAppManager = spyk<AppManager>()
-        val presenter = HistoryPresenter(viewSpy, true, mockAppManager = mockAppManager)
+        val presenter = HistoryPresenter(viewSpy, mockAppManager)
         presenter.fetchMoods(1)
         verify { mockAppManager.getOrderedUserMoods(0) }
     }

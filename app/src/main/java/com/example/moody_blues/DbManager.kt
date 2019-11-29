@@ -34,6 +34,19 @@ open class DbManager {
 
     private lateinit var auth : FirebaseAuth
     private var isInit : Boolean = false
+    private var isBeingMocked = false
+    private lateinit var mockFirebaseApp : FirebaseApp
+    private lateinit var mockFirebaseStorage : FirebaseStorage
+    private lateinit var mockFirestore : FirebaseFirestore
+
+    fun turnOnDBMocking(fba : FirebaseApp, fs : FirebaseStorage, ff :FirebaseFirestore, mockAuth : FirebaseAuth) {
+        isBeingMocked = true
+        mockFirebaseApp = fba
+        mockFirebaseStorage = fs
+        mockFirestore = ff
+        auth = mockAuth
+    }
+
     fun init(app: FirebaseApp? = null){
         auth = if (app == null){
             FirebaseAuth.getInstance()
@@ -48,6 +61,9 @@ open class DbManager {
      * Shortcut methods
      */
     private fun getFF(): FirebaseFirestore {
+        if (isBeingMocked) {
+            return mockFirestore
+        }
         return FirebaseFirestore.getInstance()
     }
 
@@ -67,6 +83,9 @@ open class DbManager {
     }
 
     private fun getFS(): FirebaseStorage {
+        if (isBeingMocked) {
+            return mockFirebaseStorage
+        }
         return FirebaseStorage.getInstance()
     }
 
@@ -79,14 +98,14 @@ open class DbManager {
      * @return The result of attempting to sign the user in
      */
     open suspend fun signIn(email: String, password: String): String? {
-        if (!isInit){
-            init()
+        if (isBeingMocked) {
+            return ""
         }
         return try {
             val authResult = auth.signInWithEmailAndPassword(email, password)
                     .await()
 
-            if (authResult == null || authResult.user == null)
+            if (authResult == null || authResult.user == null){}
                 return null
 
             val user = getFF().collection(PATH_EMAILS).document(email)
@@ -110,9 +129,9 @@ open class DbManager {
      * @return The result of creating the user's account
      */
     open suspend fun createUser(email: String, password: String, username: String): String? {
-        if (!isInit){
-            init()
-        }
+//        if (!isInit){
+//            init()
+//        }
 
         val user = User(email, username)
 
@@ -216,7 +235,7 @@ open class DbManager {
      * @return The user with the given email, if they existed in
      *  the database, else null
      */
-    protected suspend fun getUser(username: String): User? {
+    suspend fun getUser(username: String): User? {
         return getFF().collection(PATH_USERS)
                 .document(username).get()
                 .await()

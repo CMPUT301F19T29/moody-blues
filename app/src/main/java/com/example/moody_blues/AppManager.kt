@@ -14,6 +14,9 @@ object AppManager : DbManager(){
     private var userRequests: ArrayList<Request> = ArrayList()
     private var userFeed: ArrayList<Mood> = ArrayList()
     private var user: User? = null
+    private lateinit var db: DbManager
+
+    init(db)
 
     /**
      * Signs the user in so they can access the database, and also
