@@ -51,7 +51,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
             holder.image.setImageResource(R.drawable.moody_blues_icon_background)
             
             MainScope().launch {
-                val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageThumbnail!!)
+                val (uri, rotation) = AppManager.db.getImageUri(mood.username, mood.reasonImageThumbnail!!)
                 if (uri != null){
                     Picasso.get().load(uri).rotate(rotation).into(holder.image)
                 }

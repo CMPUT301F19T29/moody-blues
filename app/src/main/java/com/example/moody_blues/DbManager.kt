@@ -32,38 +32,12 @@ import java.nio.ByteBuffer
  */
 open class DbManager {
 
-    private lateinit var auth : FirebaseAuth
-    private var isInit : Boolean = false
-    private var isBeingMocked = false
-    private lateinit var mockFirebaseApp : FirebaseApp
-    private lateinit var mockFirebaseStorage : FirebaseStorage
-    private lateinit var mockFirestore : FirebaseFirestore
-
-    fun turnOnDBMocking(fba : FirebaseApp, fs : FirebaseStorage, ff :FirebaseFirestore, mockAuth : FirebaseAuth) {
-        isBeingMocked = true
-        mockFirebaseApp = fba
-        mockFirebaseStorage = fs
-        mockFirestore = ff
-        auth = mockAuth
-    }
-
-    fun init(app: FirebaseApp? = null){
-        auth = if (app == null){
-            FirebaseAuth.getInstance()
-        }
-        else{
-            FirebaseAuth.getInstance(app)
-        }
-        isInit = true
-    }
+    private var auth : FirebaseAuth = FirebaseAuth.getInstance()
 
     /**
      * Shortcut methods
      */
     private fun getFF(): FirebaseFirestore {
-        if (isBeingMocked) {
-            return mockFirestore
-        }
         return FirebaseFirestore.getInstance()
     }
 
@@ -83,9 +57,6 @@ open class DbManager {
     }
 
     private fun getFS(): FirebaseStorage {
-        if (isBeingMocked) {
-            return mockFirebaseStorage
-        }
         return FirebaseStorage.getInstance()
     }
 
@@ -98,15 +69,13 @@ open class DbManager {
      * @return The result of attempting to sign the user in
      */
     open suspend fun signIn(email: String, password: String): String? {
-        if (isBeingMocked) {
-            return ""
-        }
         return try {
             val authResult = auth.signInWithEmailAndPassword(email, password)
                     .await()
 
-            if (authResult == null || authResult.user == null){}
+            if (authResult == null || authResult.user == null){
                 return null
+            }
 
             val user = getFF().collection(PATH_EMAILS).document(email)
                 .get()
@@ -129,24 +98,21 @@ open class DbManager {
      * @return The result of creating the user's account
      */
     open suspend fun createUser(email: String, password: String, username: String): String? {
-//        if (!isInit){
-//            init()
-//        }
-
         val user = User(email, username)
 
         return try{
-            var userDocument = getFF().collection(PATH_USERS).document(username)
-            if (userDocument.get().await().exists()){
-                Log.e("createUser", "Username already exists")
-                return "Username Already Exists"
-            }
 
             val authResult = auth.createUserWithEmailAndPassword(email, password)
                     .await()
             if (authResult == null || authResult.user == null)
                 return "Failed to create user account"
 //            sendEmailVerification()
+            var userDocument = getFF().collection(PATH_USERS).document(username)
+            if (userDocument.get().await().exists()){
+                Log.e("createUser", "Username already exists")
+                auth.currentUser?.delete()?.await()
+                return "Username Already Exists"
+            }
             userDocument.set(user).await()
             getFF().collection(PATH_EMAILS).document(email)
                 .set(user)
@@ -165,7 +131,6 @@ open class DbManager {
      */
     @Deprecated("use username key instead")
     open suspend fun deleteCurrentUser(): Boolean {
-        if (isInit){
             // get email and username
             val email = getUserEmail()
             email?: return false
@@ -190,10 +155,6 @@ open class DbManager {
                     ?.delete()
                     ?.await()
             return true
-        }
-        else{
-            return false
-        }
     }
 
     /**
@@ -270,7 +231,7 @@ open class DbManager {
      * @param username The username of the user
      * @return A hashmap of ids and Moods belonging to the given user
      */
-    protected suspend fun fetchMoods (username: String?): HashMap<String, Mood> {
+    suspend fun fetchMoods (username: String?): HashMap<String, Mood> {
         val moodMap = HashMap<String, Mood>()
         username?: return moodMap
 
@@ -297,7 +258,7 @@ open class DbManager {
      * @param username The username of the user who will own the mood
      * @return The id of the mood in the database
      */
-    protected suspend fun addMood(mood: Mood, username: String): String {
+    suspend fun addMood(mood: Mood, username: String): String {
         val doc = getFFMoods(username)
                 .add(mood.wrap())
                 .await()
@@ -314,7 +275,7 @@ open class DbManager {
      * @param username The username of the user who owns the mood
      * @return The result of deleting the mood from the database
      */
-    protected suspend fun deleteMood(id: String, username: String): Void? {
+    suspend fun deleteMood(id: String, username: String): Void? {
         return getFFMoods(username).document(id)
                 .delete()
                 .await()
@@ -328,7 +289,7 @@ open class DbManager {
      * @param username The username of the user owning the mood to be updated
      * @return The result of replacing the mood in the database
      */
-    protected suspend fun editMood(id: String, mood: Mood, username: String): Void? {
+    suspend fun editMood(id: String, mood: Mood, username: String): Void? {
         return getFFMoods(username).document(id)
                 .set(mood.wrap())
                 .await()
@@ -352,7 +313,7 @@ open class DbManager {
      * Delete an existing request
      * @param request The request to delete
      */
-    protected suspend fun deleteRequest(request: Request) {
+    suspend fun deleteRequest(request: Request) {
         getFFRequestsTo(request.from).document(request.to)
             .delete()
             .await()
@@ -367,7 +328,7 @@ open class DbManager {
      * @param username The username of the user
      * @return The list of requests for the user
      */
-    protected suspend fun fetchRequests(username: String?): ArrayList<Request> {
+    suspend fun fetchRequests(username: String?): ArrayList<Request> {
         val requests = ArrayList<Request>()
         try {
             username?: return requests
@@ -401,7 +362,7 @@ open class DbManager {
      * @return The url pointing to the image in cloud storage
      */
     @ExperimentalCoroutinesApi
-    protected fun storeFile(username: String, image: Bitmap): String? {
+    fun storeFile(username: String, image: Bitmap): String? {
         val filename = UUID.randomUUID().toString()
         val storageRef = getFS().reference.child(username).child(filename)
 
@@ -428,7 +389,7 @@ open class DbManager {
      * @return The url pointing to the image in cloud storage
      */
     @ExperimentalCoroutinesApi
-    protected fun storeFile(username: String, image: File): String? {
+    fun storeFile(username: String, image: File): String? {
         val filename = UUID.randomUUID().toString() + ".jpg"
         val storageRef = getFS().reference.child(username).child(filename)
 
@@ -454,7 +415,7 @@ open class DbManager {
      * @param filename The filename of the file to delete
      */
     @ExperimentalCoroutinesApi
-    protected fun deleteFile(username: String, filename: String) {
+    fun deleteFile(username: String, filename: String) {
         val storageRef = getFS().reference.child(username).child(filename)
 
         MainScope().launch {

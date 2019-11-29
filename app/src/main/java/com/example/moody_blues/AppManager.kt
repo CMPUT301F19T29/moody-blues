@@ -4,19 +4,25 @@ import android.net.Uri
 import com.example.moody_blues.models.Mood
 import com.example.moody_blues.models.Request
 import com.example.moody_blues.models.User
+import com.firebase.ui.auth.data.model.User.getUser
 import java.io.File
 
 /**
  * Manages local data and database
  */
-object AppManager : DbManager(){
+object AppManager {
     private var userMoods: HashMap<String, Mood> = HashMap()
     private var userRequests: ArrayList<Request> = ArrayList()
     private var userFeed: ArrayList<Mood> = ArrayList()
     private var user: User? = null
-    private lateinit var db: DbManager
+//    lateinit var db: DbManager
+    private var dbUp = false
+    var db: DbManager = DbManager()
 
-    init(db)
+    fun init(newDb: DbManager = DbManager()) {
+        db = newDb
+        dbUp = true
+    }
 
     /**
      * Signs the user in so they can access the database, and also
@@ -25,11 +31,14 @@ object AppManager : DbManager(){
      * @param password The password to use to attempt a sign in
      * @return The result of attempting to sign the user in
      */
-    override suspend fun signIn(email: String, password: String): String? {
-        val username = super.signIn(email, password)
+    suspend fun signIn(email: String, password: String): String? {
+//        if (!dbUp) {
+//            init()
+//        }
+        val username = db.signIn(email, password)
         username?: return null
 
-        this.user = getUser(username)
+        this.user = db.getUser(username)
         return username
     }
 
@@ -38,8 +47,8 @@ object AppManager : DbManager(){
      * @param username The username of the user
      * @param email the email of the user
      */
-    override suspend fun deleteUser(username: String, email: String) {
-        super.deleteUser(username, email)
+    suspend fun deleteUser(username: String, email: String) {
+        db.deleteUser(username, email)
     }
 
     /**
@@ -49,8 +58,11 @@ object AppManager : DbManager(){
      * @param username The username to display to other users
      * @return The result of creating the user's account
      */
-    override suspend fun createUser(email: String, password: String, username: String): String? {
-        return super.createUser(email, password, username) // probably not needed
+    suspend fun createUser(email: String, password: String, username: String): String? {
+//        if (!dbUp) {
+//            init()
+//        }
+        return db.createUser(email, password, username) // probably not needed
     }
 
     /**
@@ -58,7 +70,7 @@ object AppManager : DbManager(){
      * @return A hashmap of the moods. ID is the key
      */
     suspend fun fetchMoods(): HashMap<String, Mood> {
-        val moods = super.fetchMoods(user!!.username)
+        val moods = db.fetchMoods(user!!.username)
         this.userMoods = moods
         return moods
     }
@@ -76,8 +88,8 @@ object AppManager : DbManager(){
      * data from local cache
      * @return The result of deleting their account from the database
      */
-    override suspend fun deleteCurrentUser(): Boolean {
-        if (!super.deleteCurrentUser())
+    suspend fun deleteCurrentUser(): Boolean {
+        if (!db.deleteCurrentUser())
             return false
 
         this.user = null
@@ -88,10 +100,10 @@ object AppManager : DbManager(){
     /**
      * Sign out the currently signed in user, and clear their locally cached data
      */
-    override fun signOut() {
+    fun signOut() {
         this.user = null
         this.userMoods.clear()
-        super.signOut()
+        db.signOut()
     }
 
     /**
@@ -148,7 +160,7 @@ object AppManager : DbManager(){
      * @param mood The mood to add to the database
      */
     suspend fun addMood(mood: Mood) {
-        val id = super.addMood(mood, this.user!!.username)
+        val id = db.addMood(mood, this.user!!.username)
         this.userMoods[id] = mood
     }
 
@@ -160,10 +172,10 @@ object AppManager : DbManager(){
     suspend fun deleteMood(id: String) {
         val mood = getUserMood(id)
         if (mood != null) {
-            mood.reasonImageThumbnail?.let { super.deleteFile(this.user!!.username, it) }
-            mood.reasonImageFull?.let { super.deleteFile(this.user!!.username, it) }
+            mood.reasonImageThumbnail?.let { db.deleteFile(this.user!!.username, it) }
+            mood.reasonImageFull?.let { db.deleteFile(this.user!!.username, it) }
         }
-        super.deleteMood(id, this.user!!.username)
+        db.deleteMood(id, this.user!!.username)
         this.userMoods.remove(id)
     }
 
@@ -172,7 +184,7 @@ object AppManager : DbManager(){
      * @param mood The mood to replace the existing mood in the database
      */
     suspend fun editMood(mood: Mood) {
-        super.editMood(mood.id, mood, this.user!!.username)
+        db.editMood(mood.id, mood, this.user!!.username)
         this.userMoods[mood.id] = mood
     }
 
@@ -182,7 +194,7 @@ object AppManager : DbManager(){
      */
     suspend fun addRequest(to: String) {
         val request = Request(user!!.username, to)
-        super.setRequest(request)
+        db.setRequest(request)
         this.userRequests.add(request)
     }
 
@@ -192,7 +204,7 @@ object AppManager : DbManager(){
      * @return The new requests for the current user (from self)
      */
     suspend fun cancelRequest(request: Request) : ArrayList<Request> {
-        super.deleteRequest(request)
+        db.deleteRequest(request)
         this.userRequests.remove(request)
         return this.getRequestsFromSelf(true)
     }
@@ -203,7 +215,7 @@ object AppManager : DbManager(){
      * @return The new requests for the current user (from others)
      */
     suspend fun rejectRequest(request: Request) : ArrayList<Request> {
-        super.deleteRequest(request)
+        db.deleteRequest(request)
         this.userRequests.remove(request)
         return this.getRequestsFromOthers(true)
     }
@@ -215,7 +227,7 @@ object AppManager : DbManager(){
      */
     suspend fun acceptRequest(request: Request) : ArrayList<Request> {
         val newRequest = Request(request.from, request.to, true)
-        super.setRequest(newRequest)
+        db.setRequest(newRequest)
         this.userRequests.remove(request)
         this.userRequests.add(newRequest)
         return this.getRequestsFromOthers(true)
@@ -226,7 +238,7 @@ object AppManager : DbManager(){
      * @return All requests for the current user
      */
     suspend fun fetchRequests(): ArrayList<Request> {
-        this.userRequests = super.fetchRequests(user!!.username)
+        this.userRequests = db.fetchRequests(user!!.username)
         return this.userRequests
     }
 
@@ -280,7 +292,7 @@ object AppManager : DbManager(){
      * @return The most recent mood, if possible
      */
     private suspend fun fetchMostRecentMood(username: String): Mood? {
-        val moodMap = super.fetchMoods(username)
+        val moodMap = db.fetchMoods(username)
         val moodArray = ArrayList(moodMap.values.sortedByDescending { mood -> mood.date })
         return if (moodArray.size == 0) null else moodArray[0]
     }
@@ -326,7 +338,7 @@ object AppManager : DbManager(){
                 null
             }
             else{
-                super.storeFile(it, file)
+                db.storeFile(it, file)
             }
         }
         return filename
@@ -338,7 +350,7 @@ object AppManager : DbManager(){
      */
     fun deleteImage(filename: String?){
         if (filename != null) {
-            this.user?.username?.let { super.deleteFile(it, filename) }
+            this.user?.username?.let { db.deleteFile(it, filename) }
         }
     }
 
@@ -354,7 +366,7 @@ object AppManager : DbManager(){
                 null
             }
             else {
-                super.getImageUri(it, filename)
+                db.getImageUri(it, filename)
             }
         }
         if (result == null){

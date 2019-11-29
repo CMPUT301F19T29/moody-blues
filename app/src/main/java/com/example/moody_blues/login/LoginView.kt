@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.moody_blues.AppManager
 import com.example.moody_blues.R
 import com.example.moody_blues.dashboard.DashboardView
 import com.example.moody_blues.signup.SignupView

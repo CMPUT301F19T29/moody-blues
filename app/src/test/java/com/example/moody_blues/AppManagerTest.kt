@@ -41,16 +41,9 @@ class AppManagerTest {
 
     @Test
     fun testsSignup() = runBlockingTest {
-        val appManager = spyk(AppManager)
-//        val mContextMock = mockk<Context>(relaxed = true)
-////        val mockFB = mockk<FirebaseApp>()
-////        val mockFS = mockk<FirebaseStorage>()
-////        val mockFF = mockk<FirebaseFirestore>()
-////        val mockAuth = mockk<FirebaseAuth>()
-////        mockFB.initializeApp(mContextMock)
-////        appManager.init(mockFB)
-//        appManager.turnOnDBMocking(mockFB, mockFS, mockFF, mockAuth)
-        every { appManager.getUser("") }
+        val appManager = AppManager
+        val mockDB = spyk<DbManager>()
+        appManager.init(mockDB)
         appManager.signIn("jordan","test")
     }
 
