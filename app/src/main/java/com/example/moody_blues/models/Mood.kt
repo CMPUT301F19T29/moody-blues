@@ -7,6 +7,8 @@ import android.os.Parcelable
 import androidx.core.graphics.ColorUtils
 import com.example.moody_blues.AppManager
 import com.google.android.gms.maps.model.LatLng
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -89,7 +91,7 @@ class Mood(
      * @return The date as a string
      */
     fun getDateString(): String {
-        return date.toString()
+        return DATE_FORMAT.format(this.date!!)
     }
 
     /**
@@ -150,7 +152,7 @@ class Mood(
         val EMOTION_FILTERS: Array<String> = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE24 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE2C Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
         val EMOTION_COLORS: Array<Int> = arrayOf(Color.parseColor("#22FF33"), Color.parseColor("#4466FF"), Color.parseColor("#CCCC33"), Color.parseColor("#EE6688"), Color.parseColor("#CC9944"), Color.parseColor("#FF99FF"))
         val SOCIAL_REASONS: Array<String> = arrayOf("   ", "Alone", "With another", "With a few", "With a group")
-        private val DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME
+        private val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd, h:mm a")
 
         override fun createFromParcel(parcel: Parcel): Mood {
             return Mood(parcel)
