@@ -149,6 +149,7 @@ class RequestView : AppCompatActivity(), RequestContract.View {
 //        title = menuItem.title
 
         // Close the navigation drawer
+        finish()
         mDrawer.closeDrawers()
     }
 
@@ -168,11 +169,6 @@ class RequestView : AppCompatActivity(), RequestContract.View {
             super.onBackPressed()
         }
     }
-
-//    override fun restartActivity() {
-//        finish()
-//        startActivity(this.intent)
-//    }
 
     override fun updateList() {
         for (fragment in supportFragmentManager.fragments) {

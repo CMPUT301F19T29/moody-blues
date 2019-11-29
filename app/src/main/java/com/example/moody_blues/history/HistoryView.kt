@@ -161,6 +161,7 @@ class HistoryView : AppCompatActivity(), HistoryContract.View {
 //        title = menuItem.title
 
         // Close the navigation drawer
+        finish()
         mDrawer.closeDrawers()
     }
 

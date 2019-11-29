@@ -50,6 +50,9 @@ class FeedView : AppCompatActivity(), FeedContract.View {
         setContentView(R.layout.feed_view)
         title = "Feed"
 
+        // Pass the view to the presenter
+        presenter = FeedPresenter(this)
+
         mapButton = findViewById(R.id.feed_goto_map_button)
 
         // Setup a toolbar as a replacement for the action bar
@@ -76,9 +79,6 @@ class FeedView : AppCompatActivity(), FeedContract.View {
 
         // Setup drawer view
         setupDrawerContent(nvDrawer)
-
-        // Pass the view to the presenter
-        presenter = FeedPresenter(this)
 
         // Do stuff with the presenter
         feed_list_mood.adapter = MoodAdapter(presenter.getFeed(),
@@ -168,6 +168,7 @@ class FeedView : AppCompatActivity(), FeedContract.View {
 //        title = menuItem.title
 
         // Close the navigation drawer
+        finish()
         mDrawer.closeDrawers()
     }
 
