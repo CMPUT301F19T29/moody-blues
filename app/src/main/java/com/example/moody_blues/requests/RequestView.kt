@@ -136,7 +136,7 @@ class RequestView : AppCompatActivity(), RequestContract.View {
     private fun selectDrawerItem(menuItem: MenuItem) {
         // Go to the activity when item is clicked
         when (menuItem.itemId) {
-
+            
             R.id.nav_history -> startActivity(Intent(this, HistoryView::class.java))
             R.id.nav_feed -> startActivity(Intent(this, FeedView::class.java))
             R.id.nav_login -> startActivity(Intent(this, LoginView::class.java))
