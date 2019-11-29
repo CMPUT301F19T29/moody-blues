@@ -4,11 +4,11 @@
     <group
         android:id="@+id/first"
         android:checkableBehavior="single">
-        <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        <item
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/welcome_text"
             android:title="Hello"
             app:showAsAction="always" />
-
     </group>
 
     <group android:checkableBehavior="single">
@@ -30,9 +30,20 @@
             android:title="Requests"
             android:icon="@drawable/ic_compare_arrows_black_24dp" />
         <item
+            android:enabled="false"/>
+        <item
+            android:enabled="false"/>
+    </group>
+
+    <group
+        android:id="@+id/last"
+        android:checkableBehavior="single">
+        <item
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/nav_login"
             android:title="Logout"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:gravity="bottom" />
+            app:showAsAction="always" />
     </group>
+
 </menu>
