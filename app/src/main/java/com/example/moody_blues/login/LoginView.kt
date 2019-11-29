@@ -27,6 +27,8 @@ class LoginView : AppCompatActivity(), LoginContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_view)
 
+        // clear stacks whenever logging out
+
         // Pass the view to the presenter
         presenter = LoginPresenter(this)
 
@@ -46,6 +48,7 @@ class LoginView : AppCompatActivity(), LoginContract.View {
             presenter.signup()
         }
     }
+
 
     /**
      * Clear the fields for username and password
