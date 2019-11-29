@@ -66,8 +66,9 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         var gradient = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, intArrayOf(mood.getColor(), android.R.color.white))
         holder.itemView.background = gradient
 
-        if (mood.reasonImageThumbnail != null) {
-//            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
+
+        if (mood.reasonImageThumbnail != null && holder.image.drawable == null) {
+            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
             
             holder.job = MainScope().launch {
                 val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageThumbnail!!)
@@ -79,9 +80,6 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
                 }
             }
         }
-        else{
-            holder.image.setImageResource(android.R.color.transparent)
-        }
     }
 
     override fun onViewRecycled(holder: ViewHolder) {
@@ -89,6 +87,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
             holder.job!!.cancel()
         }
         Picasso.get().cancelRequest(holder.image)
+        holder.image.setImageDrawable(null)
         super.onViewRecycled(holder)
     }
 
