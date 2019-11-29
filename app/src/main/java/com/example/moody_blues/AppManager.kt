@@ -59,9 +59,9 @@ object AppManager {
      * @return The result of creating the user's account
      */
     suspend fun createUser(email: String, password: String, username: String): String? {
-//        if (!dbUp) {
-//            init()
-//        }
+        if (!dbUp) {
+            init()
+        }
         return db.createUser(email, password, username) // probably not needed
     }
 
