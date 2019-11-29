@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
 
 
 /**
@@ -17,16 +18,16 @@ import java.time.format.FormatStyle
  * TODO: use private properties
  */
 class Mood(
-        var id: String = "",
-        var username: String = "",
-        var location: LatLng? = null,
-        var date: LocalDateTime = LocalDateTime.now(),
-        var reasonText: String? = null,
-        var reasonImageThumbnail: String? = null,
-        var reasonImageFull: String? = null,
-        var social: Int = 0,
-        var emotion: Int = 0,
-        var showLocation: Boolean = true
+    var id: String = "",
+    var username: String = "",
+    var location: LatLng? = null,
+    var date: Date? = Date(),
+    var reasonText: String? = null,
+    var reasonImageThumbnail: String? = null,
+    var reasonImageFull: String? = null,
+    var social: Int = 0,
+    var emotion: Int = 0,
+    var showLocation: Boolean = true
 ): Parcelable {
     constructor(location: Location?): this() {
         this.username = AppManager.getUsername()?: ""
@@ -37,7 +38,7 @@ class Mood(
             parcel.readString()?: "",
             parcel.readString()?: "",
             parcel.readParcelable(LatLng::class.java.classLoader),
-            parcel.readSerializable() as LocalDateTime,
+            parcel.readSerializable() as Date,
             parcel.readString(),
 //            parcel.readParcelable(Uri::class.java.classLoader),
 //            parcel.readParcelable(Uri::class.java.classLoader),
@@ -52,7 +53,7 @@ class Mood(
             id,
             username,
             null,
-            LocalDateTime.parse(wrapper.date_string, DATE_FORMAT),
+            wrapper.date,
             wrapper.reasonText,
 //            Uri.parse(wrapper.reasonImageThumbnail),
 //            Uri.parse(wrapper.reasonImageFull),
@@ -73,7 +74,7 @@ class Mood(
         return MoodWrapper(
                 this.location?.latitude,
                 this.location?.longitude,
-                this.getDateString(),
+                this.date,
                 this.reasonText,
                 this.reasonImageThumbnail,
                 this.reasonImageFull,
@@ -88,7 +89,7 @@ class Mood(
      * @return The date as a string
      */
     fun getDateString(): String {
-        return DATE_FORMAT.format(this.date)
+        return date.toString()
     }
 
     /**
@@ -149,7 +150,7 @@ class Mood(
         val EMOTION_FILTERS: Array<String> = arrayOf("❌ No filter", "\uD83D\uDE0E Happy", "\uD83D\uDE24 Upset", "\uD83D\uDE06 Excited", "\uD83D\uDE2C Agitated", "\uD83D\uDE10 Bored", "\uD83E\uDD14 Uncertain")
         val EMOTION_COLORS: Array<Int> = arrayOf(Color.parseColor("#22FF33"), Color.parseColor("#4466FF"), Color.parseColor("#CCCC33"), Color.parseColor("#EE6688"), Color.parseColor("#CC9944"), Color.parseColor("#FF99FF"))
         val SOCIAL_REASONS: Array<String> = arrayOf("   ", "Alone", "With another", "With a few", "With a group")
-        private val DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd, h:mm a")
+        private val DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME
 
         override fun createFromParcel(parcel: Parcel): Mood {
             return Mood(parcel)
