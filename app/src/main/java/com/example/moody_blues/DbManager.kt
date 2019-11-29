@@ -279,13 +279,19 @@ open class DbManager {
      * @return The id of the mood in the database
      */
     protected suspend fun addMood(mood: Mood, username: String): String {
-        val doc = getFFMoods(username)
-                .add(mood.wrap())
-                .await()
+        mood.id = (UUID.randomUUID().mostSignificantBits and Long.MAX_VALUE).toString()
 
-        doc.update("id", doc.id).await()
-        mood.id = doc.id
-        return doc.id
+        getFFMoods(username).document(mood.id).set(mood.wrap()).await()
+
+        return mood.id
+
+//        val doc = getFFMoods(username)
+//                .add(mood.wrap())
+//                .await()
+//
+//        doc.update("id", doc.id).await()
+//        mood.id = doc.id
+//        return doc.id
     }
 
     /**

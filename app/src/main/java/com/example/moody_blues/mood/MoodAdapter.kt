@@ -23,15 +23,25 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * An adapter class for a mood row
  */
 class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener: (Mood, Int) -> Unit, private val longListener: (Mood, Int) -> Boolean) : RecyclerView.Adapter<MoodAdapter.ViewHolder>() {
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_mood, parent, false)
         return ViewHolder(view)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return moods[position].id.toLong()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -57,7 +67,7 @@ class MoodAdapter(private var moods: ArrayList<Mood>, private val clickListener:
         holder.itemView.background = gradient
 
         if (mood.reasonImageThumbnail != null) {
-            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
+//            holder.image.setImageResource(R.drawable.moody_blues_icon_background)
             
             holder.job = MainScope().launch {
                 val (uri, rotation) = AppManager.getImageUri(mood.username, mood.reasonImageThumbnail!!)
